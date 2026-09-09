@@ -34,3 +34,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# database (SQLite is regenerated via `npx prisma db push && npm run db:seed`)
+*.db
+*.db-journal
+/prisma/*.db
+
+# logs
+*.log
+
+# local tooling / editor
+/.claude/
+.mcp.json
