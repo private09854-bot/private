@@ -72,16 +72,16 @@ export default async function AdminKycPage() {
       sub: "Compliance officer review",
     },
     {
-      label: "APPROVED (7 DAYS)",
+      label: "APPROVED",
       value: String(apps.filter((a) => a.status === "approved").length),
       tone: "text-emerald-500",
       sub: "Decisions logged",
     },
     {
-      label: "AVG DECISION TIME",
-      value: "4.2h",
+      label: "REJECTED",
+      value: String(apps.filter((a) => a.status === "rejected").length),
       tone: "text-blue-500",
-      sub: "Below 8h SLA target",
+      sub: "Declined applications",
     },
   ];
 

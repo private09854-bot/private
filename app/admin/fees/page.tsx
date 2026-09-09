@@ -2,32 +2,57 @@ import { Search, ChevronDown, Download } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/session";
+import { usdRateMap } from "@/lib/data";
+import { formatCompact, formatCurrency } from "@/lib/format";
 
 const filters = ["Route: All", "Status: All"];
-
-const kpis = [
-  { label: "FEE REVENUE (MTD)", value: "$142.8K", tone: "text-emerald-500", sub: "+8.4% vs last month" },
-  { label: "AVG FEE RATE", value: "0.42%", tone: "text-slate-900", sub: "Blended across routes" },
-  { label: "FEE-FREE TXNS", value: "68%", tone: "text-blue-500", sub: "Internal Vault transfers" },
-  { label: "LIMIT BREACHES", value: "31", tone: "text-amber-500", sub: "Auto-blocked this week" },
-];
-
-const globalLimits = [
-  { label: "Daily transfer cap", value: "$50,000.00" },
-  { label: "Single transaction cap", value: "$25,000.00" },
-  { label: "Monthly accumulative", value: "$250,000.00" },
-];
-
-const tierLimits = [
-  { tier: "Tier 1", value: "$2,500 / day" },
-  { tier: "Tier 2", value: "$25,000 / day" },
-  { tier: "Tier 3", value: "$50,000 / day" },
-];
 
 export default async function AdminFeesPage() {
   await requireAdmin();
 
-  const fees = await prisma.fee.findMany({ orderBy: { sort: "asc" } });
+  const [fees, txns, settings, users, rates] = await Promise.all([
+    prisma.fee.findMany({ orderBy: { sort: "asc" } }),
+    prisma.transaction.findMany({ select: { fee: true, currency: true } }),
+    prisma.userSettings.findMany(),
+    prisma.user.findMany({ where: { role: "CUSTOMER" }, select: { tier: true } }),
+    usdRateMap(),
+  ]);
+
+  const usd = (amount: number, currency: string) =>
+    amount * (rates.get(currency) ?? 0);
+
+  const feeTxns = txns.filter((t) => t.fee > 0);
+  const totalFees = txns.reduce((s, t) => s + usd(t.fee, t.currency), 0);
+  const avgFee = feeTxns.length ? totalFees / feeTxns.length : 0;
+  const feeFreePct = txns.length
+    ? Math.round((txns.filter((t) => t.fee === 0).length / txns.length) * 100)
+    : 0;
+
+  const kpis = [
+    { label: "FEES COLLECTED", value: formatCompact(totalFees), tone: "text-emerald-500", sub: `Across ${txns.length} transactions` },
+    { label: "AVG FEE", value: formatCurrency(avgFee, "USD"), tone: "text-slate-900", sub: `On ${feeTxns.length} charged transfers` },
+    { label: "FEE-FREE TXNS", value: `${feeFreePct}%`, tone: "text-blue-500", sub: "Zero-fee transfers" },
+    { label: "FEE RULES", value: String(fees.length), tone: "text-amber-500", sub: "Active in schedule" },
+  ];
+
+  // Platform limits derived from the highest configured customer settings.
+  const dailyCap = Math.max(50000, ...settings.map((s) => s.dailyLimit));
+  const singleCap = Math.max(10000, ...settings.map((s) => s.singleCap));
+  const monthlyCap = Math.max(500000, ...settings.map((s) => s.monthlyLimit));
+  const globalLimits = [
+    { label: "Daily transfer cap", value: `${formatCurrency(dailyCap, "USD")}` },
+    { label: "Single transaction cap", value: `${formatCurrency(singleCap, "USD")}` },
+    { label: "Monthly accumulative", value: `${formatCurrency(monthlyCap, "USD")}` },
+  ];
+
+  const tierCounts = ["Tier 3", "Tier 2", "Tier 1"].map((tier) => ({
+    tier,
+    count: users.filter((u) => u.tier === tier).length,
+  }));
+
+  const totalUsed = settings.reduce((s, x) => s + x.dailyUsed, 0);
+  const totalDaily = settings.reduce((s, x) => s + x.dailyLimit, 0) || 1;
+  const utilization = Math.min(100, Math.round((totalUsed / totalDaily) * 100));
 
   return (
     <div className="flex h-full flex-col gap-8">
@@ -150,12 +175,12 @@ export default async function AdminFeesPage() {
           <div className="w-full border-t border-slate-200" />
 
           <div className="flex flex-col gap-3">
-            <p className="text-xs font-bold text-slate-500">PER-TIER DAILY CAP</p>
-            {tierLimits.map((t) => (
+            <p className="text-xs font-bold text-slate-500">CUSTOMERS BY TIER</p>
+            {tierCounts.map((t) => (
               <div key={t.tier} className="flex items-center justify-between">
                 <span className="text-[13px] text-slate-900">{t.tier}</span>
                 <span className="font-mono text-[13px] font-semibold text-slate-900">
-                  {t.value}
+                  {t.count} {t.count === 1 ? "user" : "users"}
                 </span>
               </div>
             ))}
@@ -169,10 +194,15 @@ export default async function AdminFeesPage() {
               <span className="text-xs font-bold text-slate-500">
                 NETWORK DAILY UTILIZATION
               </span>
-              <span className="text-[13px] font-bold text-amber-500">62%</span>
+              <span className="text-[13px] font-bold text-amber-500">
+                {utilization}%
+              </span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
-              <div className="h-full w-[62%] rounded-full bg-amber-500" />
+              <div
+                className="h-full rounded-full bg-amber-500"
+                style={{ width: `${utilization}%` }}
+              />
             </div>
           </div>
 

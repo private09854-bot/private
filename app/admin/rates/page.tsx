@@ -3,7 +3,8 @@ import Badge from "@/components/ui/badge";
 import Toggle from "@/components/ui/toggle";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/session";
-import { formatNumber } from "@/lib/format";
+import { usdRateMap } from "@/lib/data";
+import { formatNumber, formatCompact } from "@/lib/format";
 
 const filters = ["Base: All", "Status: All"];
 
@@ -20,14 +21,32 @@ function fmtRate(rate: number): string {
 export default async function AdminRatesPage() {
   await requireAdmin();
 
-  const rows = await prisma.fxRate.findMany({ orderBy: { sort: "asc" } });
+  const [rows, convertTxns, rates] = await Promise.all([
+    prisma.fxRate.findMany({ orderBy: { sort: "asc" } }),
+    prisma.transaction.findMany({
+      where: { kind: "convert" },
+      select: { amount: true, currency: true },
+    }),
+    usdRateMap(),
+  ]);
   const pairs = rows.filter((r) => r.base !== r.quote);
+
+  const spreadVals = pairs
+    .map((p) => parseFloat((p.spread ?? "").replace("%", "")))
+    .filter((n) => Number.isFinite(n));
+  const avgSpread = spreadVals.length
+    ? (spreadVals.reduce((a, b) => a + b, 0) / spreadVals.length).toFixed(2)
+    : "0.00";
+  const fxVolume = convertTxns.reduce(
+    (s, t) => s + Math.abs(t.amount * (rates.get(t.currency) ?? 0)),
+    0,
+  );
 
   const kpis = [
     { label: "ACTIVE PAIRS", value: String(pairs.length), tone: "text-slate-900", sub: "Live FX corridors" },
-    { label: "AVG SPREAD", value: "0.35%", tone: "text-emerald-500", sub: "Below market median" },
-    { label: "FX VOLUME (24H)", value: "$1.82M", tone: "text-blue-500", sub: "6,204 conversions" },
-    { label: "LAST SYNC", value: "08:42", tone: "text-amber-500", sub: "UTC · 3 min ago" },
+    { label: "AVG SPREAD", value: `${avgSpread}%`, tone: "text-emerald-500", sub: "Blended across pairs" },
+    { label: "FX VOLUME", value: formatCompact(fxVolume), tone: "text-blue-500", sub: `${convertTxns.length} conversions` },
+    { label: "CONVERSIONS", value: String(convertTxns.length), tone: "text-amber-500", sub: "Total FX swaps" },
   ];
 
   return (

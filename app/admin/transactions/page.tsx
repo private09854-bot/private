@@ -18,12 +18,13 @@ export default async function AdminTransactionsPage() {
     0,
   );
   const flaggedCount = txns.filter((t) => t.flagged).length;
+  const completedCount = txns.filter((t) => t.status === "Completed").length;
 
   const kpis = [
     { label: "PROCESSED (ALL)", value: formatCompact(processed), tone: "text-slate-900", sub: `${txns.length} settlements` },
     { label: "PENDING", value: String(txns.filter((t) => t.status === "Pending" || t.status === "Processing").length), tone: "text-amber-500", sub: "Awaiting settlement" },
-    { label: "FLAGGED", value: String(flaggedCount), tone: "text-red-500", sub: "Risk score > 80" },
-    { label: "AVG SETTLE TIME", value: "1.2s", tone: "text-emerald-500", sub: "SWIFT fast rail" },
+    { label: "FLAGGED", value: String(flaggedCount), tone: "text-red-500", sub: "Flagged for review" },
+    { label: "COMPLETED", value: String(completedCount), tone: "text-emerald-500", sub: "Settled successfully" },
   ];
 
   const rows: AdminTxn[] = txns.map((t) => ({
