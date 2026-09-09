@@ -4,7 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Vault Banking Portal",
+  title: "Profintal Savings",
   description: "Secure checking, savings, transfers, and card controls.",
 };
 

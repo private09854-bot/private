@@ -38,7 +38,7 @@ export default function SendToBankPage() {
             href="/send"
             className="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
           >
-            To a Vault User
+            To a Profintal Savings User
           </Link>
           <Link
             href="/send/bank"
@@ -70,7 +70,7 @@ export default function SendToBankPage() {
             <p className="max-w-lg text-[15px] leading-relaxed text-slate-500">
               We&apos;re finalizing direct SWIFT settlement to external bank
               accounts. In the meantime, you can instantly send money to any
-              Vault user free and in real time.
+              Profintal Savings user free and in real time.
             </p>
           </div>
         </div>
@@ -114,7 +114,7 @@ export default function SendToBankPage() {
             href="/send"
             className="flex items-center justify-center gap-2 rounded-xl bg-emerald-500 p-4 text-[15px] font-bold text-white transition-colors hover:bg-emerald-600"
           >
-            Send to a Vault User Instead
+            Send to a Profintal Savings User Instead
             <ArrowRight className="size-4" />
           </Link>
         </div>

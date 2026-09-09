@@ -25,11 +25,15 @@ export default function AdminSendForm({
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [targetId, setTargetId] = useState("");
-  const [amount, setAmount] = useState("100.00");
+  const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState(wallets[0]?.currency ?? "USD");
   const [note, setNote] = useState("");
   const [pending, setPending] = useState(false);
-  const [result, setResult] = useState<{ ok?: boolean; error?: string; msg?: string }>({});
+  const [result, setResult] = useState<{
+    ok?: boolean;
+    error?: string;
+    msg?: string;
+  }>({});
 
   const wallet = wallets.find((w) => w.currency === currency) ?? null;
   const target = users.find((u) => u.id === targetId) ?? null;
@@ -177,7 +181,7 @@ export default function AdminSendForm({
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="e.g. Test disbursement"
+              placeholder="Add a reference or note"
               className="w-full bg-transparent text-[13px] text-slate-600 placeholder:text-slate-400 focus:outline-none"
             />
           </div>
@@ -203,12 +207,12 @@ export default function AdminSendForm({
           <div className="flex items-center justify-between">
             <span className="text-slate-600">Fee</span>
             <span className="font-mono font-bold text-slate-900">
-              {formatCurrency(0, currency)} (Platform)
+              Not configured
             </span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-slate-600">Delivery</span>
-            <span className="font-semibold text-slate-900">Instantaneous</span>
+            <span className="font-semibold text-slate-900">Not configured</span>
           </div>
         </div>
 
@@ -238,8 +242,8 @@ export default function AdminSendForm({
         </button>
 
         <p className="text-[11px] leading-relaxed text-slate-400">
-          Admin-only disbursement. Funds move from the platform treasury into the
-          selected user&apos;s wallet and appear instantly in their account.
+          Admin-only disbursement. Funds move from the platform treasury into
+          the selected user&apos;s wallet and appear instantly in their account.
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Lock,
   ShieldCheck,
@@ -29,13 +30,35 @@ const heroStats = [
 ];
 
 const metrics: { icon: LucideIcon; title: string; desc: string }[] = [
-  { icon: ShieldCheck, title: "FDIC-Insured Banking", desc: "Eligible deposits are protected through partner banks." },
-  { icon: Lock, title: "Bank-Grade Encryption", desc: "Sensitive data is encrypted in transit and at rest." },
-  { icon: Activity, title: "Real-Time Monitoring", desc: "Instant transaction alerts and fraud detection." },
-  { icon: Network, title: "Connected Finances", desc: "Link external accounts for one complete view." },
+  {
+    icon: ShieldCheck,
+    title: "FDIC-Insured Banking",
+    desc: "Eligible deposits are protected through partner banks.",
+  },
+  {
+    icon: Lock,
+    title: "Bank-Grade Encryption",
+    desc: "Sensitive data is encrypted in transit and at rest.",
+  },
+  {
+    icon: Activity,
+    title: "Real-Time Monitoring",
+    desc: "Instant transaction alerts and fraud detection.",
+  },
+  {
+    icon: Network,
+    title: "Connected Finances",
+    desc: "Link external accounts for one complete view.",
+  },
 ];
 
-const features: { icon: LucideIcon; badge: string; title: string; desc: string; link: string }[] = [
+const features: {
+  icon: LucideIcon;
+  badge: string;
+  title: string;
+  desc: string;
+  link: string;
+}[] = [
   {
     icon: Wallet,
     badge: "Everyday banking",
@@ -66,10 +89,32 @@ const features: { icon: LucideIcon; badge: string; title: string; desc: string; 
   },
 ];
 
-const creds: { name: string; amount: string; tag: string; tone: "active" | "linked"; negative?: boolean }[] = [
-  { name: "Chase Checking (•••• 8824)", amount: "$12,450.20", tag: "Active", tone: "active" },
-  { name: "Vault Growth Savings (•••• 9901)", amount: "$45,210.50", tag: "Active", tone: "active" },
-  { name: "Vault Debit Card (•••• 1005)", amount: "-$1,120.40", tag: "Linked", tone: "linked", negative: true },
+const creds: {
+  name: string;
+  amount: string;
+  tag: string;
+  tone: "active" | "linked";
+  negative?: boolean;
+}[] = [
+  {
+    name: "Chase Checking (•••• 8824)",
+    amount: "$12,450.20",
+    tag: "Active",
+    tone: "active",
+  },
+  {
+    name: "Vault Growth Savings (•••• 9901)",
+    amount: "$45,210.50",
+    tag: "Active",
+    tone: "active",
+  },
+  {
+    name: "Vault Debit Card (•••• 1005)",
+    amount: "-$1,120.40",
+    tag: "Linked",
+    tone: "linked",
+    negative: true,
+  },
 ];
 
 const bullets = [
@@ -97,7 +142,12 @@ const securityCards: { icon: LucideIcon; title: string; desc: string }[] = [
   },
 ];
 
-const integrityStats: { label: string; value: string; accent?: boolean; mono?: boolean }[] = [
+const integrityStats: {
+  label: string;
+  value: string;
+  accent?: boolean;
+  mono?: boolean;
+}[] = [
   { label: "MONITORING", value: "Active 24/7", accent: true },
   { label: "LAST REVIEW", value: "Today, 11:24 AM", mono: true },
   { label: "ACCOUNT ACCESS", value: "Protected", accent: true },
@@ -124,7 +174,13 @@ const testimonials = [
   },
 ];
 
-const tiers: { name: string; label: string; features: string[]; cta: string; highlighted?: boolean }[] = [
+const tiers: {
+  name: string;
+  label: string;
+  features: string[];
+  cta: string;
+  highlighted?: boolean;
+}[] = [
   {
     name: "Everyday Checking",
     label: "Personal",
@@ -193,20 +249,46 @@ const faqs = [
 ];
 
 const footerCols = [
-  { title: "Products", links: ["Checking", "Savings", "Transfers", "Business Banking"] },
-  { title: "Security", links: ["Account Protection", "Fraud Monitoring", "Card Controls", "Security Center"] },
-  { title: "Company", links: ["About Vault", "Careers", "Newsroom", "Contact"] },
-  { title: "Resources", links: ["Help Center", "Fee Schedule", "System Status", "Disclosures"] },
+  {
+    title: "Products",
+    links: ["Checking", "Savings", "Transfers", "Business Banking"],
+  },
+  {
+    title: "Security",
+    links: [
+      "Account Protection",
+      "Fraud Monitoring",
+      "Card Controls",
+      "Security Center",
+    ],
+  },
+  {
+    title: "Company",
+    links: ["About Profintal Savings", "Careers", "Newsroom", "Contact"],
+  },
+  {
+    title: "Resources",
+    links: ["Help Center", "Fee Schedule", "System Status", "Disclosures"],
+  },
 ];
 
 function Logo() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex size-8 items-center justify-center rounded-lg bg-emerald-500">
-        <Lock className="size-[18px] text-white" />
-      </div>
-      <span className="text-xl font-bold text-white">Vault</span>
-    </div>
+    <span className="flex items-center gap-3">
+      <span className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-white">
+        <Image
+          src="/profintal-savings-mark.svg"
+          alt=""
+          width={64}
+          height={64}
+          className="size-full object-cover"
+          priority
+        />
+      </span>
+      <span className="whitespace-nowrap text-base font-bold tracking-tight text-white">
+        Profintal Savings
+      </span>
+    </span>
   );
 }
 
@@ -254,7 +336,11 @@ export default function LandingPage() {
           <Logo />
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-400 lg:flex">
             {navLinks.map((l) => (
-              <a key={l} href="#" className="transition-colors hover:text-white">
+              <a
+                key={l}
+                href="#"
+                className="transition-colors hover:text-white"
+              >
                 {l}
               </a>
             ))}
@@ -327,8 +413,12 @@ export default function LandingPage() {
                   className="size-8 rounded-2xl object-cover"
                 />
                 <div className="flex flex-col gap-0.5">
-                  <p className="text-xs font-semibold text-white">Sarah Jenkins</p>
-                  <p className="text-[10px] text-slate-400">Active Secure Session</p>
+                  <p className="text-xs font-semibold text-white">
+                    Sarah Jenkins
+                  </p>
+                  <p className="text-[10px] text-slate-400">
+                    Active Secure Session
+                  </p>
                 </div>
               </div>
               <div className="rounded bg-emerald-50 px-2 py-1">
@@ -340,21 +430,31 @@ export default function LandingPage() {
             <div className="flex gap-4">
               <div className="flex flex-1 flex-col gap-2 rounded-xl border border-slate-700 bg-slate-900 p-4">
                 <p className="text-[11px] text-slate-400">AVAILABLE BALANCE</p>
-                <p className="font-mono text-2xl font-bold text-white">$71,641.10</p>
+                <p className="font-mono text-2xl font-bold text-white">
+                  $71,641.10
+                </p>
                 <div className="flex items-center gap-1 text-[11px] text-emerald-500">
                   <TrendingUp className="size-2.5" />
                   +3.4% saved this month
                 </div>
               </div>
               <div className="flex flex-1 flex-col gap-2 rounded-xl border border-slate-700 bg-slate-900 p-4">
-                <p className="text-[11px] text-slate-400">CARD SPEND THIS MONTH</p>
-                <p className="font-mono text-2xl font-bold text-red-500">-$1,120.40</p>
-                <p className="text-[11px] text-slate-400">Across 2 active cards</p>
+                <p className="text-[11px] text-slate-400">
+                  CARD SPEND THIS MONTH
+                </p>
+                <p className="font-mono text-2xl font-bold text-red-500">
+                  -$1,120.40
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Across 2 active cards
+                </p>
               </div>
             </div>
             <div className="flex flex-col gap-2 rounded-xl border border-slate-700 bg-slate-900 p-4">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold text-white">Savings Progress YTD</p>
+                <p className="text-xs font-semibold text-white">
+                  Savings Progress YTD
+                </p>
                 <p className="text-[11px] text-emerald-500">On Track</p>
               </div>
               <svg
@@ -398,7 +498,9 @@ export default function LandingPage() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="text-sm font-bold text-slate-900">{m.title}</p>
-                  <p className="text-xs leading-[1.4] text-slate-500">{m.desc}</p>
+                  <p className="text-xs leading-[1.4] text-slate-500">
+                    {m.desc}
+                  </p>
                 </div>
               </div>
             );
@@ -431,8 +533,12 @@ export default function LandingPage() {
                     </span>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <h3 className="text-xl font-bold text-slate-900">{f.title}</h3>
-                    <p className="text-sm leading-[1.5] text-slate-500">{f.desc}</p>
+                    <h3 className="text-xl font-bold text-slate-900">
+                      {f.title}
+                    </h3>
+                    <p className="text-sm leading-[1.5] text-slate-500">
+                      {f.desc}
+                    </p>
                   </div>
                   <div className="flex items-center gap-1.5 pt-3 text-[13px] font-semibold text-emerald-500">
                     {f.link}
@@ -465,7 +571,9 @@ export default function LandingPage() {
                   className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4"
                 >
                   <div className="flex flex-col gap-0.5">
-                    <p className="text-[13px] font-semibold text-slate-900">{c.name}</p>
+                    <p className="text-[13px] font-semibold text-slate-900">
+                      {c.name}
+                    </p>
                     <p
                       className={`font-mono text-base font-bold ${
                         c.negative ? "text-red-500" : "text-slate-900"
@@ -533,7 +641,9 @@ export default function LandingPage() {
                     <Icon className="size-5" />
                   </div>
                   <h3 className="text-xl font-bold text-white">{c.title}</h3>
-                  <p className="text-sm leading-[1.5] text-slate-400">{c.desc}</p>
+                  <p className="text-sm leading-[1.5] text-slate-400">
+                    {c.desc}
+                  </p>
                 </div>
               );
             })}
@@ -581,7 +691,9 @@ export default function LandingPage() {
                 key={t.name}
                 className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-[0px_4px_6px_rgba(15,23,42,0.02)]"
               >
-                <p className="text-[15px] leading-[1.6] text-slate-500">{t.quote}</p>
+                <p className="text-[15px] leading-[1.6] text-slate-500">
+                  {t.quote}
+                </p>
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -590,7 +702,9 @@ export default function LandingPage() {
                     className="size-10 rounded-full object-cover"
                   />
                   <div className="flex flex-col gap-0.5">
-                    <p className="text-sm font-semibold text-slate-900">{t.name}</p>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {t.name}
+                    </p>
                     <p className="text-xs text-slate-500">{t.role}</p>
                   </div>
                 </div>
@@ -681,16 +795,21 @@ export default function LandingPage() {
             </h2>
             <p className="max-w-xl text-base leading-[1.6] text-slate-400">
               Check balances, approve transfers, freeze cards, deposit checks,
-              and review alerts from a secure mobile app built for daily banking.
+              and review alerts from a secure mobile app built for daily
+              banking.
             </p>
             <div className="flex flex-wrap gap-4 pt-3">
               <button className="flex items-center gap-3 rounded-[10px] border border-slate-700 bg-slate-800 px-6 py-3 transition-colors hover:bg-slate-700">
                 <Smartphone className="size-[18px] text-white" />
-                <span className="text-sm font-semibold text-white">App Store</span>
+                <span className="text-sm font-semibold text-white">
+                  App Store
+                </span>
               </button>
               <button className="flex items-center gap-3 rounded-[10px] border border-slate-700 bg-slate-800 px-6 py-3 transition-colors hover:bg-slate-700">
                 <Play className="size-[18px] text-white" />
-                <span className="text-sm font-semibold text-white">Google Play</span>
+                <span className="text-sm font-semibold text-white">
+                  Google Play
+                </span>
               </button>
             </div>
           </div>
@@ -773,26 +892,35 @@ export default function LandingPage() {
           <div className="h-px w-full bg-slate-700" />
           <div className="flex flex-col gap-4 text-[11px] leading-[1.6] text-slate-400">
             <p>
-              Vault is a financial technology platform, not a bank. Banking
-              services are provided by partner banks, Members FDIC. Vault debit
-              cards are issued by partner banks pursuant to license from the
-              applicable card network. FDIC insurance applies only to eligible
-              deposit balances held at partner banks and is subject to legal limits.
+              Profintal Savings is a financial technology platform, not a bank.
+              Banking services are provided by partner banks, Members FDIC.
+              Profintal Savings debit cards are issued by partner banks pursuant
+              to license from the applicable card network. FDIC insurance
+              applies only to eligible deposit balances held at partner banks
+              and is subject to legal limits.
             </p>
             <p>
-              Transfer timing, card availability, and account features may vary by
-              eligibility, verification status, partner bank, and network rules.
-              Linked account data may be delayed depending on the external
-              financial institution.
+              Transfer timing, card availability, and account features may vary
+              by eligibility, verification status, partner bank, and network
+              rules. Linked account data may be delayed depending on the
+              external financial institution.
             </p>
           </div>
           <div className="flex flex-col items-start justify-between gap-4 text-[13px] text-slate-400 sm:flex-row sm:items-center">
-            <p>© 2026 Vault Financial Technologies Inc. All rights reserved.</p>
+            <p>© 2026 Profintal Savings. All rights reserved.</p>
             <div className="flex flex-wrap gap-6">
-              <a href="#" className="transition-colors hover:text-white">System Status</a>
-              <a href="#" className="transition-colors hover:text-white">Privacy Policy</a>
-              <a href="#" className="transition-colors hover:text-white">Terms of Use</a>
-              <a href="#" className="transition-colors hover:text-white">Regulatory Disclosures</a>
+              <a href="#" className="transition-colors hover:text-white">
+                System Status
+              </a>
+              <a href="#" className="transition-colors hover:text-white">
+                Privacy Policy
+              </a>
+              <a href="#" className="transition-colors hover:text-white">
+                Terms of Use
+              </a>
+              <a href="#" className="transition-colors hover:text-white">
+                Regulatory Disclosures
+              </a>
             </div>
           </div>
         </div>

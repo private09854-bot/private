@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, ArrowLeftRight, CheckCircle2 } from "lucide-react";
 import { convertMoney } from "@/app/actions/banking";
@@ -62,6 +62,15 @@ export default function ConvertForm({
   const [amount, setAmount] = useState("1000.00");
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<{ ok?: boolean; error?: string }>({});
+  const [expiry, setExpiry] = useState(60);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setExpiry((e) => (e <= 1 ? 60 : e - 1)),
+      1000,
+    );
+    return () => clearInterval(id);
+  }, []);
 
   const amountNum = Number(amount) || 0;
   const rate = rates[`${from}/${to}`] ?? null;
@@ -88,7 +97,7 @@ export default function ConvertForm({
   }
 
   const providers = [
-    { provider: "Vault (Us)", rate: rate ?? 0, fee: fee, tag: "Best Rate", best: true },
+    { provider: "Profintal Savings", rate: rate ?? 0, fee: fee, tag: "Best Rate", best: true },
     { provider: "Typical Bank", rate: (rate ?? 0) * 0.96, fee: 15, tag: "Standard" },
     { provider: "Standard Swap", rate: (rate ?? 0) * 0.988, fee: 5, tag: "Standard" },
   ];
@@ -185,7 +194,9 @@ export default function ConvertForm({
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Conversion Fee (0.25%)</span>
+              <span className="text-slate-600">
+                Conversion Fee ({(FEE_RATE * 100).toFixed(2)}%)
+              </span>
               <span className="font-mono font-bold text-slate-900">
                 {formatCurrency(fee, from)} {from}
               </span>

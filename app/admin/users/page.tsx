@@ -80,10 +80,30 @@ export default async function AdminUsersPage() {
   ).length;
 
   const kpis = [
-    { label: "TOTAL ACCOUNTS", value: String(users.length), tone: "text-slate-900", sub: "Registered customers" },
-    { label: "VERIFIED (TIER 3)", value: String(verified), tone: "text-emerald-500", sub: "KYC complete" },
-    { label: "PENDING REVIEW", value: String(pendingCount), tone: "text-amber-500", sub: "Manual KYC queue" },
-    { label: "FROZEN / REJECTED", value: String(frozenRejected), tone: "text-red-500", sub: "Compliance holds" },
+    {
+      label: "TOTAL ACCOUNTS",
+      value: String(users.length),
+      tone: "text-slate-900",
+      sub: "Registered customers",
+    },
+    {
+      label: "VERIFIED (TIER 3)",
+      value: String(verified),
+      tone: "text-emerald-500",
+      sub: "KYC complete",
+    },
+    {
+      label: "PENDING REVIEW",
+      value: String(pendingCount),
+      tone: "text-amber-500",
+      sub: "Manual KYC queue",
+    },
+    {
+      label: "FROZEN / REJECTED",
+      value: String(frozenRejected),
+      tone: "text-red-500",
+      sub: "Compliance holds",
+    },
   ];
 
   const applicant: ReviewApplicant = firstPending
@@ -178,8 +198,7 @@ export default async function AdminUsersPage() {
           <div className="flex flex-col">
             {users.map((u) => {
               const st = statusInfo(u.kycStatus);
-              const action =
-                u.kycStatus === "Verified" ? "View" : "Review";
+              const action = u.kycStatus === "Verified" ? "View" : "Review";
               return (
                 <div
                   key={u.id}
@@ -210,7 +229,7 @@ export default async function AdminUsersPage() {
                     </span>
                   </div>
                   <div className="w-[90px]">
-                    <Badge tone={tierTone(u.tier)}>{u.tier ?? "Tier 0"}</Badge>
+                    <Badge tone={tierTone(u.tier)}>{u.tier ?? "Unknown"}</Badge>
                   </div>
                   <div className="w-[90px]">
                     <Badge tone={st.tone}>{st.label}</Badge>

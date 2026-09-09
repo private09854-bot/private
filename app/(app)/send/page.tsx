@@ -27,7 +27,7 @@ export default async function SendToUserPage() {
             href="/send"
             className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white"
           >
-            To a Vault User
+              To a Profintal Savings User
           </Link>
           <Link
             href="/send/bank"

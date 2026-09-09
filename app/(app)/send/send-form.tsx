@@ -72,7 +72,7 @@ export default function SendForm({
         {/* Recipient search */}
         <div className="flex flex-col gap-2">
           <label className="text-[13px] font-semibold text-slate-600">
-            RECIPIENT VAULT PROFILE
+            RECIPIENT PROFINTAL SAVINGS PROFILE
           </label>
           <div className="flex items-center gap-2.5 rounded-lg border border-slate-200 bg-slate-50 p-3.5">
             <User className="size-[18px] shrink-0 text-slate-500" />

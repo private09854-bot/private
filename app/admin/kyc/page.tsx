@@ -32,7 +32,6 @@ export default async function AdminKycPage() {
 
   const applicants: Applicant[] = apps.map((a) => {
     const info = riskInfo(a.risk);
-    const last = a.user.name.split(" ").pop()?.toLowerCase() ?? "doc";
     return {
       id: a.id,
       name: a.user.name,
@@ -49,7 +48,7 @@ export default async function AdminKycPage() {
       status: a.status,
       escalated: a.escalated,
       targetTier: targetTier(a.requesting),
-      docFile: `passport_${last}.pdf`,
+      docFile: "",
       documents: a.documents.map<KycDoc>((docm) => ({
         label: docm.label,
         state: docm.status,

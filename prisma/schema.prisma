@@ -1,14 +1,16 @@
-// Vault banking prototype — SQLite via Prisma.
-// SQLite does not support native enums, so status/role/tone fields are plain
-// strings validated at the application layer (see lib/constants.ts).
+// Profintal Savings banking prototype — PostgreSQL via Prisma (Neon / Vercel
+// Postgres). Status/role/tone fields are plain strings validated at the
+// application layer rather than native enums.
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ---------------------------------------------------------------------------

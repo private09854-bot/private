@@ -8,12 +8,6 @@ import { formatNumber, formatCompact } from "@/lib/format";
 
 const filters = ["Base: All", "Status: All"];
 
-const tierMarkups = [
-  { tier: "Tier 1", value: "0.50%" },
-  { tier: "Tier 2", value: "0.25%" },
-  { tier: "Tier 3", value: "0.05%" },
-];
-
 function fmtRate(rate: number): string {
   return rate >= 100 ? formatNumber(rate, 2) : formatNumber(rate, 4);
 }
@@ -43,10 +37,30 @@ export default async function AdminRatesPage() {
   );
 
   const kpis = [
-    { label: "ACTIVE PAIRS", value: String(pairs.length), tone: "text-slate-900", sub: "Live FX corridors" },
-    { label: "AVG SPREAD", value: `${avgSpread}%`, tone: "text-emerald-500", sub: "Blended across pairs" },
-    { label: "FX VOLUME", value: formatCompact(fxVolume), tone: "text-blue-500", sub: `${convertTxns.length} conversions` },
-    { label: "CONVERSIONS", value: String(convertTxns.length), tone: "text-amber-500", sub: "Total FX swaps" },
+    {
+      label: "ACTIVE PAIRS",
+      value: String(pairs.length),
+      tone: "text-slate-900",
+      sub: "Live FX corridors",
+    },
+    {
+      label: "AVG SPREAD",
+      value: `${avgSpread}%`,
+      tone: "text-emerald-500",
+      sub: "Blended across pairs",
+    },
+    {
+      label: "FX VOLUME",
+      value: formatCompact(fxVolume),
+      tone: "text-blue-500",
+      sub: `${convertTxns.length} conversions`,
+    },
+    {
+      label: "CONVERSIONS",
+      value: String(convertTxns.length),
+      tone: "text-amber-500",
+      sub: "Total FX swaps",
+    },
   ];
 
   return (
@@ -112,14 +126,13 @@ export default async function AdminRatesPage() {
           <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
             <span className="flex-1">PAIR</span>
             <span className="w-[120px] text-right">MID-MARKET</span>
-            <span className="w-[120px] text-right">VAULT RATE</span>
+            <span className="w-[120px] text-right">RATE</span>
             <span className="w-[90px] text-right">SPREAD</span>
-            <span className="w-[90px] text-right">24H</span>
+            <span className="w-[90px] text-right">CHANGE</span>
             <span className="w-[90px] text-right">STATUS</span>
           </div>
           <div className="flex flex-col">
             {pairs.map((p) => {
-              const vault = p.rate * 0.997;
               const down = p.changeTone === "down";
               return (
                 <div
@@ -133,17 +146,17 @@ export default async function AdminRatesPage() {
                     {fmtRate(p.rate)}
                   </span>
                   <span className="w-[120px] text-right font-mono text-[13px] font-semibold text-slate-900">
-                    {fmtRate(vault)}
+                    {fmtRate(p.rate)}
                   </span>
                   <span className="w-[90px] text-right font-mono text-[13px] text-slate-600">
-                    {p.spread ?? "0.30%"}
+                    {p.change ?? "—"}
                   </span>
                   <span
                     className={`w-[90px] text-right font-mono text-[13px] font-semibold ${
                       down ? "text-red-500" : "text-emerald-500"
                     }`}
                   >
-                    {p.change ?? "—"}
+                    {p.changeTone ?? "—"}
                   </span>
                   <div className="flex w-[90px] justify-end">
                     <Badge tone="success">Live</Badge>
@@ -182,25 +195,10 @@ export default async function AdminRatesPage() {
             </label>
             <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
               <span className="font-mono text-lg font-bold text-slate-900">
-                0.05%
+                —
               </span>
               <span className="text-[11px] text-slate-500">applied to mid</span>
             </div>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <p className="text-xs font-bold text-slate-500">PER-TIER MARKUP</p>
-            {tierMarkups.map((t) => (
-              <div
-                key={t.tier}
-                className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2.5"
-              >
-                <span className="text-[13px] text-slate-900">{t.tier}</span>
-                <span className="font-mono text-[13px] font-semibold text-slate-900">
-                  {t.value}
-                </span>
-              </div>
-            ))}
           </div>
 
           <div className="w-full border-t border-slate-200" />
@@ -210,19 +208,19 @@ export default async function AdminRatesPage() {
               <p className="text-[13px] font-semibold text-slate-900">
                 Rate Source
               </p>
-              <p className="text-[11px] text-slate-500">Reuters / Bloomberg feed</p>
+              <p className="text-[11px] text-slate-500">Not configured</p>
             </div>
-            <Badge tone="success">Live</Badge>
+            <Badge tone="neutral">Unknown</Badge>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-0.5">
               <p className="text-[13px] font-semibold text-slate-900">
-                Auto-sync (60s)
+                Auto-sync
               </p>
-              <p className="text-[11px] text-slate-500">Continuous rate refresh</p>
+              <p className="text-[11px] text-slate-500">Not configured</p>
             </div>
-            <Toggle defaultOn aria-label="Auto-sync rates" />
+            <Toggle defaultOn={false} aria-label="Auto-sync rates" />
           </div>
 
           <button className="rounded-lg bg-slate-900 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800">

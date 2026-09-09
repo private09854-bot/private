@@ -28,7 +28,7 @@ export default function SignupForm() {
   return (
     <AuthShell
       heading="Open an account"
-      subheading="Create your Vault console in seconds — no card required."
+      subheading="Create your Profintal Savings console in seconds — no card required."
     >
       <form action={formAction} className="flex flex-col gap-5">
         <div className="flex flex-col gap-1.5">

@@ -28,7 +28,6 @@ const priorityTone: Record<string, Tone> = {
   Medium: "warning",
   Low: "neutral",
 };
-const riskScore: Record<string, number> = { High: 84, Medium: 60, Low: 30 };
 const statusTone: Record<string, Tone> = {
   Pending: "warning",
   Authorized: "success",
@@ -53,15 +52,12 @@ export default function TransfersQueue({
     if (!q) return transfers;
     return transfers.filter(
       (t) =>
-        t.ref.toLowerCase().includes(q) ||
-        t.party.toLowerCase().includes(q),
+        t.ref.toLowerCase().includes(q) || t.party.toLowerCase().includes(q),
     );
   }, [transfers, query]);
 
   const selected =
     transfers.find((t) => t.id === selectedId) ?? transfers[0] ?? null;
-  const score = selected ? riskScore[selected.risk] ?? 40 : 0;
-
   function run(fn: () => Promise<unknown>, msg: string) {
     startTransition(async () => {
       await fn();
@@ -214,7 +210,9 @@ export default function TransfersQueue({
               </div>
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-slate-500">Originating</span>
-                <span className="font-semibold text-slate-900">USD Vault</span>
+                <span className="font-semibold text-slate-900">
+                  Not recorded
+                </span>
               </div>
             </div>
 
@@ -224,30 +222,10 @@ export default function TransfersQueue({
                 <span className="text-xs font-bold text-slate-500">
                   RISK ASSESSMENT
                 </span>
-                <span
-                  className={`flex items-center gap-1.5 text-[13px] font-bold ${
-                    score >= 80
-                      ? "text-red-500"
-                      : score >= 50
-                        ? "text-amber-500"
-                        : "text-emerald-500"
-                  }`}
-                >
+                <span className="flex items-center gap-1.5 text-[13px] font-bold text-slate-600">
                   <AlertTriangle className="size-3.5" />
-                  {score} / 100 {selected.risk}
+                  {selected.risk || "Not assessed"}
                 </span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
-                <div
-                  className={`h-full rounded-full ${
-                    score >= 80
-                      ? "bg-red-500"
-                      : score >= 50
-                        ? "bg-amber-500"
-                        : "bg-emerald-500"
-                  }`}
-                  style={{ width: `${score}%` }}
-                />
               </div>
               <p className="text-[11px] text-slate-500">
                 Automated screening result for this instruction.
@@ -261,16 +239,18 @@ export default function TransfersQueue({
               </p>
               <div className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2.5">
                 <span className="text-[13px] text-slate-900">
-                  Approver 1 · S. Jenkins
+                  Approver 1 · Not assigned
                 </span>
                 <Badge tone="success">Signed</Badge>
               </div>
               <div className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2.5">
                 <span className="text-[13px] text-slate-900">
-                  Approver 2 · You
+                  Approver 2 · Not assigned
                 </span>
                 <Badge
-                  tone={selected.status === "Authorized" ? "success" : "warning"}
+                  tone={
+                    selected.status === "Authorized" ? "success" : "warning"
+                  }
                 >
                   {selected.status === "Authorized" ? "Signed" : "Pending"}
                 </Badge>

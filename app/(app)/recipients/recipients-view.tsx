@@ -83,7 +83,7 @@ export default function RecipientsView({
             Recipients
           </h1>
           <p className="text-sm text-slate-600">
-            Manage your saved corporate contacts, Vault users, and external bank
+            Manage your saved corporate contacts, Profintal Savings users, and external bank
             accounts.
           </p>
         </div>

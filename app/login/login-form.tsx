@@ -16,7 +16,7 @@ function SubmitButton() {
       disabled={pending}
       className="flex items-center justify-center gap-2 rounded-lg bg-emerald-500 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-600 disabled:opacity-60"
     >
-      {pending ? "Signing in…" : "Sign in to Vault"}
+      {pending ? "Signing in…" : "Sign in to Profintal Savings"}
       {!pending && <ArrowRight className="size-4" />}
     </button>
   );
@@ -28,7 +28,7 @@ export default function LoginForm() {
   return (
     <AuthShell
       heading="Welcome back"
-      subheading="Sign in to access your Vault console."
+      subheading="Sign in to access your Profintal Savings console."
     >
       <form action={formAction} className="flex flex-col gap-5">
         <div className="flex flex-col gap-1.5">
@@ -69,7 +69,7 @@ export default function LoginForm() {
       </form>
 
       <p className="text-center text-[13px] text-slate-500">
-        New to Vault?{" "}
+        New to Profintal Savings?{" "}
         <Link
           href="/signup"
           className="font-semibold text-emerald-600 hover:text-emerald-700"

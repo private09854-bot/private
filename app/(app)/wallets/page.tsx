@@ -92,7 +92,7 @@ export default async function WalletsPage() {
               {currencyName[wallet.currency] ?? wallet.currency} Wallet
             </h1>
             <p className="text-sm text-slate-500">
-              Direct FDIC-insured deposit account • Vault {wallet.currency} Node
+              Direct FDIC-insured deposit account • Profintal Savings {wallet.currency} Node
             </p>
           </div>
         </div>

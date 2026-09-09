@@ -1,31 +1,16 @@
-import { Server, ShieldCheck, Users, Plug, Plus, ChevronDown } from "lucide-react";
+import {
+  Server,
+  ShieldCheck,
+  Users,
+  Plug,
+  Plus,
+  ChevronDown,
+} from "lucide-react";
 import Badge from "@/components/ui/badge";
-import Toggle from "@/components/ui/toggle";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/session";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
-
-const platformControls: { title: string; desc: string; on: boolean }[] = [
-  { title: "Maintenance Mode", desc: "Temporarily suspend all customer sessions", on: false },
-  { title: "New Registrations", desc: "Allow new account sign-ups", on: true },
-  { title: "Global Transfer Freeze", desc: "Halt all outbound settlements", on: false },
-  { title: "SWIFT Gateway", desc: "International wire routing", on: true },
-];
-
-const securityPolicy: { title: string; desc: string; on: boolean }[] = [
-  { title: "Enforce 2FA for admins", desc: "Required for all overseer nodes", on: true },
-  { title: "IP Allowlist", desc: "Restrict admin panel access", on: true },
-  { title: "Audit Logging", desc: "Record every privileged action", on: true },
-  { title: "Auto-freeze on risk > 90", desc: "Suspend accounts without review", on: false },
-];
-
-const GATEWAY_PROVIDER: Record<string, string> = {
-  "SWIFT Network": "SwiftNet FIN",
-  "USD Settlement": "Federal Reserve rail",
-  "KYC Synapse": "Synapse Identity",
-  "Ledger Core": "Internal · Node 04",
-};
 
 function gatewayTone(status: string): Tone {
   return status === "Degraded" ? "warning" : "success";
@@ -35,7 +20,8 @@ function roleInfo(user: { role: string; title: string | null }): {
   label: string;
   tone: Tone;
 } {
-  if (user.role === "ADMIN") return { label: user.title ?? "Super Admin", tone: "success" };
+  if (user.role === "ADMIN")
+    return { label: user.title ?? "Super Admin", tone: "success" };
   return { label: "Delegated", tone: "neutral" };
 }
 
@@ -80,17 +66,9 @@ export default async function AdminSettingsPage() {
             </h2>
           </div>
           <div className="flex flex-col gap-4">
-            {platformControls.map((c) => (
-              <div key={c.title} className="flex items-center justify-between gap-4">
-                <div className="flex flex-col gap-0.5">
-                  <p className="text-[13px] font-semibold text-slate-900">
-                    {c.title}
-                  </p>
-                  <p className="text-[11px] text-slate-500">{c.desc}</p>
-                </div>
-                <Toggle defaultOn={c.on} aria-label={c.title} />
-              </div>
-            ))}
+            <p className="text-[13px] text-slate-500">
+              Platform controls are not configured in the database.
+            </p>
           </div>
         </div>
 
@@ -103,17 +81,9 @@ export default async function AdminSettingsPage() {
             </h2>
           </div>
           <div className="flex flex-col gap-4">
-            {securityPolicy.map((c) => (
-              <div key={c.title} className="flex items-center justify-between gap-4">
-                <div className="flex flex-col gap-0.5">
-                  <p className="text-[13px] font-semibold text-slate-900">
-                    {c.title}
-                  </p>
-                  <p className="text-[11px] text-slate-500">{c.desc}</p>
-                </div>
-                <Toggle defaultOn={c.on} aria-label={c.title} />
-              </div>
-            ))}
+            <p className="text-[13px] text-slate-500">
+              Security policy controls are not configured in the database.
+            </p>
           </div>
           <div className="w-full border-t border-slate-200" />
           <div className="flex items-center justify-between">
@@ -121,10 +91,12 @@ export default async function AdminSettingsPage() {
               <p className="text-[13px] font-semibold text-slate-900">
                 Session timeout
               </p>
-              <p className="text-[11px] text-slate-500">Auto-logout idle admins</p>
+              <p className="text-[11px] text-slate-500">
+                Auto-logout idle admins
+              </p>
             </div>
             <button className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-              30 minutes
+              Not configured
               <ChevronDown className="size-2.5 text-slate-500" />
             </button>
           </div>
@@ -134,7 +106,9 @@ export default async function AdminSettingsPage() {
         <div className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6">
           <div className="flex items-center gap-2">
             <Plug className="size-4 text-amber-500" />
-            <h2 className="text-[15px] font-bold text-slate-900">Integrations</h2>
+            <h2 className="text-[15px] font-bold text-slate-900">
+              Integrations
+            </h2>
           </div>
           <div className="flex flex-col gap-3">
             {gateways.map((i) => (
@@ -147,7 +121,7 @@ export default async function AdminSettingsPage() {
                     {i.name}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    {GATEWAY_PROVIDER[i.name] ?? "External provider"}
+                    Provider not configured
                   </p>
                 </div>
                 <div className="flex items-center gap-3">

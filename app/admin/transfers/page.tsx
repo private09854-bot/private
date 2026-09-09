@@ -49,7 +49,7 @@ export default async function AdminTransfersPage() {
     route: t.route,
     amount: t.amount,
     submitted: t.submitted,
-    risk: t.risk ?? "Low",
+    risk: t.risk ?? "Unknown",
     status: t.status,
   }));
 

@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ShieldCheck, LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { adminNav } from "@/lib/nav";
 import { logout } from "@/app/actions/auth";
+import BrandLogo from "./brand-logo";
 
 export default function AdminSidebar({
   user,
@@ -24,12 +25,7 @@ export default function AdminSidebar({
       {/* Mobile top bar */}
       <div className="flex items-center justify-between border-b border-slate-700 bg-slate-900 px-4 py-3 lg:hidden">
         <Link href="/admin" className="flex items-center gap-2.5">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-amber-500">
-            <ShieldCheck className="size-4 text-white" />
-          </div>
-          <span className="text-xl font-extrabold tracking-[-0.5px] text-white">
-            Vault
-          </span>
+          <BrandLogo compact />
           <span className="text-[9px] font-bold uppercase tracking-[1px] text-amber-500">
             Admin
           </span>
@@ -60,19 +56,12 @@ export default function AdminSidebar({
         <div className="flex flex-col gap-8">
           {/* Logo */}
           <div className="flex items-center justify-between pl-2">
-            <Link href="/admin" className="flex items-center gap-3">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-amber-500">
-                <ShieldCheck className="size-4 text-white" />
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[22px] font-extrabold leading-none tracking-[-0.5px] text-white">
-                  Vault
-                </span>
-                <span className="text-[9px] font-bold uppercase tracking-[1px] text-amber-500">
-                  Admin Panel
-                </span>
-              </div>
-            </Link>
+            <div className="flex items-center gap-3">
+              <BrandLogo href="/admin" compact />
+              <span className="text-[9px] font-bold uppercase tracking-[1px] text-amber-500">
+                Admin Panel
+              </span>
+            </div>
             <button
               aria-label="Close menu"
               onClick={() => setOpen(false)}

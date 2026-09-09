@@ -1,4 +1,5 @@
-import { Lock, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
+import BrandLogo from "./brand-logo";
 
 // Shared two-column shell for the /login and /signup screens: dark brand panel
 // on the left, form content (passed as children) on the right.
@@ -15,14 +16,7 @@ export default function AuthShell({
     <div className="flex min-h-screen w-full">
       {/* Brand panel */}
       <div className="relative hidden w-[45%] flex-col justify-between bg-slate-900 p-12 lg:flex">
-        <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-lg bg-emerald-500">
-            <Lock className="size-4 text-white" />
-          </div>
-          <span className="text-[22px] font-extrabold tracking-[-0.5px] text-white">
-            Vault
-          </span>
-        </div>
+        <BrandLogo inverse />
         <div className="flex flex-col gap-4">
           <h1 className="text-3xl font-extrabold leading-tight tracking-[-0.5px] text-white">
             The consolidated multi-currency banking console.

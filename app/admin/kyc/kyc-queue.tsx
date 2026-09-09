@@ -2,7 +2,13 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Search, ChevronDown, FileCheck, ShieldCheck, CheckCircle2 } from "lucide-react";
+import {
+  Search,
+  ChevronDown,
+  FileCheck,
+  ShieldCheck,
+  CheckCircle2,
+} from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { approveKyc, rejectKyc, escalateKyc } from "@/app/actions/admin";
 
@@ -43,7 +49,9 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(
     applicants.find((a) => a.status === "pending" || a.status === "escalated")
-      ?.id ?? applicants[0]?.id ?? "",
+      ?.id ??
+      applicants[0]?.id ??
+      "",
   );
   const [pending, startTransition] = useTransition();
   const [flash, setFlash] = useState("");
@@ -53,8 +61,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
     if (!q) return applicants;
     return applicants.filter(
       (a) =>
-        a.name.toLowerCase().includes(q) ||
-        a.handle.toLowerCase().includes(q),
+        a.name.toLowerCase().includes(q) || a.handle.toLowerCase().includes(q),
     );
   }, [applicants, query]);
 
@@ -228,7 +235,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
               </div>
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <p className="truncate text-[13px] font-semibold text-slate-900">
-                  {selected.docFile}
+                  {selected.docFile || "Document file not uploaded"}
                 </p>
                 <p className="text-[11px] text-slate-500">
                   2.4 MB • {selected.submittedLabel}
@@ -245,8 +252,13 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                 VERIFICATION CHECKLIST
               </p>
               {selected.documents.map((docm) => (
-                <div key={docm.label} className="flex items-center justify-between">
-                  <span className="text-[13px] text-slate-900">{docm.label}</span>
+                <div
+                  key={docm.label}
+                  className="flex items-center justify-between"
+                >
+                  <span className="text-[13px] text-slate-900">
+                    {docm.label}
+                  </span>
                   <Badge tone={docm.tone}>{docm.state}</Badge>
                 </div>
               ))}

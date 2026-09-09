@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Lock, LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { appNav } from "@/lib/nav";
 import { logout } from "@/app/actions/auth";
+import BrandLogo from "./brand-logo";
 
 export default function AppSidebar({
   user,
@@ -24,14 +25,7 @@ export default function AppSidebar({
     <>
       {/* Mobile top bar */}
       <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900 px-4 py-3 lg:hidden">
-        <Link href="/dashboard" className="flex items-center gap-2.5">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-emerald-500">
-            <Lock className="size-4 text-white" />
-          </div>
-          <span className="text-xl font-extrabold tracking-[-0.5px] text-white">
-            Vault
-          </span>
-        </Link>
+        <BrandLogo href="/dashboard" compact />
         <button
           aria-label="Open menu"
           onClick={() => setOpen(true)}
@@ -58,14 +52,7 @@ export default function AppSidebar({
         <div className="flex flex-col gap-10">
           {/* Logo */}
           <div className="flex items-center justify-between pl-2">
-            <Link href="/dashboard" className="flex items-center gap-3">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-emerald-500">
-                <Lock className="size-4 text-white" />
-              </div>
-              <span className="text-[22px] font-extrabold tracking-[-0.5px] text-white">
-                Vault
-              </span>
-            </Link>
+            <BrandLogo href="/dashboard" compact />
             <button
               aria-label="Close menu"
               onClick={() => setOpen(false)}
