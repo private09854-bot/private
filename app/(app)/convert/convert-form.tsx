@@ -223,7 +223,9 @@ export default function ConvertForm({
           <div className="w-full border-t border-slate-200" />
           <div className="flex items-center justify-between text-xs">
             <span className="text-slate-600">Rate expires in</span>
-            <span className="font-mono font-bold text-amber-500">0:58</span>
+            <span className="font-mono font-bold text-amber-500">
+              {Math.floor(expiry / 60)}:{String(expiry % 60).padStart(2, "0")}
+            </span>
           </div>
         </div>
 
