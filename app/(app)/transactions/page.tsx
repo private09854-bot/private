@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { formatDate } from "@/lib/format";
 import TransactionsView, { type TxRow } from "./transactions-view";
@@ -6,16 +6,18 @@ import TransactionsView, { type TxRow } from "./transactions-view";
 export default async function TransactionsPage() {
   const user = await requireCustomer();
 
-  const txns = await prisma.transaction.findMany({
-    where: { ownerId: user.id },
-    orderBy: { date: "desc" },
-  });
+  const { data: txnRows } = await supabaseAdmin
+    .from("transactions")
+    .select("*")
+    .eq("ownerId", user.id)
+    .order("date", { ascending: false });
+  const txns = txnRows ?? [];
 
   const rows: TxRow[] = txns.map((t) => ({
     id: t.id,
     ref: t.ref,
     dateLabel: formatDate(t.date),
-    timeLabel: t.date.toLocaleTimeString("en-US", {
+    timeLabel: new Date(t.date).toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
     }),

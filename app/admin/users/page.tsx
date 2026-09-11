@@ -1,6 +1,6 @@
 import { Search, ChevronDown, Download } from "lucide-react";
 import Badge from "@/components/ui/badge";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { formatDate } from "@/lib/format";
 import KycReviewCard, { type ReviewApplicant } from "./kyc-review-card";
@@ -61,18 +61,28 @@ const filters = ["KYC Tier: All", "Status: All", "Region: All"];
 export default async function AdminUsersPage() {
   await requireAdmin();
 
-  const [users, pendingCount, firstPending] = await Promise.all([
-    prisma.user.findMany({
-      where: { role: "CUSTOMER" },
-      orderBy: { joined: "asc" },
-    }),
-    prisma.kycApplication.count({ where: { status: "pending" } }),
-    prisma.kycApplication.findFirst({
-      where: { status: { in: ["pending", "escalated"] } },
-      include: { user: true, documents: { orderBy: { sort: "asc" } } },
-      orderBy: [{ escalated: "desc" }, { createdAt: "asc" }],
-    }),
+  const [usersRes, pendingRes, firstPendingRes] = await Promise.all([
+    supabaseAdmin
+      .from("profiles")
+      .select("*")
+      .eq("role", "CUSTOMER")
+      .order("joined"),
+    supabaseAdmin
+      .from("kyc_applications")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "pending"),
+    supabaseAdmin
+      .from("kyc_applications")
+      .select("*, user:profiles(*), documents:kyc_documents(*)")
+      .in("status", ["pending", "escalated"])
+      .order("escalated", { ascending: false })
+      .order("createdAt")
+      .limit(1),
   ]);
+
+  const users = usersRes.data ?? [];
+  const pendingCount = pendingRes.count ?? 0;
+  const firstPending = firstPendingRes.data?.[0] ?? null;
 
   const verified = users.filter((u) => u.kycStatus === "Verified").length;
   const frozenRejected = users.filter(
@@ -119,7 +129,9 @@ export default async function AdminUsersPage() {
         riskScore: firstPending.risk,
         riskLabel: riskInfo(firstPending.risk).label,
         riskTone: riskInfo(firstPending.risk).tone,
-        documents: firstPending.documents.map((d) => ({
+        documents: (
+          firstPending.documents as { label: string; status: string }[]
+        ).map((d) => ({
           label: d.label,
           state: d.status,
           tone: docTone(d.status),

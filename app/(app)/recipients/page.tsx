@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { formatDate } from "@/lib/format";
 import RecipientsView, {
@@ -9,10 +9,13 @@ import RecipientsView, {
 export default async function RecipientsPage() {
   const user = await requireCustomer();
 
-  const recipients = await prisma.recipient.findMany({
-    where: { ownerId: user.id },
-    orderBy: [{ favorite: "desc" }, { lastSent: "desc" }],
-  });
+  const { data: recipientRows } = await supabaseAdmin
+    .from("recipients")
+    .select("*")
+    .eq("ownerId", user.id)
+    .order("favorite", { ascending: false })
+    .order("lastSent", { ascending: false, nullsFirst: false });
+  const recipients = recipientRows ?? [];
 
   const users: UserRecipient[] = recipients
     .filter((r) => r.type === "USER")

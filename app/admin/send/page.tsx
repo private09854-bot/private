@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { formatCurrency, currencyFlag } from "@/lib/format";
 import AdminSendForm from "./admin-send-form";
@@ -6,16 +6,21 @@ import AdminSendForm from "./admin-send-form";
 export default async function AdminSendPage() {
   const admin = await requireAdmin();
 
-  const [users, wallets] = await Promise.all([
-    prisma.user.findMany({
-      where: { role: "CUSTOMER" },
-      orderBy: { name: "asc" },
-    }),
-    prisma.wallet.findMany({
-      where: { ownerId: admin.id },
-      orderBy: { sort: "asc" },
-    }),
+  const [usersRes, walletsRes] = await Promise.all([
+    supabaseAdmin
+      .from("profiles")
+      .select("*")
+      .eq("role", "CUSTOMER")
+      .order("name"),
+    supabaseAdmin
+      .from("wallets")
+      .select("*")
+      .eq("ownerId", admin.id)
+      .order("sort"),
   ]);
+
+  const users = usersRes.data ?? [];
+  const wallets = walletsRes.data ?? [];
 
   const treasuryTotal = wallets.find((w) => w.currency === "USD")?.balance ?? 0;
 

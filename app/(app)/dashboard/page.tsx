@@ -12,7 +12,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Badge from "@/components/ui/badge";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { usdRateMap, portfolioUsd } from "@/lib/data";
 import { formatCurrency, formatNumber, currencyFlag } from "@/lib/format";
@@ -56,19 +56,21 @@ const INDEX_PAIRS: [string, string][] = [
 export default async function DashboardPage() {
   const user = await requireCustomer();
 
-  const [wallets, rates, transactions, fx] = await Promise.all([
-    prisma.wallet.findMany({
-      where: { ownerId: user.id },
-      orderBy: { sort: "asc" },
-    }),
+  const [walletsRes, rates, txRes, fxRes] = await Promise.all([
+    supabaseAdmin.from("wallets").select("*").eq("ownerId", user.id).order("sort"),
     usdRateMap(),
-    prisma.transaction.findMany({
-      where: { ownerId: user.id },
-      orderBy: { date: "desc" },
-      take: 5,
-    }),
-    prisma.fxRate.findMany(),
+    supabaseAdmin
+      .from("transactions")
+      .select("*")
+      .eq("ownerId", user.id)
+      .order("date", { ascending: false })
+      .limit(5),
+    supabaseAdmin.from("fx_rates").select("*"),
   ]);
+
+  const wallets = walletsRes.data ?? [];
+  const transactions = txRes.data ?? [];
+  const fx = fxRes.data ?? [];
 
   const portfolio = portfolioUsd(wallets, rates);
   const fxLookup = new Map(fx.map((r) => [`${r.base}/${r.quote}`, r]));
@@ -198,7 +200,7 @@ export default async function DashboardPage() {
                     {t.currency}
                   </p>
                   <p className="hidden w-[120px] shrink-0 text-right text-[13px] text-slate-600 sm:block">
-                    {t.date.toLocaleDateString("en-US", {
+                    {new Date(t.date).toLocaleDateString("en-US", {
                       month: "long",
                       day: "numeric",
                       year: "numeric",

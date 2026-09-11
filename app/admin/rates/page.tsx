@@ -1,7 +1,7 @@
 import { Search, ChevronDown, RefreshCw } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import Toggle from "@/components/ui/toggle";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { usdRateMap } from "@/lib/data";
 import { formatNumber, formatCompact } from "@/lib/format";
@@ -15,14 +15,17 @@ function fmtRate(rate: number): string {
 export default async function AdminRatesPage() {
   await requireAdmin();
 
-  const [rows, convertTxns, rates] = await Promise.all([
-    prisma.fxRate.findMany({ orderBy: { sort: "asc" } }),
-    prisma.transaction.findMany({
-      where: { kind: "convert" },
-      select: { amount: true, currency: true },
-    }),
+  const [rowsRes, convertRes, rates] = await Promise.all([
+    supabaseAdmin.from("fx_rates").select("*").order("sort"),
+    supabaseAdmin
+      .from("transactions")
+      .select("amount,currency")
+      .eq("kind", "convert"),
     usdRateMap(),
   ]);
+
+  const rows = rowsRes.data ?? [];
+  const convertTxns = convertRes.data ?? [];
   const pairs = rows.filter((r) => r.base !== r.quote);
 
   const spreadVals = pairs

@@ -1,5 +1,5 @@
 import { Download } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import KycQueue, { type Applicant, type KycDoc } from "./kyc-queue";
 
@@ -25,10 +25,12 @@ function targetTier(requesting: string): string {
 export default async function AdminKycPage() {
   await requireAdmin();
 
-  const apps = await prisma.kycApplication.findMany({
-    include: { user: true, documents: { orderBy: { sort: "asc" } } },
-    orderBy: [{ escalated: "desc" }, { createdAt: "asc" }],
-  });
+  const { data: appRows } = await supabaseAdmin
+    .from("kyc_applications")
+    .select("*, user:profiles(*), documents:kyc_documents(*)")
+    .order("escalated", { ascending: false })
+    .order("createdAt");
+  const apps = appRows ?? [];
 
   const applicants: Applicant[] = apps.map((a) => {
     const info = riskInfo(a.risk);
@@ -49,11 +51,13 @@ export default async function AdminKycPage() {
       escalated: a.escalated,
       targetTier: targetTier(a.requesting),
       docFile: "",
-      documents: a.documents.map<KycDoc>((docm) => ({
-        label: docm.label,
-        state: docm.status,
-        tone: docTone(docm.status),
-      })),
+      documents: (a.documents as { label: string; status: string }[]).map(
+        (docm): KycDoc => ({
+          label: docm.label,
+          state: docm.status,
+          tone: docTone(docm.status),
+        }),
+      ),
     };
   });
 

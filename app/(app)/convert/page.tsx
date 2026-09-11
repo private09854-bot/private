@@ -1,18 +1,18 @@
 import TopBar from "@/components/top-bar";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import ConvertForm from "./convert-form";
 
 export default async function ConvertPage() {
   const user = await requireCustomer();
 
-  const [wallets, fx] = await Promise.all([
-    prisma.wallet.findMany({
-      where: { ownerId: user.id },
-      orderBy: { sort: "asc" },
-    }),
-    prisma.fxRate.findMany(),
+  const [walletsRes, fxRes] = await Promise.all([
+    supabaseAdmin.from("wallets").select("*").eq("ownerId", user.id).order("sort"),
+    supabaseAdmin.from("fx_rates").select("*"),
   ]);
+
+  const wallets = walletsRes.data ?? [];
+  const fx = fxRes.data ?? [];
 
   const rates: Record<string, number> = {};
   for (const r of fx) rates[`${r.base}/${r.quote}`] = r.rate;

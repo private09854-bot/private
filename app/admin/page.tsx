@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { usdRateMap } from "@/lib/data";
 import { formatCompact } from "@/lib/format";
@@ -26,31 +26,53 @@ export default async function AdminDashboardPage() {
   await requireAdmin();
 
   const [
-    totalUsers,
-    verifiedUsers,
-    pendingTransfers,
-    kycPending,
-    flaggedAlerts,
-    txns,
-    wallets,
+    totalUsersRes,
+    verifiedUsersRes,
+    pendingTransfersRes,
+    kycPendingRes,
+    flaggedAlertsRes,
+    txRes,
+    walletsRes,
     rates,
-    alerts,
-    gateways,
+    alertsRes,
+    gatewaysRes,
   ] = await Promise.all([
-    prisma.user.count(),
-    prisma.user.count({ where: { kycStatus: "Verified" } }),
-    prisma.transfer.count({ where: { status: "Pending" } }),
-    prisma.kycApplication.count({ where: { status: "pending" } }),
-    prisma.riskFlag.count({ where: { OR: [{ critical: true }, { score: { gt: 80 } }] } }),
-    prisma.transaction.findMany({ select: { amount: true, currency: true, date: true } }),
-    prisma.wallet.findMany({
-      where: { owner: { role: "CUSTOMER" } },
-      select: { balance: true, currency: true },
-    }),
+    supabaseAdmin.from("profiles").select("*", { count: "exact", head: true }),
+    supabaseAdmin
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("kycStatus", "Verified"),
+    supabaseAdmin
+      .from("transfers")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "Pending"),
+    supabaseAdmin
+      .from("kyc_applications")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "pending"),
+    supabaseAdmin
+      .from("risk_flags")
+      .select("*", { count: "exact", head: true })
+      .or("critical.eq.true,score.gt.80"),
+    supabaseAdmin.from("transactions").select("amount,currency,date"),
+    supabaseAdmin
+      .from("wallets")
+      .select("balance,currency,profiles!inner(role)")
+      .eq("profiles.role", "CUSTOMER"),
     usdRateMap(),
-    prisma.alert.findMany({ orderBy: { sort: "asc" } }),
-    prisma.gateway.findMany({ orderBy: { sort: "asc" } }),
+    supabaseAdmin.from("alerts").select("*").order("sort"),
+    supabaseAdmin.from("gateways").select("*").order("sort"),
   ]);
+
+  const totalUsers = totalUsersRes.count ?? 0;
+  const verifiedUsers = verifiedUsersRes.count ?? 0;
+  const pendingTransfers = pendingTransfersRes.count ?? 0;
+  const kycPending = kycPendingRes.count ?? 0;
+  const flaggedAlerts = flaggedAlertsRes.count ?? 0;
+  const txns = txRes.data ?? [];
+  const wallets = walletsRes.data ?? [];
+  const alerts = alertsRes.data ?? [];
+  const gateways = gatewaysRes.data ?? [];
 
   const usd = (amount: number, currency: string) =>
     amount * (rates.get(currency) ?? 0);
@@ -63,7 +85,7 @@ export default async function AdminDashboardPage() {
   // 7-day volume bars (grouped by weekday, Mon..Sun)
   const byDay = new Array(7).fill(0);
   for (const t of txns) {
-    const jsDay = t.date.getDay(); // 0=Sun
+    const jsDay = new Date(t.date).getDay(); // 0=Sun
     const idx = jsDay === 0 ? 6 : jsDay - 1; // Mon=0..Sun=6
     byDay[idx] += Math.abs(usd(t.amount, t.currency));
   }

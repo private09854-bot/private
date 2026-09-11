@@ -1,21 +1,23 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import SendForm from "./send-form";
 
 export default async function SendToUserPage() {
   const user = await requireCustomer();
 
-  const [recipients, wallets] = await Promise.all([
-    prisma.recipient.findMany({
-      where: { ownerId: user.id, type: "USER" },
-      orderBy: { lastSent: "desc" },
-    }),
-    prisma.wallet.findMany({
-      where: { ownerId: user.id },
-      orderBy: { sort: "asc" },
-    }),
+  const [recipientsRes, walletsRes] = await Promise.all([
+    supabaseAdmin
+      .from("recipients")
+      .select("*")
+      .eq("ownerId", user.id)
+      .eq("type", "USER")
+      .order("lastSent", { ascending: false, nullsFirst: false }),
+    supabaseAdmin.from("wallets").select("*").eq("ownerId", user.id).order("sort"),
   ]);
+
+  const recipients = recipientsRes.data ?? [];
+  const wallets = walletsRes.data ?? [];
 
   return (
     <div className="flex flex-col gap-8">

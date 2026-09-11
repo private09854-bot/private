@@ -1,5 +1,5 @@
 import { Laptop, Smartphone, Tablet, type LucideIcon } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { formatNumber } from "@/lib/format";
 import PersistToggle from "@/components/ui/persist-toggle";
@@ -16,13 +16,21 @@ const deviceIcon: Record<string, LucideIcon> = {
 export default async function SettingsPage() {
   const user = await requireCustomer();
 
-  const [settings, devices] = await Promise.all([
-    prisma.userSettings.findUnique({ where: { ownerId: user.id } }),
-    prisma.device.findMany({
-      where: { ownerId: user.id },
-      orderBy: { sort: "asc" },
-    }),
+  const [settingsRes, devicesRes] = await Promise.all([
+    supabaseAdmin
+      .from("user_settings")
+      .select("*")
+      .eq("ownerId", user.id)
+      .maybeSingle(),
+    supabaseAdmin
+      .from("devices")
+      .select("*")
+      .eq("ownerId", user.id)
+      .order("sort"),
   ]);
+
+  const settings = settingsRes.data;
+  const devices = devicesRes.data ?? [];
 
   const s = settings ?? {
     twoFactor: true,

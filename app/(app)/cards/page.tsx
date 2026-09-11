@@ -1,16 +1,31 @@
 import { CreditCard } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { formatCurrency } from "@/lib/format";
 import CardPanel from "./card-panel";
 
+type CardAuth = {
+  id: string;
+  merchant: string;
+  category: string;
+  when: string;
+  amount: number;
+};
+
 export default async function CardsPage() {
   const user = await requireCustomer();
 
-  const card = await prisma.card.findFirst({
-    where: { ownerId: user.id },
-    include: { authorizations: { orderBy: { sort: "asc" } } },
-  });
+  const { data: cardRows } = await supabaseAdmin
+    .from("cards")
+    .select("*, authorizations:card_authorizations(*)")
+    .eq("ownerId", user.id)
+    .limit(1);
+  const card = cardRows?.[0] ?? null;
+  if (card?.authorizations) {
+    card.authorizations.sort(
+      (a: { sort: number }, b: { sort: number }) => a.sort - b.sort,
+    );
+  }
 
   if (!card) {
     return (
@@ -57,7 +72,7 @@ export default async function CardsPage() {
             <p className="text-[13px] text-slate-500">Showing last 30 days</p>
           </div>
           <div className="flex flex-col">
-            {card.authorizations.map((a) => (
+            {(card.authorizations as CardAuth[]).map((a) => (
               <div
                 key={a.id}
                 className="flex items-center gap-4 border-b border-slate-200 py-4"

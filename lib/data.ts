@@ -1,9 +1,15 @@
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 /** Map of currency -> its value in USD (for portfolio totals). */
 export async function usdRateMap(): Promise<Map<string, number>> {
-  const rows = await prisma.fxRate.findMany({ where: { quote: "USD" } });
-  const map = new Map(rows.map((r) => [r.base, r.rate]));
+  const { data } = await supabaseAdmin
+    .from("fx_rates")
+    .select("base,rate")
+    .eq("quote", "USD");
+
+  const map = new Map<string, number>(
+    (data ?? []).map((r) => [r.base as string, r.rate as number]),
+  );
   map.set("USD", 1);
   return map;
 }
@@ -14,10 +20,13 @@ export async function getFxRate(
   quote: string,
 ): Promise<number | null> {
   if (base === quote) return 1;
-  const row = await prisma.fxRate.findUnique({
-    where: { base_quote: { base, quote } },
-  });
-  return row?.rate ?? null;
+  const { data } = await supabaseAdmin
+    .from("fx_rates")
+    .select("rate")
+    .eq("base", base)
+    .eq("quote", quote)
+    .maybeSingle();
+  return (data?.rate as number | undefined) ?? null;
 }
 
 /** Total portfolio value in USD across a set of wallets. */

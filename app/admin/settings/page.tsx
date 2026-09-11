@@ -7,7 +7,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Badge from "@/components/ui/badge";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
@@ -28,13 +28,17 @@ function roleInfo(user: { role: string; title: string | null }): {
 export default async function AdminSettingsPage() {
   await requireAdmin();
 
-  const [gateways, admins] = await Promise.all([
-    prisma.gateway.findMany({ orderBy: { sort: "asc" } }),
-    prisma.user.findMany({
-      where: { OR: [{ role: "ADMIN" }, { title: "Primary Administrator" }] },
-      orderBy: { role: "asc" },
-    }),
+  const [gatewaysRes, adminsRes] = await Promise.all([
+    supabaseAdmin.from("gateways").select("*").order("sort"),
+    supabaseAdmin
+      .from("profiles")
+      .select("*")
+      .or('role.eq.ADMIN,title.eq."Primary Administrator"')
+      .order("role"),
   ]);
+
+  const gateways = gatewaysRes.data ?? [];
+  const admins = adminsRes.data ?? [];
 
   return (
     <div className="flex h-full flex-col gap-8">

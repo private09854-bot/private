@@ -1,20 +1,10 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/db";
-import { SESSION_COOKIE } from "@/lib/session";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type AuthState = { error?: string };
-
-function setSession(userId: string) {
-  cookies().set(SESSION_COOKIE, userId, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
-}
 
 // ---------------------------------------------------------------------------
 // Sign in
@@ -30,22 +20,33 @@ export async function login(
     return { error: "Enter both your email and password." };
   }
 
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || user.password !== password) {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error || !data.user) {
     return { error: "Invalid email or password." };
   }
 
-  setSession(user.id);
-  redirect(user.role === "ADMIN" ? "/admin" : "/dashboard");
+  const { data: profile } = await supabaseAdmin
+    .from("profiles")
+    .select("role")
+    .eq("id", data.user.id)
+    .maybeSingle();
+
+  redirect(profile?.role === "ADMIN" ? "/admin" : "/dashboard");
 }
 
 export async function logout() {
-  cookies().delete(SESSION_COOKIE);
+  const supabase = createSupabaseServerClient();
+  await supabase.auth.signOut();
   redirect("/login");
 }
 
 // ---------------------------------------------------------------------------
-// Sign up — provisions a fresh customer account and signs them in
+// Sign up — creates the auth user, then provisions their account
 // ---------------------------------------------------------------------------
 function randomAccountNumber(): string {
   const digits = Array.from({ length: 12 }, () =>
@@ -76,6 +77,77 @@ const NEW_WALLETS = [
 
 const WELCOME_BONUS = 250;
 
+/** Create the profile, wallets, settings and welcome credit for a new user. */
+export async function provisionAccount(
+  userId: string,
+  email: string,
+  name: string,
+  role: "CUSTOMER" | "ADMIN" = "CUSTOMER",
+) {
+  await supabaseAdmin.from("profiles").insert({
+    id: userId,
+    email,
+    role,
+    name,
+    handle: `@${name.toLowerCase().replace(/\s+/g, "_")}`,
+    avatar: initialsAvatar(name),
+    title: role === "ADMIN" ? "System Overseer" : "Account Holder",
+    country: "🇺🇸",
+    tier: role === "ADMIN" ? "Tier 3" : "Tier 1",
+    kycStatus: "Verified",
+    riskScore: 10,
+  });
+
+  await supabaseAdmin.from("wallets").insert(
+    NEW_WALLETS.map((w) => ({
+      ownerId: userId,
+      currency: w.currency,
+      symbol: w.symbol,
+      balance: w.primary ? WELCOME_BONUS : 0,
+      available: w.primary ? WELCOME_BONUS : 0,
+      pending: 0,
+      changeLabel: w.changeLabel,
+      changeTone: w.changeTone,
+      primary: w.primary,
+      sort: w.sort,
+      ...(w.primary
+        ? {
+            accountHolder: name,
+            accountNumber: randomAccountNumber(),
+            achRouting: "021000021",
+            wireRouting: "026009593",
+            bankName: "Profintal Savings, Inc.",
+            bankAddress: "1 Market Street, San Francisco, CA 94105",
+            swift: "PFSVUS33",
+          }
+        : {}),
+    })),
+  );
+
+  await supabaseAdmin.from("user_settings").insert({ ownerId: userId });
+
+  const { count } = await supabaseAdmin
+    .from("transactions")
+    .select("*", { count: "exact", head: true });
+
+  await supabaseAdmin.from("transactions").insert({
+    ref: `TXN-2026-${String(847 + (count ?? 0)).padStart(5, "0")}`,
+    ownerId: userId,
+    date: new Date().toISOString(),
+    kind: "receive",
+    title: "Welcome Bonus",
+    sub: "Platform sign-up credit",
+    currency: "USD",
+    amount: WELCOME_BONUS,
+    fee: 0,
+    status: "Completed",
+    party: "Profintal Savings",
+    partySub: "Welcome credit",
+    route: "Internal",
+    risk: "Low",
+  });
+}
+
 export async function signup(
   _prev: AuthState,
   formData: FormData,
@@ -98,81 +170,34 @@ export async function signup(
     return { error: "Passwords do not match." };
   }
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return { error: "An account with that email already exists." };
+  // Create the user already confirmed so they can sign in immediately,
+  // regardless of the project's email-confirmation setting.
+  const { data: created, error: createError } =
+    await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: { name },
+    });
+
+  if (createError || !created.user) {
+    const msg = createError?.message ?? "Could not create your account.";
+    if (/already|registered|exists/i.test(msg)) {
+      return { error: "An account with that email already exists." };
+    }
+    return { error: msg };
   }
 
-  const user = await prisma.$transaction(async (tx) => {
-    const created = await tx.user.create({
-      data: {
-        email,
-        password,
-        role: "CUSTOMER",
-        name,
-        handle: `@${name.toLowerCase().replace(/\s+/g, "_")}`,
-        avatar: initialsAvatar(name),
-        title: "Account Holder",
-        country: "🇺🇸",
-        tier: "Tier 1",
-        kycStatus: "Verified",
-        riskScore: 10,
-      },
-    });
+  await provisionAccount(created.user.id, email, name, "CUSTOMER");
 
-    for (const w of NEW_WALLETS) {
-      await tx.wallet.create({
-        data: {
-          ownerId: created.id,
-          currency: w.currency,
-          symbol: w.symbol,
-          balance: w.primary ? WELCOME_BONUS : 0,
-          available: w.primary ? WELCOME_BONUS : 0,
-          pending: 0,
-          changeLabel: w.changeLabel,
-          changeTone: w.changeTone,
-          primary: w.primary,
-          sort: w.sort,
-          ...(w.primary
-            ? {
-                accountHolder: name,
-                accountNumber: randomAccountNumber(),
-                achRouting: "021000021",
-                wireRouting: "026009593",
-                bankName: "Vault Financial, Inc.",
-                bankAddress: "1 Market Street, San Francisco, CA 94105",
-                swift: "VLTFUS33",
-              }
-            : {}),
-        },
-      });
-    }
-
-    await tx.userSettings.create({ data: { ownerId: created.id } });
-
-    const count = await tx.transaction.count();
-    await tx.transaction.create({
-      data: {
-        ref: `TXN-2026-${String(847 + count).padStart(5, "0")}`,
-        ownerId: created.id,
-        date: new Date(),
-        kind: "receive",
-        title: "Vault Welcome Bonus",
-        sub: "Platform sign-up credit",
-        currency: "USD",
-        amount: WELCOME_BONUS,
-        fee: 0,
-        status: "Completed",
-        party: "Vault",
-        partySub: "Welcome credit",
-        route: "Internal",
-        risk: "Low",
-      },
-    });
-
-    return created;
+  const supabase = createSupabaseServerClient();
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
   });
+  if (signInError) {
+    return { error: "Account created — please sign in." };
+  }
 
-  setSession(user.id);
   redirect("/dashboard");
 }

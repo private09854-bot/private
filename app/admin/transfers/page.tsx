@@ -1,5 +1,5 @@
 import { ShieldCheck } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { formatCompact } from "@/lib/format";
 import TransfersQueue, { type TransferRow } from "./transfers-queue";
@@ -7,9 +7,11 @@ import TransfersQueue, { type TransferRow } from "./transfers-queue";
 export default async function AdminTransfersPage() {
   await requireAdmin();
 
-  const transfers = await prisma.transfer.findMany({
-    orderBy: { createdAt: "asc" },
-  });
+  const { data: transferRows } = await supabaseAdmin
+    .from("transfers")
+    .select("*")
+    .order("createdAt");
+  const transfers = transferRows ?? [];
 
   const pendingList = transfers.filter((t) => t.status === "Pending");
   const pendingValue = pendingList.reduce((s, t) => s + t.amount, 0);

@@ -1,5 +1,5 @@
 import { Download } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { usdRateMap } from "@/lib/data";
 import { formatCompact } from "@/lib/format";
@@ -8,10 +8,15 @@ import AdminTxnView, { type AdminTxn } from "./admin-txn-view";
 export default async function AdminTransactionsPage() {
   await requireAdmin();
 
-  const [txns, rates] = await Promise.all([
-    prisma.transaction.findMany({ orderBy: { date: "desc" } }),
+  const [txRes, rates] = await Promise.all([
+    supabaseAdmin
+      .from("transactions")
+      .select("*")
+      .order("date", { ascending: false }),
     usdRateMap(),
   ]);
+
+  const txns = txRes.data ?? [];
 
   const processed = txns.reduce(
     (s, t) => s + Math.abs(t.amount * (rates.get(t.currency) ?? 0)),

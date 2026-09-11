@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Send, ArrowDownLeft, ArrowLeftRight, Plus, type LucideIcon } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { formatCurrency, currencyFlag, formatDate } from "@/lib/format";
 import CopyButton from "./copy-button";
@@ -27,14 +27,19 @@ function activityTitle(kind: string, title: string, amount: number): string {
 export default async function WalletsPage() {
   const user = await requireCustomer();
 
-  const wallet =
-    (await prisma.wallet.findFirst({
-      where: { ownerId: user.id, primary: true },
-    })) ??
-    (await prisma.wallet.findFirst({
-      where: { ownerId: user.id },
-      orderBy: { sort: "asc" },
-    }));
+  const { data: primaryRows } = await supabaseAdmin
+    .from("wallets")
+    .select("*")
+    .eq("ownerId", user.id)
+    .eq("primary", true)
+    .limit(1);
+  const { data: anyRows } = await supabaseAdmin
+    .from("wallets")
+    .select("*")
+    .eq("ownerId", user.id)
+    .order("sort")
+    .limit(1);
+  const wallet = primaryRows?.[0] ?? anyRows?.[0] ?? null;
 
   if (!wallet) {
     return (
@@ -45,10 +50,13 @@ export default async function WalletsPage() {
     );
   }
 
-  const txns = await prisma.transaction.findMany({
-    where: { ownerId: user.id, currency: wallet.currency },
-    orderBy: { date: "desc" },
-  });
+  const { data: txnRows } = await supabaseAdmin
+    .from("transactions")
+    .select("*")
+    .eq("ownerId", user.id)
+    .eq("currency", wallet.currency)
+    .order("date", { ascending: false });
+  const txns = txnRows ?? [];
 
   const incoming = txns
     .filter((t) => t.amount > 0)

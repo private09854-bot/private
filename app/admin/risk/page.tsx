@@ -1,5 +1,5 @@
 import { Search, ChevronDown, Download, SlidersHorizontal } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { formatCurrency } from "@/lib/format";
 import RuleToggle from "./rule-toggle";
@@ -9,14 +9,29 @@ const filters = ["Severity: All", "Trigger: All", "Status: Open"];
 export default async function AdminRiskPage() {
   await requireAdmin();
 
-  const [flagged, rules, users, failedTxns, rejectedTransfers] =
+  const [flaggedRes, rulesRes, usersRes, failedRes, rejectedRes] =
     await Promise.all([
-      prisma.riskFlag.findMany({ orderBy: { score: "desc" } }),
-      prisma.detectionRule.findMany({ orderBy: { sort: "asc" } }),
-      prisma.user.findMany({ select: { riskScore: true } }),
-      prisma.transaction.count({ where: { status: "Failed" } }),
-      prisma.transfer.count({ where: { status: "Rejected" } }),
+      supabaseAdmin
+        .from("risk_flags")
+        .select("*")
+        .order("score", { ascending: false }),
+      supabaseAdmin.from("detection_rules").select("*").order("sort"),
+      supabaseAdmin.from("profiles").select("riskScore"),
+      supabaseAdmin
+        .from("transactions")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "Failed"),
+      supabaseAdmin
+        .from("transfers")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "Rejected"),
     ]);
+
+  const flagged = flaggedRes.data ?? [];
+  const rules = rulesRes.data ?? [];
+  const users = usersRes.data ?? [];
+  const failedTxns = failedRes.count ?? 0;
+  const rejectedTransfers = rejectedRes.count ?? 0;
 
   const openCases = flagged.filter((f) => f.status === "Open").length;
   const flagged24 = flagged.filter((f) => f.critical || f.score > 80).length;

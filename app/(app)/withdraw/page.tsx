@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { usdRateMap, portfolioUsd } from "@/lib/data";
 import { formatCurrency } from "@/lib/format";
@@ -7,13 +7,12 @@ import WithdrawMethods from "./withdraw-methods";
 export default async function WithdrawPage() {
   const user = await requireCustomer();
 
-  const [wallets, rates] = await Promise.all([
-    prisma.wallet.findMany({
-      where: { ownerId: user.id },
-      orderBy: { sort: "asc" },
-    }),
+  const [walletsRes, rates] = await Promise.all([
+    supabaseAdmin.from("wallets").select("*").eq("ownerId", user.id).order("sort"),
     usdRateMap(),
   ]);
+
+  const wallets = walletsRes.data ?? [];
 
   const total = portfolioUsd(wallets, rates);
 

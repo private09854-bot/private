@@ -1,6 +1,6 @@
 import { Search, ChevronDown, Download } from "lucide-react";
 import Badge from "@/components/ui/badge";
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { usdRateMap } from "@/lib/data";
 import { formatCompact, formatCurrency } from "@/lib/format";
@@ -10,13 +10,18 @@ const filters = ["Route: All", "Status: All"];
 export default async function AdminFeesPage() {
   await requireAdmin();
 
-  const [fees, txns, settings, users, rates] = await Promise.all([
-    prisma.fee.findMany({ orderBy: { sort: "asc" } }),
-    prisma.transaction.findMany({ select: { fee: true, currency: true } }),
-    prisma.userSettings.findMany(),
-    prisma.user.findMany({ where: { role: "CUSTOMER" }, select: { tier: true } }),
+  const [feesRes, txRes, settingsRes, usersRes, rates] = await Promise.all([
+    supabaseAdmin.from("fees").select("*").order("sort"),
+    supabaseAdmin.from("transactions").select("fee,currency"),
+    supabaseAdmin.from("user_settings").select("*"),
+    supabaseAdmin.from("profiles").select("tier").eq("role", "CUSTOMER"),
     usdRateMap(),
   ]);
+
+  const fees = feesRes.data ?? [];
+  const txns = txRes.data ?? [];
+  const settings = settingsRes.data ?? [];
+  const users = usersRes.data ?? [];
 
   const usd = (amount: number, currency: string) =>
     amount * (rates.get(currency) ?? 0);

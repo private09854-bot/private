@@ -70,7 +70,8 @@ const MONTHS = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-/** Format a Date as "Jun 15, 2026" to match the original mock. */
-export function formatDate(date: Date): string {
+/** Format a date as "Jun 15, 2026". Accepts a Date or an ISO string. */
+export function formatDate(input: Date | string): string {
+  const date = typeof input === "string" ? new Date(input) : input;
   return `${MONTHS[date.getMonth()]} ${String(date.getDate()).padStart(2, "0")}, ${date.getFullYear()}`;
 }

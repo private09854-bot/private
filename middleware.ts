@@ -1,20 +1,45 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
-// Edge middleware cannot touch Prisma, so it only checks for the presence of a
-// session cookie. Role enforcement (customer vs. admin) happens in the server
-// layouts via requireCustomer()/requireAdmin().
-const SESSION_COOKIE = "vault_session";
+// Refreshes the Supabase session cookie on every protected request and bounces
+// signed-out visitors to /login. Role checks (customer vs admin) stay in the
+// server layouts via requireCustomer()/requireAdmin().
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({ request });
 
-export function middleware(req: NextRequest) {
-  const session = req.cookies.get(SESSION_COOKIE)?.value;
-  if (!session) {
-    const url = req.nextUrl.clone();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value),
+          );
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options),
+          );
+        },
+      },
+    },
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    const url = request.nextUrl.clone();
     url.pathname = "/login";
-    url.searchParams.set("next", req.nextUrl.pathname);
+    url.searchParams.set("next", request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }
-  return NextResponse.next();
+
+  return response;
 }
 
 export const config = {
@@ -22,6 +47,7 @@ export const config = {
     "/dashboard/:path*",
     "/wallets/:path*",
     "/send/:path*",
+    "/withdraw/:path*",
     "/recipients/:path*",
     "/transactions/:path*",
     "/cards/:path*",

@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/session";
 import { sendOwnerEmail } from "@/lib/mail";
 
@@ -18,9 +18,10 @@ export async function sendSupportMessage(input: {
   const name = input.name?.trim() || user?.name || "Guest";
   const email = input.email?.trim() || user?.email || "unknown@demo.local";
 
-  await prisma.supportMessage.create({
-    data: { userId: user?.id ?? null, name, email, message },
-  });
+  const { error } = await supabaseAdmin
+    .from("support_messages")
+    .insert({ userId: user?.id ?? null, name, email, message });
+  if (error) return { error: error.message };
 
   // Notify the owner (no-ops with a log line unless SMTP is configured).
   await sendOwnerEmail(
