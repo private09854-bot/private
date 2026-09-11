@@ -6,6 +6,10 @@
 // Idempotent: clears the app tables, then recreates auth users + demo data.
 import { createClient } from "@supabase/supabase-js";
 import fs from "node:fs";
+import ws from "ws";
+
+// Node 20 has no global WebSocket; supabase-js needs one to construct a client.
+if (typeof globalThis.WebSocket === "undefined") globalThis.WebSocket = ws;
 
 // --- tiny .env loader (no dependency) ---------------------------------------
 for (const file of [".env", ".env.local"]) {
@@ -43,6 +47,26 @@ async function must(label, promise) {
   }
   return data;
 }
+
+/**
+ * PostgREST fills a missing key in a multi-row insert with NULL instead of the
+ * column default, so every row in a batch must carry the same keys. This
+ * squares up the rows, using `defaults` for NOT NULL columns.
+ */
+function rows(list, defaults = {}) {
+  const keys = new Set(Object.keys(defaults));
+  for (const r of list) for (const k of Object.keys(r)) keys.add(k);
+  return list.map((r) => {
+    const out = {};
+    for (const k of keys) {
+      out[k] = r[k] !== undefined ? r[k] : defaults[k] !== undefined ? defaults[k] : null;
+    }
+    return out;
+  });
+}
+
+const insertAll = (table, defaults, list) =>
+  db.from(table).insert(rows(list, defaults));
 
 /** Create an auth user, reusing the existing one if the email is taken. */
 async function ensureUser(email, password, name) {
@@ -125,7 +149,7 @@ async function main() {
   console.log("Inserting profiles…");
   await must(
     "profiles",
-    db.from("profiles").insert([
+    insertAll("profiles", { flagged: false }, [
       { id: sarahId, email: "sarah@jenkins.co", role: "CUSTOMER", name: "Sarah Jenkins", handle: "@sarah_j", avatar: "/avatars/sarah.png", title: "Primary Administrator", country: "🇺🇸", tier: "Tier 3", kycStatus: "Verified", riskScore: 8, joined: iso("2024-11-02") },
       { id: adminId, email: "official.privatechat0378@gmail.com", role: "ADMIN", name: "Platform Admin", handle: "@official_admin", avatar: "/avatars/sarah.png", title: "System Overseer", country: "🇺🇸", tier: "Tier 3", kycStatus: "Verified", riskScore: 2, joined: iso("2023-01-15") },
       ...directory.map((u) => ({
@@ -151,7 +175,7 @@ async function main() {
   console.log("Inserting wallets…");
   await must(
     "wallets",
-    db.from("wallets").insert([
+    insertAll("wallets", { primary: false, pending: 0 }, [
       { ownerId: sarahId, currency: "USD", symbol: "$", balance: 12500, available: 12350, pending: 150, changeLabel: "+0.04%", changeTone: "up", primary: true, sort: 0, accountHolder: "Sarah Jenkins", accountNumber: "8827 4491 2203", achRouting: "021000021", wireRouting: "026009593", bankName: "Profintal Savings, Inc.", bankAddress: "1 Market Street, San Francisco, CA 94105", swift: "PFSVUS33" },
       { ownerId: sarahId, currency: "EUR", symbol: "€", balance: 4820.5, changeLabel: "-0.12%", changeTone: "down", sort: 1 },
       { ownerId: sarahId, currency: "GBP", symbol: "£", balance: 2420, changeLabel: "+0.18%", changeTone: "up", sort: 2 },
@@ -187,7 +211,9 @@ async function main() {
   ];
   await must(
     "transactions",
-    db.from("transactions").insert(
+    insertAll(
+      "transactions",
+      { flagged: false },
       txns.map((t) => ({ ...t, ownerId: sarahId, date: iso(t.date) })),
     ),
   );
@@ -198,7 +224,7 @@ async function main() {
   console.log("Inserting recipients, cards, devices…");
   await must(
     "recipients",
-    db.from("recipients").insert([
+    insertAll("recipients", { favorite: false }, [
       { ownerId: sarahId, type: "USER", name: "John Doe", handle: "@john_doe", avatar: "/avatars/john.png", favorite: true, lastSent: iso("2026-06-15") },
       { ownerId: sarahId, type: "USER", name: "Maria Santos", handle: "@maria_s", avatar: "/avatars/maria.png", lastSent: iso("2026-06-02") },
       { ownerId: sarahId, type: "USER", name: "Alex Chen", handle: "@achen", avatar: "/avatars/alex.png", favorite: true, lastSent: iso("2026-05-28") },
@@ -220,7 +246,7 @@ async function main() {
 
   await must(
     "card_authorizations",
-    db.from("card_authorizations").insert([
+    insertAll("card_authorizations", {}, [
       { cardId: card.id, merchant: "Github Enterprise", category: "Developer Tools", when: "Today, 10:15 AM", amount: -19, sort: 0 },
       { cardId: card.id, merchant: "Apple App Store", category: "Entertainment", when: "Yesterday, 04:15 PM", amount: -4.99, sort: 1 },
       { cardId: card.id, merchant: "Starbucks Coffee", category: "Food & Beverage", when: "Yesterday, 09:42 AM", amount: -6.8, sort: 2 },
@@ -230,7 +256,7 @@ async function main() {
 
   await must(
     "devices",
-    db.from("devices").insert([
+    insertAll("devices", { current: false }, [
       { ownerId: sarahId, kind: "laptop", name: 'MacBook Pro 14"', meta: "San Francisco • Active Now", current: true, sort: 0 },
       { ownerId: sarahId, kind: "phone", name: "iPhone 15 Pro", meta: "San Francisco • 2 Hours Ago", sort: 1 },
       { ownerId: sarahId, kind: "tablet", name: "iPad Air", meta: "New York • 3 Days Ago", sort: 2 },
@@ -243,7 +269,7 @@ async function main() {
   console.log("Inserting FX rates…");
   await must(
     "fx_rates",
-    db.from("fx_rates").insert([
+    insertAll("fx_rates", {}, [
       { base: "USD", quote: "EUR", rate: 0.9215, change: "-0.12%", changeTone: "down", spread: "0.25%", sort: 0 },
       { base: "USD", quote: "GBP", rate: 0.7852, change: "+0.18%", changeTone: "up", spread: "0.25%", sort: 1 },
       { base: "USD", quote: "CAD", rate: 1.3712, change: "-0.08%", changeTone: "down", spread: "0.30%", sort: 2 },
@@ -278,7 +304,7 @@ async function main() {
     );
     await must(
       "kyc_documents",
-      db.from("kyc_documents").insert([
+      insertAll("kyc_documents", {}, [
         { appId: app.id, label: "Government ID", status: "Verified", sort: 0 },
         { appId: app.id, label: "Proof of Address", status: "Verified", sort: 1 },
         { appId: app.id, label: "Biometric Liveness", status: k.risk > 50 ? "Pending" : "Verified", sort: 2 },
@@ -293,7 +319,7 @@ async function main() {
   console.log("Inserting transfers, risk, fees, alerts, gateways…");
   await must(
     "transfers",
-    db.from("transfers").insert([
+    insertAll("transfers", {}, [
       { ref: "TRF-2026-0472", party: "Lagos Corp", partySub: "Corporate node transfer", route: "SWIFT Wire", amount: 15000, status: "Pending", risk: "High", submitted: "12 min ago" },
       { ref: "TRF-2026-0473", party: "Maria Santos", partySub: "Banco do Brasil", route: "SWIFT Wire", amount: 2500, status: "Pending", risk: "Medium", submitted: "44 min ago" },
       { ref: "TRF-2026-0474", party: "Chase Bank", partySub: "ACH settlement", route: "ACH", amount: 5000, status: "Pending", risk: "Low", submitted: "1 hour ago" },
@@ -306,7 +332,7 @@ async function main() {
 
   await must(
     "risk_flags",
-    db.from("risk_flags").insert([
+    insertAll("risk_flags", { critical: false }, [
       { account: "User #4821", accountSub: "Unknown recipient", trigger: "Velocity + new payee", score: 92, amount: 15000, when: "12 min ago", critical: true },
       { account: "User #1120", accountSub: "Lagos Corp", trigger: "Sanctions match (weak)", score: 88, amount: 9800, when: "1 hour ago" },
       { account: "User #2847", accountSub: "Daniel Cruz", trigger: "Daily limit breach", score: 85, amount: 12500, when: "3 hours ago" },
@@ -317,7 +343,7 @@ async function main() {
 
   await must(
     "detection_rules",
-    db.from("detection_rules").insert([
+    insertAll("detection_rules", {}, [
       { label: "Velocity monitoring", desc: "Rapid successive transfers", enabled: true, sort: 0 },
       { label: "Geo-anomaly detection", desc: "Impossible-travel logins", enabled: true, sort: 1 },
       { label: "Sanctions / PEP screening", desc: "OFAC & watchlist match", enabled: true, sort: 2 },
@@ -328,7 +354,7 @@ async function main() {
 
   await must(
     "fees",
-    db.from("fees").insert([
+    insertAll("fees", {}, [
       { name: "Internal Transfer", category: "Platform", detail: "Account-to-account instant", amount: "$0.00", tier: "All tiers", sort: 0 },
       { name: "ACH Transfer", category: "Domestic", detail: "1–3 business days", amount: "$5.00", tier: "All tiers", sort: 1 },
       { name: "SWIFT Wire", category: "International", detail: "Cross-border settlement", amount: "$15.00", tier: "Tier 1–2", sort: 2 },
@@ -342,7 +368,7 @@ async function main() {
 
   await must(
     "gateways",
-    db.from("gateways").insert([
+    insertAll("gateways", {}, [
       { name: "SWIFT Network", status: "Operational", tone: "text-emerald-500", sort: 0 },
       { name: "USD Settlement", status: "Healthy", tone: "text-emerald-500", sort: 1 },
       { name: "KYC Synapse", status: "Degraded", tone: "text-amber-500", sort: 2 },
@@ -352,7 +378,7 @@ async function main() {
 
   await must(
     "alerts",
-    db.from("alerts").insert([
+    insertAll("alerts", {}, [
       { severity: "critical", title: "High-risk transfer flagged", detail: "User #4821 — velocity + new payee", when: "12 min ago", sort: 0 },
       { severity: "medium", title: "Sanctions weak match", detail: "Lagos Corp settlement held", when: "1 hour ago", sort: 1 },
       { severity: "warning", title: "KYC Synapse degraded", detail: "Verification latency above SLA", when: "2 hours ago", sort: 2 },
