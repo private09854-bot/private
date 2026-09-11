@@ -75,9 +75,7 @@ const NEW_WALLETS = [
   { currency: "CAD", symbol: "$", changeLabel: "+0.00%", changeTone: "flat", sort: 4, primary: false },
 ];
 
-const WELCOME_BONUS = 250;
-
-/** Create the profile, wallets, settings and welcome credit for a new user. */
+/** Create the profile, wallets and settings for a new user. */
 export async function provisionAccount(
   userId: string,
   email: string,
@@ -103,8 +101,8 @@ export async function provisionAccount(
       ownerId: userId,
       currency: w.currency,
       symbol: w.symbol,
-      balance: w.primary ? WELCOME_BONUS : 0,
-      available: w.primary ? WELCOME_BONUS : 0,
+      balance: 0,
+      available: 0,
       pending: 0,
       changeLabel: w.changeLabel,
       changeTone: w.changeTone,
@@ -125,27 +123,6 @@ export async function provisionAccount(
   );
 
   await supabaseAdmin.from("user_settings").insert({ ownerId: userId });
-
-  const { count } = await supabaseAdmin
-    .from("transactions")
-    .select("*", { count: "exact", head: true });
-
-  await supabaseAdmin.from("transactions").insert({
-    ref: `TXN-2026-${String(847 + (count ?? 0)).padStart(5, "0")}`,
-    ownerId: userId,
-    date: new Date().toISOString(),
-    kind: "receive",
-    title: "Welcome Bonus",
-    sub: "Platform sign-up credit",
-    currency: "USD",
-    amount: WELCOME_BONUS,
-    fee: 0,
-    status: "Completed",
-    party: "Profintal Savings",
-    partySub: "Welcome credit",
-    route: "Internal",
-    risk: "Low",
-  });
 }
 
 export async function signup(
