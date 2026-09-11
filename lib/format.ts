@@ -73,3 +73,22 @@ export function formatDate(input: Date | string): string {
   const date = typeof input === "string" ? new Date(input) : input;
   return `${MONTHS[date.getMonth()]} ${String(date.getDate()).padStart(2, "0")}, ${date.getFullYear()}`;
 }
+
+/**
+ * "Just now", "12 min ago", "3 hours ago", "2 days ago".
+ * Used wherever the UI shows how long ago something was submitted, so the
+ * label stays truthful instead of being frozen at write time.
+ */
+export function relativeTime(input: Date | string | null): string {
+  if (!input) return "—";
+  const date = typeof input === "string" ? new Date(input) : input;
+  const secs = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+  if (secs < 60) return "Just now";
+  const mins = Math.floor(secs / 60);
+  if (mins < 60) return `${mins} min ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} day${days === 1 ? "" : "s"} ago`;
+  return formatDate(date);
+}

@@ -115,6 +115,17 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
             <span className="w-[70px] text-right">ACTION</span>
           </div>
           <div className="flex flex-col">
+            {filtered.length === 0 && (
+              <div className="flex flex-col items-center gap-1.5 border-b border-slate-200 px-6 py-14 text-center">
+                <p className="text-sm font-semibold text-slate-700">
+                  Queue is empty
+                </p>
+                <p className="max-w-sm text-[13px] text-slate-500">
+                  A verification request is opened automatically whenever
+                  someone registers an account.
+                </p>
+              </div>
+            )}
             {filtered.map((a) => (
               <div
                 key={a.id}

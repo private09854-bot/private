@@ -91,8 +91,11 @@ export async function provisionAccount(
     title: role === "ADMIN" ? "System Overseer" : "Account Holder",
     country: "🇺🇸",
     tier: role === "ADMIN" ? "Tier 3" : "Tier 1",
-    kycStatus: "Verified",
-    riskScore: 10,
+    // New customers land in the verification queue rather than arriving
+    // pre-approved, so the admin console reflects real registrations.
+    kycStatus: role === "ADMIN" ? "Verified" : "Pending",
+    riskScore: 0,
+    flagged: false,
   });
 
   await supabaseAdmin.from("wallets").insert(
@@ -122,6 +125,42 @@ export async function provisionAccount(
   );
 
   await supabaseAdmin.from("user_settings").insert({ ownerId: userId });
+
+  // Open a real KYC application for customers so the admin queue is driven by
+  // actual sign-ups. `submitted` is kept for compatibility; the UI renders the
+  // live age from `createdAt`.
+  if (role === "CUSTOMER") {
+    const { data: app } = await supabaseAdmin
+      .from("kyc_applications")
+      .insert({
+        userId,
+        requesting: "Tier 1 → 2",
+        docs: "0 documents",
+        submitted: "Just now",
+        risk: 0,
+        riskTone: "text-emerald-500",
+        status: "pending",
+        escalated: false,
+      })
+      .select()
+      .single();
+
+    if (app) {
+      await supabaseAdmin.from("kyc_documents").insert(
+        [
+          "Government ID",
+          "Proof of Address",
+          "Biometric Liveness",
+          "Sanctions Screening",
+        ].map((label, sort) => ({
+          appId: app.id,
+          label,
+          status: "Pending",
+          sort,
+        })),
+      );
+    }
+  }
 }
 
 export async function signup(

@@ -67,6 +67,17 @@ export default async function AdminSendPage() {
         ))}
       </div>
 
+      {users.length === 0 ? (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+          <p className="text-base font-bold text-slate-800">
+            No customers to send to yet
+          </p>
+          <p className="max-w-md text-sm text-slate-500">
+            Once someone registers an account through the sign-up page they will
+            appear here and you can disburse treasury funds to them.
+          </p>
+        </div>
+      ) : (
       <AdminSendForm
         users={users.map((u) => ({
           id: u.id,
@@ -81,6 +92,7 @@ export default async function AdminSendPage() {
           balance: w.balance,
         }))}
       />
+      )}
     </div>
   );
 }

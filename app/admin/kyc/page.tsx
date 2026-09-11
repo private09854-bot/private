@@ -1,6 +1,7 @@
 import { Download } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
+import { relativeTime } from "@/lib/format";
 import KycQueue, { type Applicant, type KycDoc } from "./kyc-queue";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
@@ -34,6 +35,7 @@ export default async function AdminKycPage() {
 
   const applicants: Applicant[] = apps.map((a) => {
     const info = riskInfo(a.risk);
+    const docCount = (a.documents as unknown[]).length;
     return {
       id: a.id,
       name: a.user.name,
@@ -42,8 +44,8 @@ export default async function AdminKycPage() {
       flag: a.user.country ?? "🏳️",
       country: "",
       requesting: a.requesting,
-      docsLabel: a.docs,
-      submittedLabel: a.submitted,
+      docsLabel: `${docCount} document${docCount === 1 ? "" : "s"}`,
+      submittedLabel: relativeTime(a.createdAt),
       riskScore: a.risk,
       riskLabel: info.label,
       riskTone: info.tone,

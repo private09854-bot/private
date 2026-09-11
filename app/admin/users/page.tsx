@@ -2,7 +2,7 @@ import { Search, ChevronDown, Download } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
-import { formatDate } from "@/lib/format";
+import { formatDate, relativeTime } from "@/lib/format";
 import KycReviewCard, { type ReviewApplicant } from "./kyc-review-card";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
@@ -97,7 +97,7 @@ export default async function AdminUsersPage() {
       sub: "Registered customers",
     },
     {
-      label: "VERIFIED (TIER 3)",
+      label: "VERIFIED",
       value: String(verified),
       tone: "text-emerald-500",
       sub: "KYC complete",
@@ -124,7 +124,7 @@ export default async function AdminUsersPage() {
         avatar: firstPending.user.avatar ?? "/avatars/sarah.png",
         flag: firstPending.user.country ?? "🏳️",
         requesting: firstPending.requesting,
-        submitted: firstPending.submitted,
+        submitted: relativeTime(firstPending.createdAt),
         targetTier: targetTier(firstPending.requesting),
         riskScore: firstPending.risk,
         riskLabel: riskInfo(firstPending.risk).label,
@@ -208,6 +208,17 @@ export default async function AdminUsersPage() {
             <span className="w-[70px] text-right">ACTION</span>
           </div>
           <div className="flex flex-col">
+            {users.length === 0 && (
+              <div className="flex flex-col items-center gap-1.5 border-b border-slate-200 px-6 py-14 text-center">
+                <p className="text-sm font-semibold text-slate-700">
+                  No customers yet
+                </p>
+                <p className="max-w-sm text-[13px] text-slate-500">
+                  Accounts appear here as soon as someone registers through the
+                  sign-up page.
+                </p>
+              </div>
+            )}
             {users.map((u) => {
               const st = statusInfo(u.kycStatus);
               const action = u.kycStatus === "Verified" ? "View" : "Review";

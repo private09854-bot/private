@@ -184,6 +184,11 @@ export default async function AdminDashboardPage() {
           </p>
           <Divider />
           <div className="flex flex-col gap-4">
+            {distribution.length === 0 && (
+              <p className="py-6 text-center text-[13px] text-slate-500">
+                No customer holdings yet.
+              </p>
+            )}
             {distribution.map((d) => (
               <div key={d.code} className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between text-xs">
@@ -210,6 +215,16 @@ export default async function AdminDashboardPage() {
             System Alerts (Priority Queue)
           </p>
           <div className="flex flex-col gap-3">
+            {alerts.length === 0 && (
+              <div className="rounded-lg border border-dashed border-slate-200 py-8 text-center">
+                <p className="text-[13px] font-semibold text-slate-600">
+                  No active alerts
+                </p>
+                <p className="mt-1 text-[11px] text-slate-500">
+                  Alerts appear here when activity trips a detection rule.
+                </p>
+              </div>
+            )}
             {alerts.map((a) => {
               const st = alertStyle[a.severity] ?? alertStyle.notice;
               return (

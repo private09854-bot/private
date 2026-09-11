@@ -118,6 +118,17 @@ export default async function AdminRiskPage() {
             <span className="w-[100px] text-right">ACTION</span>
           </div>
           <div className="flex flex-col">
+            {flagged.length === 0 && (
+              <div className="flex flex-col items-center gap-1.5 border-b border-slate-200 px-6 py-14 text-center">
+                <p className="text-sm font-semibold text-slate-700">
+                  No flagged activity
+                </p>
+                <p className="max-w-sm text-[13px] text-slate-500">
+                  Accounts appear here when live activity trips one of the
+                  detection rules below.
+                </p>
+              </div>
+            )}
             {flagged.map((f) => {
               const scoreTone =
                 f.score >= 85

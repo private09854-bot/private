@@ -156,6 +156,16 @@ export default function TransfersQueue({
                 </div>
               </div>
             ))}
+            {filtered.length === 0 && (
+              <div className="flex flex-col items-center gap-1.5 border-b border-slate-200 px-6 py-14 text-center">
+                <p className="text-sm font-semibold text-slate-700">
+                  Nothing in the queue
+                </p>
+                <p className="max-w-sm text-[13px] text-slate-500">
+                  Transfers needing authorisation will show up here.
+                </p>
+              </div>
+            )}
           </div>
           <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
             <p className="text-[13px] text-slate-500">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useFormState, useFormStatus } from "react-dom";
 import { ArrowRight } from "lucide-react";
 import AuthShell from "@/components/auth-shell";
+import PasswordField from "@/components/ui/password-field";
 import { signup, type AuthState } from "@/app/actions/auth";
 
 const initial: AuthState = {};
@@ -14,7 +15,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="flex items-center justify-center gap-2 rounded-lg bg-emerald-500 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-600 disabled:opacity-60"
+      className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
     >
       {pending ? "Creating account…" : "Create account"}
       {!pending && <ArrowRight className="size-4" />}
@@ -28,11 +29,14 @@ export default function SignupForm() {
   return (
     <AuthShell
       heading="Open an account"
-      subheading="Create your Profintal Savings console in seconds — no card required."
+      subheading="Four currency wallets, ready in about two minutes. No card required."
     >
       <form action={formAction} className="flex flex-col gap-5">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="name" className="text-[13px] font-semibold text-slate-900">
+          <label
+            htmlFor="name"
+            className="text-[13px] font-semibold text-slate-900"
+          >
             Full name
           </label>
           <input
@@ -41,55 +45,50 @@ export default function SignupForm() {
             type="text"
             autoComplete="name"
             placeholder="Jane Cooper"
-            className="rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-[13px] font-semibold text-slate-900">
+          <label
+            htmlFor="email"
+            className="text-[13px] font-semibold text-slate-900"
+          >
             Email address
           </label>
           <input
             id="email"
             name="email"
             type="email"
+            inputMode="email"
             autoComplete="email"
             placeholder="you@example.com"
-            className="rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
           />
         </div>
 
-        <div className="flex gap-3">
-          <div className="flex flex-1 flex-col gap-1.5">
-            <label htmlFor="password" className="text-[13px] font-semibold text-slate-900">
-              Password
-            </label>
-            <input
+        {/* Stacked on phones so neither field gets squeezed. */}
+        <div className="flex flex-col gap-5 sm:flex-row sm:gap-3">
+          <div className="min-w-0 flex-1">
+            <PasswordField
               id="password"
               name="password"
-              type="password"
+              label="Password"
               autoComplete="new-password"
-              placeholder="••••••••"
-              className="rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
-          <div className="flex flex-1 flex-col gap-1.5">
-            <label htmlFor="confirm" className="text-[13px] font-semibold text-slate-900">
-              Confirm
-            </label>
-            <input
+          <div className="min-w-0 flex-1">
+            <PasswordField
               id="confirm"
               name="confirm"
-              type="password"
+              label="Confirm password"
               autoComplete="new-password"
-              placeholder="••••••••"
-              className="rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
         </div>
 
         {state.error && (
-          <p className="rounded-lg bg-red-50 px-3.5 py-2.5 text-[13px] font-semibold text-red-500">
+          <p className="rounded-lg bg-red-50 px-3.5 py-2.5 text-[13px] font-semibold text-red-600">
             {state.error}
           </p>
         )}
@@ -97,12 +96,12 @@ export default function SignupForm() {
         <SubmitButton />
 
         <p className="text-[11px] leading-relaxed text-slate-400">
-          This is a prototype with mock authentication. Do not use a real
-          password — accounts carry no genuine security.
+          Profintal Savings is a demonstration project and holds no real money.
+          Please choose a password you do not use anywhere else.
         </p>
       </form>
 
-      <p className="text-center text-[13px] text-slate-500">
+      <p className="text-center text-sm text-slate-500">
         Already have an account?{" "}
         <Link
           href="/login"
