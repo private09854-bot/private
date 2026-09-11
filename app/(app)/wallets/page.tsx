@@ -83,7 +83,6 @@ export default async function WalletsPage() {
     USD: "US Dollar",
     EUR: "Euro",
     GBP: "British Pound",
-    NGN: "Nigerian Naira",
     CAD: "Canadian Dollar",
   };
 

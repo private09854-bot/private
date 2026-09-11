@@ -155,14 +155,12 @@ async function main() {
       { ownerId: sarahId, currency: "USD", symbol: "$", balance: 12500, available: 12350, pending: 150, changeLabel: "+0.04%", changeTone: "up", primary: true, sort: 0, accountHolder: "Sarah Jenkins", accountNumber: "8827 4491 2203", achRouting: "021000021", wireRouting: "026009593", bankName: "Profintal Savings, Inc.", bankAddress: "1 Market Street, San Francisco, CA 94105", swift: "PFSVUS33" },
       { ownerId: sarahId, currency: "EUR", symbol: "€", balance: 4820.5, changeLabel: "-0.12%", changeTone: "down", sort: 1 },
       { ownerId: sarahId, currency: "GBP", symbol: "£", balance: 2420, changeLabel: "+0.18%", changeTone: "up", sort: 2 },
-      { ownerId: sarahId, currency: "NGN", symbol: "₦", balance: 3850000, changeLabel: "Stable", changeTone: "flat", sort: 3 },
-      { ownerId: sarahId, currency: "CAD", symbol: "$", balance: 1250, changeLabel: "-0.08%", changeTone: "down", sort: 4 },
+      { ownerId: sarahId, currency: "CAD", symbol: "$", balance: 1250, changeLabel: "-0.08%", changeTone: "down", sort: 3 },
       // Admin treasury
       { ownerId: adminId, currency: "USD", symbol: "$", balance: 1000000, available: 1000000, pending: 0, changeLabel: "Treasury", changeTone: "flat", primary: true, sort: 0 },
       { ownerId: adminId, currency: "EUR", symbol: "€", balance: 500000, available: 500000, pending: 0, changeLabel: "Treasury", changeTone: "flat", sort: 1 },
       { ownerId: adminId, currency: "GBP", symbol: "£", balance: 400000, available: 400000, pending: 0, changeLabel: "Treasury", changeTone: "flat", sort: 2 },
-      { ownerId: adminId, currency: "NGN", symbol: "₦", balance: 900000000, available: 900000000, pending: 0, changeLabel: "Treasury", changeTone: "flat", sort: 3 },
-      { ownerId: adminId, currency: "CAD", symbol: "$", balance: 600000, available: 600000, pending: 0, changeLabel: "Treasury", changeTone: "flat", sort: 4 },
+      { ownerId: adminId, currency: "CAD", symbol: "$", balance: 600000, available: 600000, pending: 0, changeLabel: "Treasury", changeTone: "flat", sort: 3 },
     ]),
   );
 
@@ -178,7 +176,7 @@ async function main() {
   const txns = [
     { ref: "TXN-2026-00847", date: "2026-06-15T09:41:00Z", kind: "send", title: "John Doe", sub: "User @john_doe", currency: "USD", amount: -500, fee: 0, status: "Completed", party: "John Doe", partySub: "@john_doe", route: "Internal", risk: "Low", reference: "#PFS-8849-01", walletSource: "US Dollar Wallet", delivery: "Instantaneous" },
     { ref: "TXN-2026-00848", date: "2026-06-14T14:05:00Z", kind: "receive", title: "Maria Santos", sub: "Wise payout incoming", currency: "EUR", amount: 1200, fee: 1.5, status: "Completed", party: "Maria Santos", partySub: "Wise payout", route: "SWIFT Wire", risk: "Low" },
-    { ref: "TXN-2026-00849", date: "2026-06-13T11:20:00Z", kind: "convert", title: "USD → NGN conversion", sub: "Platform swap loop", currency: "NGN", amount: 1500000, fee: 2.5, status: "Completed", party: "FX Desk", partySub: "USD → NGN", route: "FX Swap", risk: "Medium" },
+    { ref: "TXN-2026-00849", date: "2026-06-13T11:20:00Z", kind: "convert", title: "USD → EUR conversion", sub: "Platform swap loop", currency: "EUR", amount: 919.19, fee: 2.5, status: "Completed", party: "FX Desk", partySub: "USD → EUR", route: "FX Swap", risk: "Medium" },
     { ref: "TXN-2026-00850", date: "2026-06-12T16:32:00Z", kind: "wire", title: "Banco do Brasil", sub: "Wire to Maria Santos", currency: "USD", amount: -2500, fee: 15, status: "Processing", party: "Banco do Brasil", partySub: "Maria Santos", route: "SWIFT Wire", risk: "Medium" },
     { ref: "TXN-2026-00851", date: "2026-06-11T08:15:00Z", kind: "ach", title: "Chase Bank ACH", sub: "Sarah Jenkins personal", currency: "USD", amount: 5000, fee: 0, status: "Pending", party: "Chase Bank", partySub: "ACH credit", route: "ACH", risk: "Low" },
     { ref: "TXN-2026-00852", date: "2026-06-10T13:44:00Z", kind: "send", title: "Alex Chen", sub: "User @achen", currency: "GBP", amount: -300, fee: 0, status: "Completed", party: "Alex Chen", partySub: "@achen", route: "Internal", risk: "Low" },
@@ -248,14 +246,12 @@ async function main() {
     db.from("fx_rates").insert([
       { base: "USD", quote: "EUR", rate: 0.9215, change: "-0.12%", changeTone: "down", spread: "0.25%", sort: 0 },
       { base: "USD", quote: "GBP", rate: 0.7852, change: "+0.18%", changeTone: "up", spread: "0.25%", sort: 1 },
-      { base: "USD", quote: "NGN", rate: 1500, change: "Stable", changeTone: "flat", spread: "0.75%", sort: 2 },
-      { base: "USD", quote: "CAD", rate: 1.3712, change: "-0.08%", changeTone: "down", spread: "0.30%", sort: 3 },
-      { base: "EUR", quote: "GBP", rate: 0.8521, change: "+0.05%", changeTone: "up", spread: "0.35%", sort: 4 },
-      { base: "EUR", quote: "USD", rate: 1.0852, change: "+0.12%", changeTone: "up", spread: "0.25%", sort: 5 },
-      { base: "GBP", quote: "USD", rate: 1.2736, change: "-0.18%", changeTone: "down", spread: "0.25%", sort: 6 },
-      { base: "NGN", quote: "USD", rate: 0.000667, change: "Stable", changeTone: "flat", spread: "0.75%", sort: 7 },
-      { base: "CAD", quote: "USD", rate: 0.7293, change: "+0.08%", changeTone: "up", spread: "0.30%", sort: 8 },
-      { base: "USD", quote: "USD", rate: 1, change: "Stable", changeTone: "flat", spread: "0.00%", sort: 9 },
+      { base: "USD", quote: "CAD", rate: 1.3712, change: "-0.08%", changeTone: "down", spread: "0.30%", sort: 2 },
+      { base: "EUR", quote: "GBP", rate: 0.8521, change: "+0.05%", changeTone: "up", spread: "0.35%", sort: 3 },
+      { base: "EUR", quote: "USD", rate: 1.0852, change: "+0.12%", changeTone: "up", spread: "0.25%", sort: 4 },
+      { base: "GBP", quote: "USD", rate: 1.2736, change: "-0.18%", changeTone: "down", spread: "0.25%", sort: 5 },
+      { base: "CAD", quote: "USD", rate: 0.7293, change: "+0.08%", changeTone: "up", spread: "0.30%", sort: 6 },
+      { base: "USD", quote: "USD", rate: 1, change: "Stable", changeTone: "flat", spread: "0.00%", sort: 7 },
     ]),
   );
 

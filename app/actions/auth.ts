@@ -71,8 +71,7 @@ const NEW_WALLETS = [
   { currency: "USD", symbol: "$", changeLabel: "+0.00%", changeTone: "flat", sort: 0, primary: true },
   { currency: "EUR", symbol: "€", changeLabel: "+0.00%", changeTone: "flat", sort: 1, primary: false },
   { currency: "GBP", symbol: "£", changeLabel: "+0.00%", changeTone: "flat", sort: 2, primary: false },
-  { currency: "NGN", symbol: "₦", changeLabel: "Stable", changeTone: "flat", sort: 3, primary: false },
-  { currency: "CAD", symbol: "$", changeLabel: "+0.00%", changeTone: "flat", sort: 4, primary: false },
+  { currency: "CAD", symbol: "$", changeLabel: "+0.00%", changeTone: "flat", sort: 3, primary: false },
 ];
 
 /** Create the profile, wallets and settings for a new user. */

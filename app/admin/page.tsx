@@ -10,7 +10,6 @@ const FILLS: Record<string, string> = {
   USD: "bg-slate-900",
   EUR: "bg-blue-500",
   GBP: "bg-amber-500",
-  NGN: "bg-emerald-500",
   CAD: "bg-slate-500",
   Other: "bg-slate-400",
 };

@@ -1,12 +1,11 @@
 // Money + number formatting. All amounts are stored numerically in the
 // database; the UI renders them through these helpers so display stays
-// consistent with the original design strings (e.g. "-$500.00", "₦1,500,000").
+// consistent with the original design strings (e.g. "-$500.00", "€1,200.00").
 
 export const CURRENCIES: Record<string, { symbol: string; decimals: number }> = {
   USD: { symbol: "$", decimals: 2 },
   EUR: { symbol: "€", decimals: 2 },
   GBP: { symbol: "£", decimals: 2 },
-  NGN: { symbol: "₦", decimals: 0 },
   CAD: { symbol: "$", decimals: 2 },
 };
 
@@ -18,7 +17,6 @@ export const CURRENCY_FLAGS: Record<string, string> = {
   USD: "🇺🇸",
   EUR: "🇪🇺",
   GBP: "🇬🇧",
-  NGN: "🇳🇬",
   CAD: "🇨🇦",
 };
 
