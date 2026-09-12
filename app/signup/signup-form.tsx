@@ -94,11 +94,6 @@ export default function SignupForm() {
         )}
 
         <SubmitButton />
-
-        <p className="text-[11px] leading-relaxed text-slate-400">
-          Profintal Savings is a demonstration project and holds no real money.
-          Please choose a password you do not use anywhere else.
-        </p>
       </form>
 
       <p className="text-center text-sm text-slate-500">
