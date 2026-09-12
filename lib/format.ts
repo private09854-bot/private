@@ -92,3 +92,16 @@ export function relativeTime(input: Date | string | null): string {
   if (days < 30) return `${days} day${days === 1 ? "" : "s"} ago`;
   return formatDate(date);
 }
+
+/**
+ * Format a date-only value ("YYYY-MM-DD", e.g. a Postgres `date` column)
+ * without going through Date, which would shift the day in negative UTC
+ * offsets and render a date of birth one day early.
+ */
+export function formatDateOnly(input: string | null): string {
+  if (!input) return "—";
+  const m = input.slice(0, 10).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return formatDate(input);
+  const [, y, mo, d] = m;
+  return `${MONTHS[Number(mo) - 1]} ${d}, ${y}`;
+}

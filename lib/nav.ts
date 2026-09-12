@@ -6,6 +6,7 @@ import {
   ListOrdered,
   CreditCard,
   Settings,
+  UserRound,
   FileLock2,
   ArrowUpFromLine,
   ShieldAlert,
@@ -33,6 +34,7 @@ export const appNav: NavItem[] = [
   { label: "Recipients", href: "/recipients", icon: Users },
   { label: "Transactions", href: "/transactions", icon: ListOrdered },
   { label: "Cards", href: "/cards", icon: CreditCard },
+  { label: "Profile", href: "/profile", icon: UserRound },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 

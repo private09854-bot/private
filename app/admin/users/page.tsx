@@ -2,20 +2,11 @@ import { Search, ChevronDown, Download } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
-import { formatDate, relativeTime } from "@/lib/format";
+import { formatDate, formatDateOnly, relativeTime } from "@/lib/format";
+import { countryFlag, countryName } from "@/lib/countries";
 import KycReviewCard, { type ReviewApplicant } from "./kyc-review-card";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
-
-const COUNTRY_NAME: Record<string, string> = {
-  "🇺🇸": "United States",
-  "🇧🇷": "Brazil",
-  "🇸🇬": "Singapore",
-  "🇮🇳": "India",
-  "🇦🇪": "United Arab Emirates",
-  "🇰🇷": "South Korea",
-  "🇲🇽": "Mexico",
-};
 
 function tierTone(tier: string | null): Tone {
   if (tier === "Tier 3") return "success";
@@ -57,6 +48,41 @@ function targetTier(requesting: string): string {
 }
 
 const filters = ["KYC Tier: All", "Status: All", "Region: All"];
+
+type ProfileRow = {
+  email: string;
+  username?: string | null;
+  accountType?: string | null;
+  preferredCurrency?: string | null;
+  middleName?: string | null;
+  phone?: string | null;
+  dob?: string | null;
+  addressLine?: string | null;
+  city?: string | null;
+  region?: string | null;
+  postalCode?: string | null;
+  countryCode?: string | null;
+};
+
+/**
+ * Flatten the personal details captured at sign-up into label/value rows.
+ * Accounts created before those fields existed simply contribute fewer rows.
+ */
+function signupDetails(u: ProfileRow): { label: string; value: string }[] {
+  const address = [u.addressLine, u.city, u.region, u.postalCode]
+    .filter(Boolean)
+    .join(", ");
+  return [
+    { label: "Username", value: u.username ? `@${u.username}` : "" },
+    { label: "Email", value: u.email },
+    { label: "Phone", value: u.phone ?? "" },
+    { label: "Date of birth", value: u.dob ? formatDateOnly(u.dob) : "" },
+    { label: "Account type", value: u.accountType ?? "" },
+    { label: "Primary currency", value: u.preferredCurrency ?? "" },
+    { label: "Address", value: address },
+    { label: "Country", value: countryName(u.countryCode) },
+  ].filter((d) => d.value && d.value !== "—");
+}
 
 export default async function AdminUsersPage() {
   await requireAdmin();
@@ -136,6 +162,7 @@ export default async function AdminUsersPage() {
           state: d.status,
           tone: docTone(d.status),
         })),
+        details: signupDetails(firstPending.user),
       }
     : null;
 
@@ -201,6 +228,8 @@ export default async function AdminUsersPage() {
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
             <span className="flex-1">USER</span>
+            <span className="w-[90px]">TYPE</span>
+            <span className="w-[150px]">PHONE</span>
             <span className="w-[160px]">COUNTRY</span>
             <span className="w-[90px]">KYC TIER</span>
             <span className="w-[90px]">STATUS</span>
@@ -245,10 +274,18 @@ export default async function AdminUsersPage() {
                       </p>
                     </div>
                   </div>
+                  <span className="w-[90px] truncate text-[13px] text-slate-600">
+                    {u.accountType ?? "—"}
+                  </span>
+                  <span className="w-[150px] truncate text-[13px] text-slate-600">
+                    {u.phone ?? "—"}
+                  </span>
                   <div className="flex w-[160px] items-center gap-2">
-                    <span className="text-sm">{u.country}</span>
+                    <span className="text-sm">
+                      {u.countryCode ? countryFlag(u.countryCode) : u.country}
+                    </span>
                     <span className="truncate text-[13px] text-slate-600">
-                      {COUNTRY_NAME[u.country ?? ""] ?? ""}
+                      {u.countryCode ? countryName(u.countryCode) : ""}
                     </span>
                   </div>
                   <div className="w-[90px]">

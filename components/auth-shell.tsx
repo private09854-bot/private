@@ -26,7 +26,7 @@ export default function AuthShell({
   return (
     <div className="flex min-h-screen w-full flex-col bg-white lg:flex-row">
       {/* Brand panel — desktop only */}
-      <div className="relative hidden flex-col justify-between bg-slate-900 p-10 xl:p-12 lg:flex lg:w-[44%] lg:shrink-0">
+      <div className="relative hidden flex-col justify-between bg-slate-900 p-10 xl:p-12 lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-[44%] lg:shrink-0">
         <Link href="/">
           <BrandLogo inverse />
         </Link>

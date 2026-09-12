@@ -17,6 +17,21 @@ export type Profile = {
   flagged: boolean;
   joined: string;
   createdAt: string;
+  // Captured at sign-up. Null on accounts created before these were collected.
+  firstName: string | null;
+  middleName: string | null;
+  lastName: string | null;
+  username: string | null;
+  phone: string | null;
+  dob: string | null;
+  addressLine: string | null;
+  city: string | null;
+  region: string | null;
+  postalCode: string | null;
+  countryCode: string | null;
+  accountType: string | null;
+  preferredCurrency: string | null;
+  termsAcceptedAt: string | null;
 };
 
 /** The signed-in user's profile row, or null when signed out. */

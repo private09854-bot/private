@@ -21,6 +21,8 @@ export type ReviewApplicant = {
   riskLabel: string;
   riskTone: Tone;
   documents: { label: string; state: string; tone: Tone }[];
+  /** Details captured at sign-up. Null for accounts created before they were collected. */
+  details: { label: string; value: string }[];
 } | null;
 
 export default function KycReviewCard({
@@ -108,6 +110,23 @@ export default function KycReviewCard({
           </span>
         </div>
       </div>
+
+      {/* Details given at sign-up */}
+      {applicant.details.length > 0 && (
+        <div className="flex flex-col gap-2.5">
+          <p className="text-xs font-bold text-slate-500">REGISTERED DETAILS</p>
+          {applicant.details.map((d) => (
+            <div key={d.label} className="flex items-start justify-between gap-3">
+              <span className="shrink-0 text-[11px] text-slate-500">
+                {d.label}
+              </span>
+              <span className="min-w-0 break-words text-right text-[11px] font-semibold text-slate-900">
+                {d.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Checklist */}
       <div className="flex flex-col gap-3.5">

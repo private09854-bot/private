@@ -3,6 +3,11 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { countryByCode } from "@/lib/countries";
+import {
+  ACCOUNT_TYPE_VALUES,
+  SIGNUP_CURRENCY_CODES,
+} from "@/lib/account-options";
 
 export type AuthState = { error?: string };
 
@@ -84,32 +89,96 @@ const NEW_WALLETS = [
   { currency: "CAD", symbol: "$", changeLabel: "+0.00%", changeTone: "flat", sort: 3, primary: false },
 ];
 
+/** Personal details collected by the sign-up form. */
+export type SignupDetails = {
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+  username: string;
+  phone: string;
+  accountType: string;
+  preferredCurrency: string;
+  dob: string; // yyyy-mm-dd
+  addressLine: string;
+  city: string;
+  region: string | null;
+  postalCode: string;
+  countryCode: string;
+  countryFlag: string;
+};
+
 /** Create the profile, wallets and settings for a new user. */
 export async function provisionAccount(
   userId: string,
   email: string,
   name: string,
   role: "CUSTOMER" | "ADMIN" = "CUSTOMER",
+  details?: SignupDetails,
 ) {
-  await supabaseAdmin.from("profiles").insert({
+  const base = {
     id: userId,
     email,
     role,
     name,
-    handle: `@${name.toLowerCase().replace(/\s+/g, "_")}`,
+    handle: details
+      ? `@${details.username}`
+      : `@${name.toLowerCase().replace(/\s+/g, "_")}`,
     avatar: initialsAvatar(name),
     title: role === "ADMIN" ? "System Overseer" : "Account Holder",
-    country: "🇺🇸",
+    country: details?.countryFlag ?? "🇺🇸",
     tier: role === "ADMIN" ? "Tier 3" : "Tier 1",
     // New customers land in the verification queue rather than arriving
     // pre-approved, so the admin console reflects real registrations.
     kycStatus: role === "ADMIN" ? "Verified" : "Pending",
     riskScore: 0,
     flagged: false,
-  });
+  };
+
+  const extended = details
+    ? {
+        ...base,
+        firstName: details.firstName,
+        middleName: details.middleName,
+        lastName: details.lastName,
+        username: details.username,
+        phone: details.phone,
+        accountType: details.accountType,
+        preferredCurrency: details.preferredCurrency,
+        dob: details.dob,
+        addressLine: details.addressLine,
+        city: details.city,
+        region: details.region,
+        postalCode: details.postalCode,
+        countryCode: details.countryCode,
+        termsAcceptedAt: new Date().toISOString(),
+      }
+    : base;
+
+  const { error } = await supabaseAdmin.from("profiles").insert(extended);
+
+  // If supabase/migrations/001_signup_details.sql has not been run yet the
+  // personal-detail columns do not exist. Fall back to the base profile so
+  // sign-up still works, and say loudly what is missing.
+  if (error && /column|schema cache|PGRST204|42703/i.test(error.message)) {
+    console.error(
+      "[provisionAccount] profiles is missing the sign-up detail columns — " +
+        "run supabase/migrations/001_signup_details.sql. Details not saved:",
+      error.message,
+    );
+    await supabaseAdmin.from("profiles").insert(base);
+  } else if (error) {
+    throw new Error(`Could not create profile: ${error.message}`);
+  }
+
+  // The currency picked at sign-up becomes the primary wallet, and sorts first.
+  const primaryCurrency = details?.preferredCurrency ?? "USD";
+  const ordered = [
+    ...NEW_WALLETS.filter((w) => w.currency === primaryCurrency),
+    ...NEW_WALLETS.filter((w) => w.currency !== primaryCurrency),
+  ];
 
   await supabaseAdmin.from("wallets").insert(
-    NEW_WALLETS.map((w) => ({
+    ordered.map((w, i) => ({
       ownerId: userId,
       currency: w.currency,
       symbol: w.symbol,
@@ -118,9 +187,9 @@ export async function provisionAccount(
       pending: 0,
       changeLabel: w.changeLabel,
       changeTone: w.changeTone,
-      primary: w.primary,
-      sort: w.sort,
-      ...(w.primary
+      primary: i === 0,
+      sort: i,
+      ...(i === 0
         ? {
             accountHolder: name,
             accountNumber: randomAccountNumber(),
@@ -173,27 +242,110 @@ export async function provisionAccount(
   }
 }
 
+/** Whole years between `dob` and today. */
+function ageOn(dob: Date, today = new Date()): number {
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+  return age;
+}
+
 export async function signup(
   _prev: AuthState,
   formData: FormData,
 ): Promise<AuthState> {
-  const name = String(formData.get("name") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const s = (k: string) => String(formData.get(k) ?? "").trim();
+
+  const firstName = s("firstName");
+  const middleName = s("middleName");
+  const lastName = s("lastName");
+  const username = s("username");
+  const email = s("email").toLowerCase();
+  const accountType = s("accountType");
+  const preferredCurrency = s("preferredCurrency").toUpperCase();
+  const dialCode = s("dialCode");
+  const phoneNumber = s("phone");
+  const dobRaw = s("dob");
+  const countryCode = s("countryCode").toUpperCase();
+  const addressLine = s("addressLine");
+  const city = s("city");
+  const region = s("region");
+  const postalCode = s("postalCode");
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("confirm") ?? "");
+  const acceptedTerms = formData.get("terms") != null;
 
-  if (!name || !email || !password) {
-    return { error: "Fill in your name, email and password." };
+  // --- required fields ---
+  if (!firstName || !lastName) {
+    return { error: "Enter your first and last name." };
   }
+  if (!email) return { error: "Enter your email address." };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { error: "Enter a valid email address." };
   }
-  if (password.length < 6) {
-    return { error: "Password must be at least 6 characters." };
+
+  // --- username ---
+  if (!username) return { error: "Choose a username." };
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+    return {
+      error:
+        "Username must be 3-20 characters, letters, numbers or underscores only.",
+    };
   }
-  if (confirm && confirm !== password) {
+  const { data: usernameTaken } = await supabaseAdmin
+    .from("profiles")
+    .select("id")
+    .ilike("username", username)
+    .maybeSingle();
+  if (usernameTaken) return { error: "That username is already taken." };
+
+  // --- account type + currency ---
+  if (!ACCOUNT_TYPE_VALUES.includes(accountType)) {
+    return { error: "Choose an account type." };
+  }
+  if (!SIGNUP_CURRENCY_CODES.includes(preferredCurrency)) {
+    return { error: "Choose your primary account currency." };
+  }
+
+  // --- phone ---
+  const digits = phoneNumber.replace(/\D/g, "");
+  if (!digits) return { error: "Enter your phone number." };
+  if (digits.length < 6 || digits.length > 15) {
+    return { error: "Enter a valid phone number." };
+  }
+  const country = countryByCode(countryCode);
+  if (!country) return { error: "Select your country." };
+  const phone = `${dialCode || country.dial} ${digits}`;
+
+  // --- date of birth ---
+  if (!dobRaw) return { error: "Enter your date of birth." };
+  const dob = new Date(`${dobRaw}T00:00:00Z`);
+  if (Number.isNaN(dob.getTime())) {
+    return { error: "Enter a valid date of birth." };
+  }
+  const age = ageOn(dob);
+  if (age < 18) {
+    return { error: "You must be at least 18 years old to open an account." };
+  }
+  if (age > 120) return { error: "Enter a valid date of birth." };
+
+  // --- address ---
+  if (!addressLine) return { error: "Enter your street address." };
+  if (!city) return { error: "Enter your city." };
+  if (!postalCode) return { error: "Enter your postal or ZIP code." };
+
+  // --- password + terms ---
+  if (password.length < 8) {
+    return { error: "Password must be at least 8 characters." };
+  }
+  if (confirm !== password) {
     return { error: "Passwords do not match." };
   }
+  if (!acceptedTerms) {
+    return { error: "Please accept the terms to continue." };
+  }
+
+  const name = [firstName, middleName, lastName].filter(Boolean).join(" ");
 
   // Create the user already confirmed so they can sign in immediately,
   // regardless of the project's email-confirmation setting.
@@ -213,7 +365,22 @@ export async function signup(
     return { error: msg };
   }
 
-  await provisionAccount(created.user.id, email, name, "CUSTOMER");
+  await provisionAccount(created.user.id, email, name, "CUSTOMER", {
+    firstName,
+    middleName: middleName || null,
+    lastName,
+    username,
+    phone,
+    accountType,
+    preferredCurrency,
+    dob: dobRaw,
+    addressLine,
+    city,
+    region: region || null,
+    postalCode,
+    countryCode: country.code,
+    countryFlag: country.flag,
+  });
 
   const supabase = createSupabaseServerClient();
   const { error: signInError } = await supabase.auth.signInWithPassword({

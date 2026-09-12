@@ -51,6 +51,7 @@ export const config = {
     "/recipients/:path*",
     "/transactions/:path*",
     "/cards/:path*",
+    "/profile/:path*",
     "/settings/:path*",
     "/convert/:path*",
     "/admin/:path*",

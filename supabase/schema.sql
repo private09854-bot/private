@@ -16,14 +16,35 @@ create table if not exists public.profiles (
   handle          text,
   avatar          text,
   title           text,
-  country         text,
+  country         text,                                -- flag emoji, display only
   tier            text,
   "kycStatus"     text,
   "riskScore"     int,
   flagged         boolean not null default false,
   joined          timestamptz not null default now(),
-  "createdAt"     timestamptz not null default now()
+  "createdAt"     timestamptz not null default now(),
+  -- Personal details captured at sign-up
+  "firstName"         text,
+  "middleName"        text,
+  "lastName"          text,
+  username            text,                            -- public handle, unique
+  phone               text,                            -- dial code + number
+  dob                 date,                            -- 18+ enforced in the app
+  "addressLine"       text,
+  city                text,
+  region              text,                            -- state / province, optional
+  "postalCode"        text,
+  "countryCode"       text,                            -- ISO 3166-1 alpha-2
+  "accountType"       text,                            -- Savings | Checking | Business
+  "preferredCurrency" text,                            -- becomes the primary wallet
+  "termsAcceptedAt"   timestamptz
 );
+
+create unique index if not exists profiles_username_lower_idx
+  on public.profiles (lower(username));
+
+create index if not exists profiles_country_code_idx
+  on public.profiles ("countryCode");
 
 -- ---------------------------------------------------------------------------
 -- Money
