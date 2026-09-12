@@ -52,6 +52,7 @@ export const config = {
     "/transactions/:path*",
     "/cards/:path*",
     "/profile/:path*",
+    "/kyc/:path*",
     "/settings/:path*",
     "/convert/:path*",
     "/admin/:path*",

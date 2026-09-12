@@ -11,10 +11,18 @@ import {
 } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { approveKyc, rejectKyc, escalateKyc } from "@/app/actions/admin";
+import { getKycDocumentUrl } from "@/app/actions/kyc";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
-export type KycDoc = { label: string; state: string; tone: Tone };
+export type KycDoc = {
+  id: string;
+  label: string;
+  state: string;
+  tone: Tone;
+  fileName: string | null;
+  fileSize: number | null;
+};
 export type Applicant = {
   id: string;
   name: string;
@@ -31,14 +39,22 @@ export type Applicant = {
   status: string;
   escalated: boolean;
   targetTier: string;
-  docFile: string;
+  /** What the customer actually filled in, or null while still a draft. */
+  submission: { label: string; value: string }[];
   documents: KycDoc[];
 };
 
 const filters = ["Tier: All", "Document: All", "Region: All"];
 
+function prettySize(bytes: number | null) {
+  if (!bytes) return null;
+  return bytes < 1024 * 1024
+    ? `${Math.round(bytes / 1024)} KB`
+    : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
 const statusBadge: Record<string, { tone: Tone; label: string }> = {
-  pending: { tone: "warning", label: "In Progress" },
+  pending: { tone: "warning", label: "Awaiting review" },
   escalated: { tone: "danger", label: "Escalated" },
   approved: { tone: "success", label: "Approved" },
   rejected: { tone: "danger", label: "Rejected" },
@@ -55,6 +71,22 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
   );
   const [pending, startTransition] = useTransition();
   const [flash, setFlash] = useState("");
+  const [opening, setOpening] = useState("");
+
+  /**
+   * Documents live in a private bucket, so open one through a signed URL that
+   * expires in five minutes rather than any permanent link.
+   */
+  async function openDocument(documentId: string) {
+    setOpening(documentId);
+    try {
+      const res = await getKycDocumentUrl(documentId);
+      if (res.url) window.open(res.url, "_blank", "noopener,noreferrer");
+      else setFlash(res.error ?? "Could not open that document.");
+    } finally {
+      setOpening("");
+    }
+  }
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -121,8 +153,8 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                   Queue is empty
                 </p>
                 <p className="max-w-sm text-[13px] text-slate-500">
-                  A verification request is opened automatically whenever
-                  someone registers an account.
+                  Applications appear here once a customer submits their
+                  documents from the verification page.
                 </p>
               </div>
             )}
@@ -239,40 +271,68 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
               </div>
             </div>
 
-            {/* Document preview */}
-            <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white">
-                <FileCheck className="size-5 text-emerald-500" />
+            {/* What the customer submitted */}
+            {selected.submission.length > 0 && (
+              <div className="flex flex-col gap-2.5">
+                <p className="text-xs font-bold text-slate-500">SUBMITTED DETAILS</p>
+                {selected.submission.map((f) => (
+                  <div
+                    key={f.label}
+                    className="flex items-start justify-between gap-3"
+                  >
+                    <span className="shrink-0 text-[11px] text-slate-500">
+                      {f.label}
+                    </span>
+                    <span className="min-w-0 break-words text-right text-[11px] font-semibold text-slate-900">
+                      {f.value}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <p className="truncate text-[13px] font-semibold text-slate-900">
-                  {selected.docFile || "Document file not uploaded"}
-                </p>
-                <p className="text-[11px] text-slate-500">
-                  2.4 MB • {selected.submittedLabel}
-                </p>
-              </div>
-              <button className="shrink-0 text-[13px] font-semibold text-blue-500 hover:text-blue-600">
-                Open
-              </button>
-            </div>
+            )}
 
-            {/* Checklist */}
-            <div className="flex flex-col gap-3.5">
+            {/* Uploaded documents - opened through a short-lived signed URL */}
+            <div className="flex flex-col gap-3">
               <p className="text-xs font-bold text-slate-500">
                 VERIFICATION CHECKLIST
               </p>
-              {selected.documents.map((docm) => (
-                <div
-                  key={docm.label}
-                  className="flex items-center justify-between"
-                >
-                  <span className="text-[13px] text-slate-900">
-                    {docm.label}
-                  </span>
-                  <Badge tone={docm.tone}>{docm.state}</Badge>
-                </div>
-              ))}
+              {selected.documents.map((docm) => {
+                const size = prettySize(docm.fileSize);
+                return (
+                  <div
+                    key={docm.id}
+                    className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3"
+                  >
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white">
+                      <FileCheck
+                        className={`size-4 ${
+                          docm.fileName ? "text-emerald-500" : "text-slate-300"
+                        }`}
+                      />
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <p className="truncate text-[13px] font-semibold text-slate-900">
+                        {docm.label}
+                      </p>
+                      <p className="truncate text-[11px] text-slate-500">
+                        {docm.fileName
+                          ? `${docm.fileName}${size ? ` • ${size}` : ""}`
+                          : "No file uploaded"}
+                      </p>
+                    </div>
+                    <Badge tone={docm.tone}>{docm.state}</Badge>
+                    {docm.fileName && (
+                      <button
+                        onClick={() => openDocument(docm.id)}
+                        disabled={opening === docm.id}
+                        className="shrink-0 text-[13px] font-semibold text-blue-500 transition-colors hover:text-blue-600 disabled:opacity-50"
+                      >
+                        {opening === docm.id ? "…" : "Open"}
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Risk score */}

@@ -1,7 +1,8 @@
 import { Download } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
-import { relativeTime } from "@/lib/format";
+import { relativeTime, formatDateOnly } from "@/lib/format";
+import { countryName } from "@/lib/countries";
 import KycQueue, { type Applicant, type KycDoc } from "./kyc-queue";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
@@ -13,9 +14,10 @@ function riskInfo(score: number): { label: string; tone: Tone } {
 }
 
 function docTone(state: string): Tone {
-  if (state === "Pending") return "warning";
   if (state === "Rejected") return "danger";
-  return "success";
+  if (state === "Verified" || state === "Cleared") return "success";
+  if (state === "Not submitted") return "neutral";
+  return "warning"; // Submitted / Pending
 }
 
 function targetTier(requesting: string): string {
@@ -29,13 +31,39 @@ export default async function AdminKycPage() {
   const { data: appRows } = await supabaseAdmin
     .from("kyc_applications")
     .select("*, user:profiles(*), documents:kyc_documents(*)")
+    .neq("status", "draft")
     .order("escalated", { ascending: false })
     .order("createdAt");
   const apps = appRows ?? [];
 
   const applicants: Applicant[] = apps.map((a) => {
     const info = riskInfo(a.risk);
-    const docCount = (a.documents as unknown[]).length;
+    const docs = a.documents as {
+      id: string;
+      label: string;
+      status: string;
+      fileName: string | null;
+      fileSize: number | null;
+    }[];
+    const docCount = docs.length;
+    const uploadedCount = docs.filter((d) => d.fileName).length;
+
+    // Only the fields the customer actually filled in.
+    const submission = [
+      { label: "Document", value: a.documentType ?? "" },
+      { label: "Number", value: a.documentNumber ?? "" },
+      {
+        label: "Issued by",
+        value: a.issuingCountry ? countryName(a.issuingCountry) : "",
+      },
+      {
+        label: "Expires",
+        value: a.documentExpiry ? formatDateOnly(a.documentExpiry) : "",
+      },
+      { label: "Occupation", value: a.occupation ?? "" },
+      { label: "Source of funds", value: a.sourceOfFunds ?? "" },
+    ].filter((f) => f.value && f.value !== "—");
+
     return {
       id: a.id,
       name: a.user.name,
@@ -44,20 +72,23 @@ export default async function AdminKycPage() {
       flag: a.user.country ?? "🏳️",
       country: "",
       requesting: a.requesting,
-      docsLabel: `${docCount} document${docCount === 1 ? "" : "s"}`,
-      submittedLabel: relativeTime(a.createdAt),
+      docsLabel: `${uploadedCount} of ${docCount}`,
+      submittedLabel: relativeTime(a.submittedAt ?? a.createdAt),
       riskScore: a.risk,
       riskLabel: info.label,
       riskTone: info.tone,
       status: a.status,
       escalated: a.escalated,
       targetTier: targetTier(a.requesting),
-      docFile: "",
-      documents: (a.documents as { label: string; status: string }[]).map(
+      submission,
+      documents: docs.map(
         (docm): KycDoc => ({
+          id: docm.id,
           label: docm.label,
           state: docm.status,
           tone: docTone(docm.status),
+          fileName: docm.fileName ?? null,
+          fileSize: docm.fileSize ?? null,
         }),
       ),
     };

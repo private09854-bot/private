@@ -35,6 +35,7 @@ export const appNav: NavItem[] = [
   { label: "Transactions", href: "/transactions", icon: ListOrdered },
   { label: "Cards", href: "/cards", icon: CreditCard },
   { label: "Profile", href: "/profile", icon: UserRound },
+  { label: "Verification", href: "/kyc", icon: FileLock2 },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 

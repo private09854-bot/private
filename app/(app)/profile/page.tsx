@@ -264,7 +264,11 @@ export default async function ProfilePage() {
             <span className="font-bold">Your profile is incomplete.</span> We do
             not have your {missing.join(", ")} on file. This account was opened
             before those details were collected — verification cannot complete
-            without them.
+            without them.{" "}
+            <Link href="/kyc" className="font-bold underline">
+              Verify your identity
+            </Link>
+            .
           </p>
         </div>
       )}
@@ -381,6 +385,19 @@ export default async function ProfilePage() {
                 );
               })}
             </div>
+          )}
+
+          {status !== "Verified" && (
+            <Link
+              href="/kyc"
+              className="inline-flex w-fit items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-[13px] font-bold text-white transition-colors hover:bg-emerald-700"
+            >
+              {kyc?.status === "pending" || kyc?.status === "escalated"
+                ? "View your submission"
+                : kyc?.status === "rejected"
+                  ? "Submit again"
+                  : "Start verification"}
+            </Link>
           )}
 
           <p className="text-[11px] leading-relaxed text-slate-400">

@@ -29,14 +29,28 @@ export async function approveKyc(appId: string): Promise<AdminResult> {
 
   const { error } = await supabaseAdmin
     .from("kyc_applications")
-    .update({ status: "approved", escalated: false })
+    .update({
+      status: "approved",
+      escalated: false,
+      reviewedAt: new Date().toISOString(),
+      reviewNote: null,
+    })
     .eq("id", appId);
   if (error) return { error: error.message };
+
+  // The customer sees each checklist row clear, not just the headline status.
+  await supabaseAdmin
+    .from("kyc_documents")
+    .update({ status: "Verified" })
+    .eq("appId", appId);
 
   await supabaseAdmin
     .from("profiles")
     .update({ kycStatus: "Verified", flagged: false, ...(tier ? { tier } : {}) })
     .eq("id", app.userId as string);
+
+  revalidatePath("/profile");
+  revalidatePath("/kyc");
 
   revalidatePath("/admin/kyc");
   revalidatePath("/admin/users");
@@ -44,7 +58,10 @@ export async function approveKyc(appId: string): Promise<AdminResult> {
   return { ok: true };
 }
 
-export async function rejectKyc(appId: string): Promise<AdminResult> {
+export async function rejectKyc(
+  appId: string,
+  reason?: string,
+): Promise<AdminResult> {
   await requireAdmin();
   const { data: app } = await supabaseAdmin
     .from("kyc_applications")
@@ -55,14 +72,27 @@ export async function rejectKyc(appId: string): Promise<AdminResult> {
 
   const { error } = await supabaseAdmin
     .from("kyc_applications")
-    .update({ status: "rejected", escalated: false })
+    .update({
+      status: "rejected",
+      escalated: false,
+      reviewedAt: new Date().toISOString(),
+      reviewNote: reason?.trim() || null,
+    })
     .eq("id", appId);
   if (error) return { error: error.message };
+
+  await supabaseAdmin
+    .from("kyc_documents")
+    .update({ status: "Rejected" })
+    .eq("appId", appId);
 
   await supabaseAdmin
     .from("profiles")
     .update({ kycStatus: "Rejected" })
     .eq("id", app.userId as string);
+
+  revalidatePath("/profile");
+  revalidatePath("/kyc");
 
   revalidatePath("/admin/kyc");
   revalidatePath("/admin/users");

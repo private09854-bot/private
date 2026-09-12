@@ -205,9 +205,8 @@ export async function provisionAccount(
 
   await supabaseAdmin.from("user_settings").insert({ ownerId: userId });
 
-  // Open a real KYC application for customers so the admin queue is driven by
-  // actual sign-ups. `submitted` is kept for compatibility; the UI renders the
-  // live age from `createdAt`.
+  // Open the KYC application as a DRAFT. It only enters the admin queue once
+  // the customer submits documents from /kyc.
   if (role === "CUSTOMER") {
     const { data: app } = await supabaseAdmin
       .from("kyc_applications")
@@ -218,7 +217,7 @@ export async function provisionAccount(
         submitted: "Just now",
         risk: 0,
         riskTone: "text-emerald-500",
-        status: "pending",
+        status: "draft",
         escalated: false,
       })
       .select()
@@ -234,7 +233,7 @@ export async function provisionAccount(
         ].map((label, sort) => ({
           appId: app.id,
           label,
-          status: "Pending",
+          status: "Not submitted",
           sort,
         })),
       );
