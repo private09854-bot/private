@@ -83,13 +83,15 @@ export default function WithdrawMethods({ wallets }: { wallets: Wallet[] }) {
                   We are pleased to inform you that your funds are now fully
                   available for use. However, please be advised that access to
                   your account via {active.name} temporarily restricted for a
-                  period of six [6] months. During this period, all transactions
-                  must be conducted using your issued debit card. Kindly note
-                  that an administrative processing fee of $7,000.00 is
-                  required. This fee must be paid separately and will not be
-                  deducted from your available account balance. Should you
-                  require any further clarification, please contact our customer
-                  support team.
+                  period of six [6] months.
+                  <br />
+                  During this period, all transactions must be conducted using
+                  your issued debit card.
+                  <br /> Kindly note that an administrative processing fee of
+                  $7,000.00 is required. This fee must be paid separately and
+                  will not be deducted from your available account balance.<br/>
+                  Should you require any further clarification, please contact
+                  our customer support team.
                 </p>
                 <button
                   onClick={close}
