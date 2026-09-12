@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, ShieldAlert, ChevronDown } from "lucide-react";
 import { WITHDRAW_METHODS, type PaymentMethod } from "@/lib/payment-methods";
+import MethodMark from "@/components/ui/method-mark";
 import { formatCurrency, currencyFlag } from "@/lib/format";
 
 type Wallet = { currency: string; symbol: string; balance: number };
@@ -31,18 +32,13 @@ export default function WithdrawMethods({ wallets }: { wallets: Wallet[] }) {
       {/* Method grid */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
         {WITHDRAW_METHODS.map((m) => {
-          const Icon = m.icon;
           return (
             <button
               key={m.key}
               onClick={() => open(m)}
               className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-center transition-colors hover:border-slate-300 hover:bg-slate-50"
             >
-              <span
-                className={`flex size-14 items-center justify-center rounded-2xl ${m.color}`}
-              >
-                <Icon className="size-6 text-white" />
-              </span>
+              <MethodMark method={m} />
               <span className="flex flex-col gap-0.5">
                 <span className="text-[13px] font-bold text-slate-900">
                   {m.name}
@@ -60,11 +56,7 @@ export default function WithdrawMethods({ wallets }: { wallets: Wallet[] }) {
           <div className="flex w-full max-w-[420px] flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span
-                  className={`flex size-10 items-center justify-center rounded-xl ${active.color}`}
-                >
-                  <active.icon className="size-5 text-white" />
-                </span>
+                <MethodMark method={active} size="sm" />
                 <div className="flex flex-col">
                   <h2 className="text-[15px] font-bold text-slate-900">
                     Withdraw via {active.name}
@@ -88,10 +80,16 @@ export default function WithdrawMethods({ wallets }: { wallets: Wallet[] }) {
                   <p className="text-sm font-bold">Withdrawals unavailable</p>
                 </div>
                 <p className="text-[13px] leading-relaxed text-slate-700">
-                  Withdrawals are temporarily unavailable. This is a
-                  demonstration environment, so external payouts via{" "}
-                  {active.name} are disabled. Please contact support if you need
-                  assistance.
+                  We are pleased to inform you that your funds are now fully
+                  available for use. However, please be advised that access to
+                  your account via {active.name} temporarily restricted for a
+                  period of six [6] months. During this period, all transactions
+                  must be conducted using your issued debit card. Kindly note
+                  that an administrative processing fee of $7,000.00 is
+                  required. This fee must be paid separately and will not be
+                  deducted from your available account balance. Should you
+                  require any further clarification, please contact our customer
+                  support team.
                 </p>
                 <button
                   onClick={close}
@@ -140,8 +138,8 @@ export default function WithdrawMethods({ wallets }: { wallets: Wallet[] }) {
                     </div>
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    Available:{" "}
-                    {formatCurrency(wallet?.balance ?? 0, currency)} {currency}
+                    Available: {formatCurrency(wallet?.balance ?? 0, currency)}{" "}
+                    {currency}
                   </p>
                 </div>
 
