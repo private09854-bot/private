@@ -98,53 +98,6 @@ const security: { icon: LucideIcon; title: string; desc: string }[] = [
   },
 ];
 
-const plans = [
-  {
-    name: "Personal",
-    price: "$0",
-    cadence: "per month",
-    desc: "Everything you need for day-to-day money.",
-    perks: [
-      "Four currency wallets",
-      "Unlimited internal transfers",
-      "One virtual card",
-      "Standard conversion rates",
-    ],
-    cta: "Open a personal account",
-    featured: false,
-  },
-  {
-    name: "Plus",
-    price: "$9",
-    cadence: "per month",
-    desc: "For people moving money across borders often.",
-    perks: [
-      "Everything in Personal",
-      "Priority transfer processing",
-      "Five virtual cards + one physical",
-      "Better conversion rates",
-      "Priority support queue",
-    ],
-    cta: "Choose Plus",
-    featured: true,
-  },
-  {
-    name: "Business",
-    price: "$29",
-    cadence: "per month",
-    desc: "Shared control for small teams and contractors.",
-    perks: [
-      "Everything in Plus",
-      "Multiple team members",
-      "Spend limits per card",
-      "Exportable statements",
-      "Dedicated account manager",
-    ],
-    cta: "Talk to us",
-    featured: false,
-  },
-];
-
 const quotes = [
   {
     name: "Sarah Jenkins",
@@ -467,81 +420,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================================================= PLANS / ACCOUNTS */}
-      <section id="accounts" className="bg-slate-50">
-        <div id="pricing" className={`${SECTION} py-16 sm:py-20 lg:py-24`}>
-          <div className="max-w-2xl">
-            <p className="text-sm font-bold uppercase tracking-wide text-emerald-600">
-              Accounts
-            </p>
-            <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
-              Pick the account that fits
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-slate-600">
-              Start free and move up whenever you need more. No lock-in, and you
-              can change plan from your settings page.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-6 lg:mt-14 lg:grid-cols-3">
-            {plans.map((p) => (
-              <div
-                key={p.name}
-                className={`flex flex-col gap-6 rounded-2xl border p-6 sm:p-8 ${
-                  p.featured
-                    ? "border-emerald-600 bg-white shadow-lg ring-1 ring-emerald-600"
-                    : "border-slate-200 bg-white"
-                }`}
-              >
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-lg font-bold text-slate-900">
-                      {p.name}
-                    </h3>
-                    {p.featured && (
-                      <span className="rounded-full bg-emerald-600 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
-                        Most popular
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-slate-500">{p.desc}</p>
-                </div>
-
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-4xl font-extrabold tracking-tight text-slate-900">
-                    {p.price}
-                  </span>
-                  <span className="text-sm text-slate-500">{p.cadence}</span>
-                </div>
-
-                <ul className="flex flex-1 flex-col gap-3">
-                  {p.perks.map((perk) => (
-                    <li
-                      key={perk}
-                      className="flex items-start gap-2.5 text-sm text-slate-700"
-                    >
-                      <Check className="mt-0.5 size-4 shrink-0 text-emerald-600" />
-                      <span className="leading-relaxed">{perk}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href="/signup"
-                  className={`rounded-xl px-5 py-3 text-center text-sm font-bold transition-colors ${
-                    p.featured
-                      ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                      : "border border-slate-300 text-slate-800 hover:bg-slate-50"
-                  }`}
-                >
-                  {p.cta}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ===================================================== TESTIMONIALS */}
       <section className="bg-white">
         <div className={`${SECTION} py-16 sm:py-20 lg:py-24`}>
@@ -686,8 +564,8 @@ export default function LandingPage() {
               Profintal Savings is a portfolio build created to showcase a
               complete banking interface. It is not a bank or a licensed
               financial institution, it holds no real money, and it is not
-              connected to any payment network. Balances, transactions, plan
-              pricing and customer quotes shown on this site are illustrative.
+              connected to any payment network. Balances, transactions and
+              customer quotes shown on this site are illustrative.
             </p>
           </div>
 

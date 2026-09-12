@@ -6,10 +6,8 @@ import { Menu, X } from "lucide-react";
 import BrandLogo from "./brand-logo";
 
 const links = [
-  { label: "Accounts", href: "#accounts" },
   { label: "Features", href: "#features" },
   { label: "Security", href: "#security" },
-  { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
 ];
 

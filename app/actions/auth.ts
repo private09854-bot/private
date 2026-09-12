@@ -30,13 +30,23 @@ export async function login(
     return { error: "Invalid email or password." };
   }
 
-  const { data: profile } = await supabaseAdmin
+  let { data: profile } = await supabaseAdmin
     .from("profiles")
     .select("role")
     .eq("id", data.user.id)
     .maybeSingle();
 
-  redirect(profile?.role === "ADMIN" ? "/admin" : "/dashboard");
+  // A valid auth user with no profile row would bounce between /dashboard and
+  // /login forever, so provision the missing account instead.
+  if (!profile) {
+    const name =
+      (data.user.user_metadata?.name as string | undefined)?.trim() ||
+      email.split("@")[0];
+    await provisionAccount(data.user.id, email, name);
+    profile = { role: "CUSTOMER" };
+  }
+
+  redirect(profile.role === "ADMIN" ? "/admin" : "/dashboard");
 }
 
 export async function logout() {

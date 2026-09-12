@@ -95,12 +95,32 @@ function rows(list, defaults = {}) {
 const insertAll = (table, defaults, list) =>
   db.from(table).insert(rows(list, defaults));
 
-/** Every auth user, paged. */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Every auth user, paged. The admin auth API rate-limits after a burst of
+ * writes, so each page is retried with backoff rather than silently coming
+ * back empty.
+ */
 async function listAuthUsers() {
   const all = [];
   for (let page = 1; page <= 20; page++) {
-    const { data } = await db.auth.admin.listUsers({ page, perPage: 200 });
-    const batch = data?.users ?? [];
+    let batch = null;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const { data, error } = await db.auth.admin.listUsers({
+        page,
+        perPage: 200,
+      });
+      if (!error) {
+        batch = data?.users ?? [];
+        break;
+      }
+      if (attempt === 4) {
+        console.error(`✗ listUsers(page ${page}):`, error.message);
+        process.exit(1);
+      }
+      await sleep(500 * 2 ** attempt);
+    }
     all.push(...batch);
     if (batch.length < 200) break;
   }
@@ -161,8 +181,13 @@ async function main() {
   const existing = await listAuthUsers();
   for (const u of existing) {
     if (LEGACY_DEMO_EMAILS.includes((u.email ?? "").toLowerCase())) {
-      await db.auth.admin.deleteUser(u.id);
-      console.log(`  removed legacy demo user ${u.email}`);
+      const { error } = await db.auth.admin.deleteUser(u.id);
+      console.log(
+        error
+          ? `  ! could not remove ${u.email}: ${error.message}`
+          : `  removed legacy demo user ${u.email}`,
+      );
+      await sleep(250); // stay under the admin API rate limit
     }
   }
 

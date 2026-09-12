@@ -36,10 +36,15 @@ export default async function AdminDashboardPage() {
     alertsRes,
     gatewaysRes,
   ] = await Promise.all([
-    supabaseAdmin.from("profiles").select("*", { count: "exact", head: true }),
+    // Customers only — the admin's own account is staff, not a registration.
     supabaseAdmin
       .from("profiles")
       .select("*", { count: "exact", head: true })
+      .eq("role", "CUSTOMER"),
+    supabaseAdmin
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("role", "CUSTOMER")
       .eq("kycStatus", "Verified"),
     supabaseAdmin
       .from("transfers")

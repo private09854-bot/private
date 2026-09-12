@@ -33,8 +33,8 @@ export default async function AdminSettingsPage() {
     supabaseAdmin
       .from("profiles")
       .select("*")
-      .or('role.eq.ADMIN,title.eq."Primary Administrator"')
-      .order("role"),
+      .eq("role", "ADMIN")
+      .order("name"),
   ]);
 
   const gateways = gatewaysRes.data ?? [];

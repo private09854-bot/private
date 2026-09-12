@@ -12,16 +12,18 @@ export default function BrandLogo({
   const content = (
     <span className={`flex items-center ${compact ? "gap-2.5" : "gap-3"}`}>
       <span
-        className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-emerald-900/20 bg-white ${
+        className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ${
           compact ? "size-8" : "size-11"
         }`}
       >
+        {/* The artwork carries its own ring with white padding around it, so it
+            is scaled up slightly to sit flush inside the circular mask. */}
         <Image
-          src="/profintal-savings-mark.svg"
+          src="/profintal-savings-mark.png"
           alt=""
-          width={64}
-          height={64}
-          className="size-full object-cover"
+          width={128}
+          height={128}
+          className="size-full scale-[1.28] object-cover"
           priority
         />
       </span>
