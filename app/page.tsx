@@ -21,7 +21,7 @@ import SupportChat from "@/components/support-chat";
 /* ------------------------------------------------------------------ data */
 
 const HERO_IMG =
-  "https://images.unsplash.com/photo-1573496782432-8690d8148c46?auto=format&fit=crop&w=900&q=70";
+  "https://images.unsplash.com/photo-1508938255445-041651dfe0c3?auto=format&fit=crop&w=2000&q=70";
 const CARD_IMG =
   "https://images.unsplash.com/photo-1609429019995-8c40f49535a5?auto=format&fit=crop&w=1200&q=70";
 const PHONE_IMG =
@@ -164,77 +164,61 @@ export default function LandingPage() {
       <SiteHeader />
 
       {/* ============================================================ HERO */}
-      <section className="bg-gradient-to-b from-slate-50 to-white">
-        <div className={`${SECTION} py-14 sm:py-20 lg:py-24`}>
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            <div className="flex flex-col items-start gap-6">
-              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
-                <ShieldCheck className="size-3.5" />
-                No monthly fees, no minimum balance
-              </span>
+      <section className="relative isolate overflow-hidden bg-slate-900">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={HERO_IMG}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 -z-20 size-full object-cover"
+        />
+        {/* Darkest where the copy sits, so the headline stays legible at any
+            width without washing the photo out entirely. */}
+        <div className="absolute inset-0 -z-10 bg-slate-950/80 lg:bg-gradient-to-r lg:from-slate-950/92 lg:via-slate-950/80 lg:to-slate-950/45" />
 
-              <h1 className="text-[32px] font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-5xl lg:text-[52px]">
-                Banking that keeps up with your money
-              </h1>
+        <div className={`${SECTION} py-20 sm:py-28 lg:py-36`}>
+          <div className="flex max-w-2xl flex-col items-start gap-6">
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-300 backdrop-blur">
+              <ShieldCheck className="size-3.5" />
+              No monthly fees, no minimum balance
+            </span>
 
-              <p className="max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
-                Profintal Savings gives you four currency wallets, transfers you
-                can track, and cards you control — all from one clean dashboard
-                that works just as well on your phone as on your laptop.
-              </p>
+            <h1 className="text-[34px] font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-[56px]">
+              Banking that keeps up with your money
+            </h1>
 
-              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                <Link
-                  href="/signup"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-emerald-700"
-                >
-                  Open a free account
-                  <ArrowRight className="size-4" />
-                </Link>
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-bold text-slate-800 transition-colors hover:bg-slate-50"
-                >
-                  Sign in
-                </Link>
-              </div>
+            <p className="max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              Profintal Savings gives you four currency wallets, transfers you
+              can track, and cards you control — all from one clean dashboard
+              that works just as well on your phone as on your laptop.
+            </p>
 
-              <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
-                {["Free to open", "Ready in 2 minutes", "Cancel any time"].map(
-                  (t) => (
-                    <li key={t} className="flex items-center gap-1.5">
-                      <Check className="size-4 shrink-0 text-emerald-600" />
-                      {t}
-                    </li>
-                  ),
-                )}
-              </ul>
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+              <Link
+                href="/signup"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-colors hover:bg-emerald-700"
+              >
+                Open a free account
+                <ArrowRight className="size-4" />
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur transition-colors hover:bg-white/20"
+              >
+                Sign in
+              </Link>
             </div>
 
-            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-              <div className="overflow-hidden rounded-3xl bg-slate-200 shadow-xl">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={HERO_IMG}
-                  alt="A person checking their account balance on a phone"
-                  className="aspect-[4/5] w-full object-cover sm:aspect-[3/2] lg:aspect-[4/5]"
-                />
-              </div>
-
-              {/* Floating balance chip — hidden on the narrowest screens so it
-                  can never push the layout sideways. */}
-              <div className="absolute -bottom-5 left-4 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-lg sm:block">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                  Total balance
-                </p>
-                <p className="mt-1 text-xl font-extrabold text-slate-900">
-                  $12,480.00
-                </p>
-                <p className="mt-0.5 text-xs font-semibold text-emerald-600">
-                  USD · EUR · GBP · CAD
-                </p>
-              </div>
-            </div>
+            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-300">
+              {["Free to open", "Ready in 2 minutes", "Cancel any time"].map(
+                (t) => (
+                  <li key={t} className="flex items-center gap-1.5">
+                    <Check className="size-4 shrink-0 text-emerald-400" />
+                    {t}
+                  </li>
+                ),
+              )}
+            </ul>
           </div>
         </div>
       </section>

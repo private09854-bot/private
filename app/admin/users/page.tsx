@@ -1,4 +1,5 @@
-import { Search, ChevronDown, Download } from "lucide-react";
+import Link from "next/link";
+import { Search, ChevronDown, Download, ChevronRight } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
@@ -226,7 +227,7 @@ export default async function AdminUsersPage() {
       <div className="flex flex-1 flex-col gap-6 xl:flex-row xl:items-start">
         {/* Users table */}
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-          <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
+          <div className="hidden items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500 lg:flex">
             <span className="flex-1">USER</span>
             <span className="w-[90px]">TYPE</span>
             <span className="w-[150px]">PHONE</span>
@@ -252,9 +253,10 @@ export default async function AdminUsersPage() {
               const st = statusInfo(u.kycStatus);
               const action = u.kycStatus === "Verified" ? "View" : "Review";
               return (
-                <div
+                <Link
                   key={u.id}
-                  className={`flex items-center border-b border-slate-200 px-6 py-3.5 ${
+                  href={`/admin/users/${u.id}`}
+                  className={`flex flex-col gap-3 border-b border-slate-200 px-4 py-4 transition-colors hover:bg-slate-50 sm:px-6 lg:flex-row lg:items-center lg:gap-0 lg:py-3.5 ${
                     u.flagged ? "bg-amber-100/25" : ""
                   }`}
                 >
@@ -274,35 +276,37 @@ export default async function AdminUsersPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="w-[90px] truncate text-[13px] text-slate-600">
-                    {u.accountType ?? "—"}
-                  </span>
-                  <span className="w-[150px] truncate text-[13px] text-slate-600">
-                    {u.phone ?? "—"}
-                  </span>
-                  <div className="flex w-[160px] items-center gap-2">
-                    <span className="text-sm">
-                      {u.countryCode ? countryFlag(u.countryCode) : u.country}
+                  {/* Stacked detail on phones, columns from lg up */}
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pl-12 lg:contents lg:pl-0">
+                    <span className="text-[13px] text-slate-600 lg:w-[90px] lg:truncate">
+                      {u.accountType ?? "—"}
                     </span>
-                    <span className="truncate text-[13px] text-slate-600">
-                      {u.countryCode ? countryName(u.countryCode) : ""}
+                    <span className="text-[13px] text-slate-600 lg:w-[150px] lg:truncate">
+                      {u.phone ?? "—"}
                     </span>
-                  </div>
-                  <div className="w-[90px]">
-                    <Badge tone={tierTone(u.tier)}>{u.tier ?? "Unknown"}</Badge>
-                  </div>
-                  <div className="w-[90px]">
-                    <Badge tone={st.tone}>{st.label}</Badge>
-                  </div>
-                  <span className="w-[100px] text-[13px] text-slate-600">
-                    {formatDate(u.joined)}
-                  </span>
-                  <div className="flex w-[70px] justify-end">
-                    <button className="text-[13px] font-semibold text-blue-500 hover:text-blue-600">
+                    <div className="flex items-center gap-2 lg:w-[160px]">
+                      <span className="text-sm">
+                        {u.countryCode ? countryFlag(u.countryCode) : u.country}
+                      </span>
+                      <span className="truncate text-[13px] text-slate-600">
+                        {u.countryCode ? countryName(u.countryCode) : ""}
+                      </span>
+                    </div>
+                    <div className="lg:w-[90px]">
+                      <Badge tone={tierTone(u.tier)}>{u.tier ?? "Unknown"}</Badge>
+                    </div>
+                    <div className="lg:w-[90px]">
+                      <Badge tone={st.tone}>{st.label}</Badge>
+                    </div>
+                    <span className="text-[13px] text-slate-600 lg:w-[100px]">
+                      {formatDate(u.joined)}
+                    </span>
+                    <span className="ml-auto flex items-center gap-1 text-[13px] font-semibold text-blue-500 lg:ml-0 lg:w-[70px] lg:justify-end">
                       {action}
-                    </button>
+                      <ChevronRight className="size-3.5" />
+                    </span>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

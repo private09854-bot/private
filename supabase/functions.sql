@@ -6,14 +6,33 @@
 -- failure anywhere rolls the whole thing back.
 
 -- Next sequential transaction reference, e.g. TXN-2026-00857
+-- Ledger references come from a sequence, never from count(*): a count goes
+-- backwards whenever a row is deleted (re-issuing an existing ref) and two
+-- concurrent transfers would compute the same number.
+create sequence if not exists public.txn_ref_seq as bigint start with 848;
+
+-- Never collide with refs already in the table.
+select setval(
+  'public.txn_ref_seq',
+  greatest(
+    847,
+    coalesce(
+      (select max((regexp_replace(ref, '^.*-', ''))::bigint)
+         from public.transactions
+        where ref ~ '^TXN-[0-9]{4}-[0-9]+$'),
+      847
+    )
+  ),
+  true
+);
+
 create or replace function public.next_txn_ref()
 returns text
 language plpgsql
 as $$
-declare v_count int;
 begin
-  select count(*) into v_count from public.transactions;
-  return 'TXN-2026-' || lpad((847 + v_count)::text, 5, '0');
+  return 'TXN-' || to_char(now(), 'YYYY') || '-' ||
+         lpad(nextval('public.txn_ref_seq')::text, 5, '0');
 end;
 $$;
 

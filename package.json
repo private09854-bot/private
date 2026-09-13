@@ -8,7 +8,9 @@
     "vercel-build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:seed": "node scripts/seed.mjs"
+    "db:seed": "node scripts/seed.mjs",
+    "db:doctor": "node scripts/doctor.mjs",
+    "db:reset-test": "node scripts/reset-test-data.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
