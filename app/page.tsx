@@ -172,9 +172,10 @@ export default function LandingPage() {
           aria-hidden="true"
           className="absolute inset-0 -z-20 size-full object-cover"
         />
-        {/* Darkest where the copy sits, so the headline stays legible at any
-            width without washing the photo out entirely. */}
-        <div className="absolute inset-0 -z-10 bg-slate-950/80 lg:bg-gradient-to-r lg:from-slate-950/92 lg:via-slate-950/80 lg:to-slate-950/45" />
+        {/* Two layers instead of one heavy wash: a light overall tint keeps the
+            photo visible, and a gradient adds contrast only behind the copy. */}
+        <div className="absolute inset-0 -z-10 bg-slate-950/35" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent lg:bg-gradient-to-r lg:from-slate-950/85 lg:via-slate-950/45 lg:to-transparent" />
 
         <div className={`${SECTION} py-20 sm:py-28 lg:py-36`}>
           <div className="flex max-w-2xl flex-col items-start gap-6">
