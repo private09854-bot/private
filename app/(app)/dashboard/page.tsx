@@ -83,7 +83,7 @@ export default async function DashboardPage() {
       {/* Total portfolio */}
       <div className="flex flex-col gap-2 rounded-2xl bg-slate-900 p-7">
         <p className="text-[13px] font-semibold uppercase text-slate-500">
-          Total Consolidated Portfolio Value
+          Dashboard
         </p>
         <div className="flex items-baseline gap-3">
           <span className="font-mono text-[40px] font-extrabold text-white">
