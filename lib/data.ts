@@ -39,3 +39,29 @@ export function portfolioUsd(
     0,
   );
 }
+
+export type WithdrawalNotice = { title: string; body: string };
+
+const DEFAULT_WITHDRAWAL_NOTICE: WithdrawalNotice = {
+  title: "Withdrawals unavailable",
+  body: "We are pleased to inform you that your funds are now fully available for use. However, please be advised that access to your account via {method} is temporarily restricted. Should you require any further clarification, please contact our customer support team.",
+};
+
+/**
+ * The withdrawal-blocked message shown to customers. Editable by the admin from
+ * the settings page, so the copy lives in the database rather than in code.
+ * `{method}` in the body is replaced with the chosen payout method's name.
+ */
+export async function getWithdrawalNotice(): Promise<WithdrawalNotice> {
+  const { data } = await supabaseAdmin
+    .from("platform_settings")
+    .select("value")
+    .eq("key", "withdrawal_notice")
+    .maybeSingle();
+
+  const v = data?.value as Partial<WithdrawalNotice> | undefined;
+  return {
+    title: v?.title?.trim() || DEFAULT_WITHDRAWAL_NOTICE.title,
+    body: v?.body?.trim() || DEFAULT_WITHDRAWAL_NOTICE.body,
+  };
+}

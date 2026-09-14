@@ -211,3 +211,37 @@ export async function setUserFrozen(
   revalidatePath("/admin/users");
   return { ok: true };
 }
+
+// ---------------------------------------------------------------------------
+// Platform content (withdrawal notice)
+// ---------------------------------------------------------------------------
+export async function updateWithdrawalNotice(input: {
+  title: string;
+  body: string;
+}): Promise<AdminResult> {
+  await requireAdmin();
+
+  const title = input.title.trim();
+  const body = input.body.trim();
+  if (!title) return { error: "Give the notice a heading." };
+  if (!body) return { error: "The message body cannot be empty." };
+  if (body.length > 2000) return { error: "Keep the message under 2000 characters." };
+
+  const { error } = await supabaseAdmin
+    .from("platform_settings")
+    .upsert(
+      {
+        key: "withdrawal_notice",
+        value: { title, body },
+        updatedAt: new Date().toISOString(),
+      },
+      { onConflict: "key" },
+    );
+  if (error) return { error: error.message };
+
+  // Both places that show it re-read on next load.
+  revalidatePath("/withdraw");
+  revalidatePath("/dashboard");
+  revalidatePath("/admin/settings");
+  return { ok: true };
+}

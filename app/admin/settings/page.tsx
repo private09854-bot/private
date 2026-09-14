@@ -1,5 +1,5 @@
 import {
-  Server,
+  MessageSquareWarning,
   ShieldCheck,
   Users,
   Plug,
@@ -9,6 +9,8 @@ import {
 import Badge from "@/components/ui/badge";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
+import { getWithdrawalNotice } from "@/lib/data";
+import WithdrawalNoticeForm from "./withdrawal-notice-form";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -28,13 +30,14 @@ function roleInfo(user: { role: string; title: string | null }): {
 export default async function AdminSettingsPage() {
   await requireAdmin();
 
-  const [gatewaysRes, adminsRes] = await Promise.all([
+  const [gatewaysRes, adminsRes, withdrawalNotice] = await Promise.all([
     supabaseAdmin.from("gateways").select("*").order("sort"),
     supabaseAdmin
       .from("profiles")
       .select("*")
       .eq("role", "ADMIN")
       .order("name"),
+    getWithdrawalNotice(),
   ]);
 
   const gateways = gatewaysRes.data ?? [];
@@ -53,29 +56,28 @@ export default async function AdminSettingsPage() {
             integrations.
           </p>
         </div>
-        <span className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-500">
-          <span className="size-1.5 rounded-full bg-emerald-500" />
-          All changes auto-saved
-        </span>
+
+      </div>
+
+      {/* Withdrawal notice editor */}
+      <div className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <MessageSquareWarning className="size-4 text-amber-500" />
+            <h2 className="text-[15px] font-bold text-slate-900">
+              Withdrawal Notice
+            </h2>
+          </div>
+          <p className="text-[13px] text-slate-500">
+            The message every customer sees when they attempt a withdrawal.
+            Changes take effect immediately across the platform.
+          </p>
+        </div>
+        <WithdrawalNoticeForm initial={withdrawalNotice} />
       </div>
 
       {/* Two-column config grid */}
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
-        {/* Platform controls */}
-        <div className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6">
-          <div className="flex items-center gap-2">
-            <Server className="size-4 text-amber-500" />
-            <h2 className="text-[15px] font-bold text-slate-900">
-              Platform Controls
-            </h2>
-          </div>
-          <div className="flex flex-col gap-4">
-            <p className="text-[13px] text-slate-500">
-              Platform controls are not configured in the database.
-            </p>
-          </div>
-        </div>
-
         {/* Security policy */}
         <div className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6">
           <div className="flex items-center gap-2">

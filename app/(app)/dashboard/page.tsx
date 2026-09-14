@@ -10,7 +10,7 @@ import {
 import Badge from "@/components/ui/badge";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
-import { usdRateMap, portfolioUsd } from "@/lib/data";
+import { usdRateMap, portfolioUsd, getWithdrawalNotice } from "@/lib/data";
 import { formatCurrency, formatNumber, currencyFlag } from "@/lib/format";
 import WithdrawMethods from "../withdraw/withdraw-methods";
 
@@ -41,7 +41,7 @@ const INDEX_PAIRS: [string, string][] = [
 export default async function DashboardPage() {
   const user = await requireCustomer();
 
-  const [walletsRes, rates, txRes, fxRes] = await Promise.all([
+  const [walletsRes, rates, txRes, fxRes, withdrawalNotice] = await Promise.all([
     supabaseAdmin.from("wallets").select("*").eq("ownerId", user.id).order("sort"),
     usdRateMap(),
     supabaseAdmin
@@ -51,6 +51,7 @@ export default async function DashboardPage() {
       .order("date", { ascending: false })
       .limit(5),
     supabaseAdmin.from("fx_rates").select("*"),
+    getWithdrawalNotice(),
   ]);
 
   const wallets = walletsRes.data ?? [];
@@ -108,6 +109,7 @@ export default async function DashboardPage() {
         </div>
         <WithdrawMethods
           compact
+          notice={withdrawalNotice}
           wallets={wallets.map((w) => ({
             currency: w.currency,
             symbol: w.symbol,

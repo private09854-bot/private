@@ -1,15 +1,16 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
-import { usdRateMap, portfolioUsd } from "@/lib/data";
+import { usdRateMap, portfolioUsd, getWithdrawalNotice } from "@/lib/data";
 import { formatCurrency } from "@/lib/format";
 import WithdrawMethods from "./withdraw-methods";
 
 export default async function WithdrawPage() {
   const user = await requireCustomer();
 
-  const [walletsRes, rates] = await Promise.all([
+  const [walletsRes, rates, notice] = await Promise.all([
     supabaseAdmin.from("wallets").select("*").eq("ownerId", user.id).order("sort"),
     usdRateMap(),
+    getWithdrawalNotice(),
   ]);
 
   const wallets = walletsRes.data ?? [];
@@ -42,6 +43,7 @@ export default async function WithdrawPage() {
       <div className="flex flex-col gap-4">
         <h2 className="text-base font-bold text-slate-900">Payout Methods</h2>
         <WithdrawMethods
+          notice={notice}
           wallets={wallets.map((w) => ({
             currency: w.currency,
             symbol: w.symbol,

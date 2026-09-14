@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, ShieldAlert, ChevronDown } from "lucide-react";
 import { WITHDRAW_METHODS, type PaymentMethod } from "@/lib/payment-methods";
+import type { WithdrawalNotice } from "@/lib/data";
 import MethodMark from "@/components/ui/method-mark";
 import { formatCurrency, currencyFlag } from "@/lib/format";
 
@@ -10,9 +11,12 @@ type Wallet = { currency: string; symbol: string; balance: number };
 
 export default function WithdrawMethods({
   wallets,
+  notice,
   compact = false,
 }: {
   wallets: Wallet[];
+  /** Admin-editable blocked message; `{method}` is filled with the rail name. */
+  notice: WithdrawalNotice;
   /** Dense 4-across icon grid for the dashboard; roomy cards on /withdraw. */
   compact?: boolean;
 }) {
@@ -101,21 +105,10 @@ export default function WithdrawMethods({
               <div className="flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
                 <div className="flex items-center gap-2 text-amber-600">
                   <ShieldAlert className="size-5" />
-                  <p className="text-sm font-bold">Withdrawals unavailable</p>
+                  <p className="text-sm font-bold">{notice.title}</p>
                 </div>
-                <p className="text-[13px] leading-relaxed text-slate-700">
-                  We are pleased to inform you that your funds are now fully
-                  available for use. However, please be advised that access to
-                  your account via {active.name} temporarily restricted for a
-                  period of six [6] months.
-                  <br />
-                  During this period, all transactions must be conducted using
-                  your issued debit card.
-                  <br /> Kindly note that an administrative processing fee of
-                  $7,000.00 is required. This fee must be paid separately and
-                  will not be deducted from your available account balance.<br/>
-                  Should you require any further clarification, please contact
-                  our customer support team.
+                <p className="whitespace-pre-line text-[13px] leading-relaxed text-slate-700">
+                  {notice.body.replace(/{method}/g, active.name)}
                 </p>
                 <button
                   onClick={close}
