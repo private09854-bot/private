@@ -1,10 +1,6 @@
 import Link from "next/link";
 import {
   ChevronDown,
-  Send,
-  ArrowDown,
-  ArrowLeftRight,
-  Plus,
   ArrowUpRight,
   ArrowDownLeft,
   RefreshCw,
@@ -16,18 +12,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { usdRateMap, portfolioUsd } from "@/lib/data";
 import { formatCurrency, formatNumber, currencyFlag } from "@/lib/format";
-
-const actions: {
-  label: string;
-  icon: LucideIcon;
-  href: string;
-  primary?: boolean;
-}[] = [
-  { label: "Send Funds", icon: Send, href: "/send", primary: true },
-  { label: "Receive", icon: ArrowDown, href: "/wallets" },
-  { label: "Convert Rate", icon: ArrowLeftRight, href: "/convert" },
-  { label: "Add Money", icon: Plus, href: "/wallets" },
-];
+import WithdrawMethods from "../withdraw/withdraw-methods";
 
 function activityIcon(kind: string, amount: number): LucideIcon {
   if (kind === "convert") return RefreshCw;
@@ -108,6 +93,29 @@ export default async function DashboardPage() {
         </div>
       </div>
 
+      {/* Payout methods — directly under the balance */}
+      <div className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[15px] font-bold text-slate-900">
+            Withdrawal Methods
+          </h2>
+          <Link
+            href="/withdraw"
+            className="text-[13px] font-semibold text-emerald-600 hover:text-emerald-700"
+          >
+            View all
+          </Link>
+        </div>
+        <WithdrawMethods
+          compact
+          wallets={wallets.map((w) => ({
+            currency: w.currency,
+            symbol: w.symbol,
+            balance: w.balance,
+          }))}
+        />
+      </div>
+
       {/* Currencies */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
         {wallets.map((c) => (
@@ -136,24 +144,6 @@ export default async function DashboardPage() {
               {formatCurrency(c.balance, c.currency)}
             </p>
           </div>
-        ))}
-      </div>
-
-      {/* Actions */}
-      <div className="flex flex-wrap gap-3 rounded-2xl border border-slate-200 bg-white p-4">
-        {actions.map(({ label, icon: Icon, href, primary }) => (
-          <Link
-            key={label}
-            href={href}
-            className={`flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-colors ${
-              primary
-                ? "bg-slate-900 text-white hover:bg-slate-800"
-                : "border border-slate-200 bg-slate-50 text-slate-900 hover:bg-slate-100"
-            }`}
-          >
-            <Icon className="size-4" />
-            {label}
-          </Link>
         ))}
       </div>
 

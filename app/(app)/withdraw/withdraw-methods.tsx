@@ -8,7 +8,14 @@ import { formatCurrency, currencyFlag } from "@/lib/format";
 
 type Wallet = { currency: string; symbol: string; balance: number };
 
-export default function WithdrawMethods({ wallets }: { wallets: Wallet[] }) {
+export default function WithdrawMethods({
+  wallets,
+  compact = false,
+}: {
+  wallets: Wallet[];
+  /** Dense 4-across icon grid for the dashboard; roomy cards on /withdraw. */
+  compact?: boolean;
+}) {
   const [active, setActive] = useState<PaymentMethod | null>(null);
   const [amount, setAmount] = useState("100.00");
   const [currency, setCurrency] = useState(wallets[0]?.currency ?? "USD");
@@ -30,9 +37,26 @@ export default function WithdrawMethods({ wallets }: { wallets: Wallet[] }) {
   return (
     <>
       {/* Method grid */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
-        {WITHDRAW_METHODS.map((m) => {
-          return (
+      {compact ? (
+        <div className="grid grid-cols-4 gap-x-2 gap-y-5 sm:gap-x-4">
+          {WITHDRAW_METHODS.map((m) => (
+            <button
+              key={m.key}
+              onClick={() => open(m)}
+              className="group flex min-w-0 flex-col items-center gap-2 text-center"
+            >
+              <span className="transition-transform group-hover:-translate-y-0.5 group-active:scale-95">
+                <MethodMark method={m} />
+              </span>
+              <span className="w-full text-[11px] font-semibold leading-tight text-slate-700 sm:text-xs">
+                {m.name}
+              </span>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
+          {WITHDRAW_METHODS.map((m) => (
             <button
               key={m.key}
               onClick={() => open(m)}
@@ -46,9 +70,9 @@ export default function WithdrawMethods({ wallets }: { wallets: Wallet[] }) {
                 <span className="text-[11px] text-slate-500">{m.blurb}</span>
               </span>
             </button>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Modal */}
       {active && (
