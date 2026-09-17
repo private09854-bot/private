@@ -12,7 +12,7 @@ export type PaymentMethod = {
   mark?: string;
   /** Fallback for generic rails that have no brand. */
   icon?: LucideIcon;
-  /** Fallback for brands with no published open logo (Skrill). */
+  /** Fallback lettermark for any brand with no published open logo. */
   letter?: string;
 };
 
@@ -20,8 +20,8 @@ export type PaymentMethod = {
  * Payout methods shown on the Withdraw screen.
  *
  * Brand marks are rendered in each brand's own colour on the background that
- * brand uses for light surfaces — a few (Western Union yellow, Wise green) are
- * too light to sit on white, so they get their own tile colour instead.
+ * brand uses for light surfaces — a few (Western Union yellow, Cash App green)
+ * are too light to sit on white, so they get their own tile colour instead.
  *
  * This is a demonstration environment: none of these are wired to a real
  * gateway, and the withdraw flow says so plainly.
@@ -52,12 +52,12 @@ export const WITHDRAW_METHODS: PaymentMethod[] = [
     mark: "paypal",
   },
   {
-    key: "skrill",
-    name: "Skrill",
-    blurb: "Skrill wallet payout",
-    tile: "bg-[#f6eef3]",
-    fg: "#862165",
-    letter: "S",
+    key: "moneygram",
+    name: "MoneyGram",
+    blurb: "Cash pickup or bank deposit",
+    tile: "bg-[#fdeceb]",
+    fg: "#DA291C",
+    mark: "moneygram",
   },
   {
     key: "googlepay",
@@ -76,19 +76,19 @@ export const WITHDRAW_METHODS: PaymentMethod[] = [
     mark: "westernunion",
   },
   {
-    key: "wise",
-    name: "Wise",
-    blurb: "Multi-currency transfer",
-    tile: "bg-[#9FE870]",
-    fg: "#163300",
-    mark: "wise",
+    key: "cashapp",
+    name: "Cash App",
+    blurb: "Send to a $Cashtag",
+    tile: "bg-[#e6faf0]",
+    fg: "#00C244",
+    mark: "cashapp",
   },
   {
-    key: "payoneer",
-    name: "Payoneer",
-    blurb: "Payoneer account payout",
-    tile: "bg-[#fff2ed]",
-    fg: "#FF4800",
-    mark: "payoneer",
+    key: "zelle",
+    name: "Zelle",
+    blurb: "Direct bank-to-bank",
+    tile: "bg-[#f3eafc]",
+    fg: "#6D1ED4",
+    mark: "zelle",
   },
 ];
