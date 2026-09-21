@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Snowflake } from "lucide-react";
+import { Snowflake, Clock, Wifi } from "lucide-react";
 import { toggleCardFreeze, adjustCardLimit } from "@/app/actions/banking";
 import { formatCurrency } from "@/lib/format";
 
@@ -16,7 +16,67 @@ type Card = {
   spent: number;
   limit: number;
   frozen: boolean;
+  type: string; // virtual | physical
+  status: string; // active | pending | cancelled
 };
+
+/** The card face — shared look for active and pending cards. */
+function CardFace({ card }: { card: Card }) {
+  const pending = card.status === "pending";
+  return (
+    <div
+      className={`relative flex h-[240px] flex-col justify-between overflow-hidden rounded-2xl p-6 transition-colors ${
+        pending
+          ? "bg-slate-400"
+          : card.frozen
+            ? "bg-slate-700"
+            : "bg-gradient-to-br from-slate-900 to-slate-700"
+      }`}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-1">
+          <p className="text-lg font-bold text-white">{card.name}</p>
+          <span className="w-fit rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+            {card.type}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          {pending && (
+            <span className="flex items-center gap-1 rounded-full bg-amber-400/25 px-2 py-0.5 text-[10px] font-bold text-amber-100">
+              <Clock className="size-3" />
+              PENDING
+            </span>
+          )}
+          {!pending && card.frozen && (
+            <span className="flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-300">
+              <Snowflake className="size-3" />
+              FROZEN
+            </span>
+          )}
+          {!pending && <Wifi className="size-4 rotate-90 text-white/70" />}
+        </div>
+      </div>
+
+      <p className="font-mono text-[22px] font-semibold tracking-[2px] text-white">
+        {pending ? "•••• •••• •••• ••••" : `•••• •••• •••• ${card.last4}`}
+      </p>
+
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[10px] text-white/60">CARD HOLDER</p>
+          <p className="text-sm font-semibold text-white">{card.holder}</p>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[10px] text-white/60">EXPIRES</p>
+          <p className="font-mono text-sm font-semibold text-white">
+            {pending ? "••/••" : card.expiry}
+          </p>
+        </div>
+        <p className="font-mono text-xs font-bold text-white/90">{card.brand}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function CardPanel({ card }: { card: Card }) {
   const router = useRouter();
@@ -24,7 +84,9 @@ export default function CardPanel({ card }: { card: Card }) {
   const [limit, setLimit] = useState(String(card.limit));
   const [pending, startTransition] = useTransition();
 
-  const pct = Math.min(100, Math.round((card.spent / card.limit) * 100));
+  const pct = card.limit
+    ? Math.min(100, Math.round((card.spent / card.limit) * 100))
+    : 0;
 
   function refresh() {
     startTransition(() => router.refresh());
@@ -41,42 +103,30 @@ export default function CardPanel({ card }: { card: Card }) {
     refresh();
   }
 
-  return (
-    <div className="flex w-full shrink-0 flex-col gap-5 lg:w-[420px]">
-      {/* Card */}
-      <div
-        className={`flex h-[240px] flex-col justify-between rounded-2xl p-6 transition-colors ${
-          card.frozen ? "bg-slate-700" : "bg-slate-900"
-        }`}
-      >
-        <div className="flex items-center justify-between">
-          <p className="text-lg font-bold text-white">{card.name}</p>
-          <div className="flex items-center gap-2">
-            {card.frozen && (
-              <span className="flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-300">
-                <Snowflake className="size-3" />
-                FROZEN
-              </span>
-            )}
-            <p className="font-mono text-xs text-emerald-500">{card.brand}</p>
-          </div>
-        </div>
-        <p className="font-mono text-[22px] font-semibold tracking-[2px] text-white">
-          •••• •••• •••• {card.last4}
-        </p>
-        <div className="flex items-center justify-between">
+  // Pending physical card: show the face + a status note, no controls.
+  if (card.status === "pending") {
+    return (
+      <div className="flex w-full flex-col gap-4">
+        <CardFace card={card} />
+        <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+          <Clock className="mt-0.5 size-4 shrink-0 text-amber-600" />
           <div className="flex flex-col gap-0.5">
-            <p className="text-[10px] text-slate-500">CARD HOLDER</p>
-            <p className="text-sm font-semibold text-white">{card.holder}</p>
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[10px] text-slate-500">EXPIRES</p>
-            <p className="font-mono text-sm font-semibold text-white">
-              {card.expiry}
+            <p className="text-[13px] font-bold text-amber-900">
+              Your physical card is being prepared
+            </p>
+            <p className="text-[12px] leading-relaxed text-amber-800">
+              We&apos;re processing your request. You&apos;ll be able to activate
+              the card once it arrives.
             </p>
           </div>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="flex w-full flex-col gap-5">
+      <CardFace card={card} />
 
       {/* Limit tracker */}
       <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_4px_6px_rgba(15,23,42,0.03)]">

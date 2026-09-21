@@ -226,3 +226,101 @@ export async function adjustCardLimit(
   revalidatePath("/cards");
   return { ok: true };
 }
+
+// --- Card issuance ---------------------------------------------------------
+
+const CARD_LIMIT = 5000;
+
+/** 16-digit-friendly random last four. */
+function randomLast4(): string {
+  return String(Math.floor(1000 + Math.random() * 9000));
+}
+
+/** Expiry four years out, MM/YY (uses the card's created date). */
+function expiryFromNow(): string {
+  const d = new Date();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yy = String((d.getFullYear() + 4) % 100).padStart(2, "0");
+  return `${mm}/${yy}`;
+}
+
+/** Cardholder name as it should read on the card. */
+function holderName(user: {
+  firstName?: string | null;
+  lastName?: string | null;
+  name: string;
+}): string {
+  const full =
+    [user.firstName, user.lastName].filter(Boolean).join(" ") || user.name;
+  return full.toUpperCase();
+}
+
+/**
+ * Issue a virtual card instantly. Details are drawn from the signed-in user,
+ * so the holder name matches their account. One virtual card per customer.
+ */
+export async function createVirtualCard(): Promise<ActionResult> {
+  const user = await requireCustomer();
+
+  const { count } = await supabaseAdmin
+    .from("cards")
+    .select("*", { count: "exact", head: true })
+    .eq("ownerId", user.id)
+    .eq("type", "virtual");
+  if ((count ?? 0) > 0) {
+    return { error: "You already have a virtual card." };
+  }
+
+  const { error } = await supabaseAdmin.from("cards").insert({
+    ownerId: user.id,
+    name: "Virtual Card",
+    brand: "VISA",
+    last4: randomLast4(),
+    holder: holderName(user),
+    expiry: expiryFromNow(),
+    spent: 0,
+    limit: CARD_LIMIT,
+    frozen: false,
+    type: "virtual",
+    status: "active",
+  });
+  if (error) return { error: error.message };
+
+  revalidatePath("/cards");
+  return { ok: true, message: "Your virtual card is ready." };
+}
+
+/**
+ * Request a physical card. It is created in a `pending` state — an admin would
+ * mark it issued/shipped in a real system. One physical card per customer.
+ */
+export async function requestPhysicalCard(): Promise<ActionResult> {
+  const user = await requireCustomer();
+
+  const { count } = await supabaseAdmin
+    .from("cards")
+    .select("*", { count: "exact", head: true })
+    .eq("ownerId", user.id)
+    .eq("type", "physical");
+  if ((count ?? 0) > 0) {
+    return { error: "You have already requested a physical card." };
+  }
+
+  const { error } = await supabaseAdmin.from("cards").insert({
+    ownerId: user.id,
+    name: "Physical Card",
+    brand: "VISA",
+    last4: randomLast4(),
+    holder: holderName(user),
+    expiry: expiryFromNow(),
+    spent: 0,
+    limit: CARD_LIMIT,
+    frozen: false,
+    type: "physical",
+    status: "pending",
+  });
+  if (error) return { error: error.message };
+
+  revalidatePath("/cards");
+  return { ok: true, message: "Physical card requested." };
+}

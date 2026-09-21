@@ -121,8 +121,12 @@ create table if not exists public.cards (
   expiry          text not null,
   spent           double precision not null default 0,
   "limit"         double precision not null default 0,
-  frozen          boolean not null default false
+  frozen          boolean not null default false,
+  type            text not null default 'virtual',      -- virtual | physical
+  status          text not null default 'active',       -- active | pending | cancelled
+  "createdAt"     timestamptz not null default now()
 );
+create index if not exists cards_owner_idx on public.cards ("ownerId", "createdAt");
 
 create table if not exists public.card_authorizations (
   id              uuid primary key default gen_random_uuid(),
@@ -266,9 +270,16 @@ create table if not exists public.support_messages (
   name            text not null,
   email           text not null,
   message         text not null,
+  sender          text not null default 'customer',    -- customer | admin
   handled         boolean not null default false,
+  "readByAdmin"    boolean not null default false,       -- false = admin has not seen this customer message
+  "readByCustomer" boolean not null default true,        -- false = customer has not seen this admin reply
   "createdAt"     timestamptz not null default now()
 );
+create index if not exists support_messages_user_idx
+  on public.support_messages ("userId", "createdAt");
+create index if not exists support_messages_email_idx
+  on public.support_messages (email, "createdAt");
 
 -- ---------------------------------------------------------------------------
 -- Row Level Security: lock everything down. The app talks to these tables

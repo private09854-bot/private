@@ -13,6 +13,7 @@ import {
   TrendingUp,
   BadgePercent,
   Banknote,
+  MessageSquare,
   type LucideIcon,
 } from "lucide-react";
 
@@ -50,6 +51,7 @@ export const adminNav: NavItem[] = [
   { label: "KYC Pending", href: "/admin/kyc", icon: FileLock2 },
   { label: "Transactions", href: "/admin/transactions", icon: CreditCard },
   { label: "Transfers", href: "/admin/transfers", icon: ArrowUpFromLine },
+  { label: "Support", href: "/admin/support", icon: MessageSquare },
   { label: "Risk & Fraud", href: "/admin/risk", icon: ShieldAlert },
   { label: "Exchange Rates", href: "/admin/rates", icon: TrendingUp },
   { label: "Fees & Limits", href: "/admin/fees", icon: BadgePercent },
