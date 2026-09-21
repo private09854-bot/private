@@ -231,9 +231,32 @@ export async function adjustCardLimit(
 
 const CARD_LIMIT = 5000;
 
-/** 16-digit-friendly random last four. */
-function randomLast4(): string {
-  return String(Math.floor(1000 + Math.random() * 9000));
+/**
+ * A random, Luhn-valid 16-digit VISA-style number. Non-functional demo value —
+ * the platform is not connected to any card network.
+ */
+function randomCardNumber(): string {
+  const digits = [4]; // VISA prefix
+  while (digits.length < 15) digits.push(Math.floor(Math.random() * 10));
+  // Luhn check digit
+  let sum = 0;
+  digits.forEach((d, i) => {
+    // Position of the check digit is 16 (even from the right), so double the
+    // digits at odd positions from the left in this 15-digit body.
+    let v = d;
+    if ((digits.length - i) % 2 === 1) {
+      v *= 2;
+      if (v > 9) v -= 9;
+    }
+    sum += v;
+  });
+  digits.push((10 - (sum % 10)) % 10);
+  return digits.join("");
+}
+
+/** Three-digit demo CVV. */
+function randomCvv(): string {
+  return String(Math.floor(100 + Math.random() * 900));
 }
 
 /** Expiry four years out, MM/YY (uses the card's created date). */
@@ -271,11 +294,14 @@ export async function createVirtualCard(): Promise<ActionResult> {
     return { error: "You already have a virtual card." };
   }
 
+  const number = randomCardNumber();
   const { error } = await supabaseAdmin.from("cards").insert({
     ownerId: user.id,
     name: "Virtual Card",
     brand: "VISA",
-    last4: randomLast4(),
+    number,
+    last4: number.slice(-4),
+    cvv: randomCvv(),
     holder: holderName(user),
     expiry: expiryFromNow(),
     spent: 0,
@@ -306,11 +332,14 @@ export async function requestPhysicalCard(): Promise<ActionResult> {
     return { error: "You have already requested a physical card." };
   }
 
+  const number = randomCardNumber();
   const { error } = await supabaseAdmin.from("cards").insert({
     ownerId: user.id,
     name: "Physical Card",
     brand: "VISA",
-    last4: randomLast4(),
+    number,
+    last4: number.slice(-4),
+    cvv: randomCvv(),
     holder: holderName(user),
     expiry: expiryFromNow(),
     spent: 0,

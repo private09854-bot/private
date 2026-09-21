@@ -116,7 +116,9 @@ create table if not exists public.cards (
   "ownerId"       uuid not null references public.profiles(id) on delete cascade,
   name            text not null,
   brand           text not null,
+  number          text,                                 -- full demo PAN, non-functional
   last4           text not null,
+  cvv             text,                                 -- demo CVV, non-functional
   holder          text not null,
   expiry          text not null,
   spent           double precision not null default 0,
