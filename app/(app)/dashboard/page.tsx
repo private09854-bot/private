@@ -11,6 +11,12 @@ import Badge from "@/components/ui/badge";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { usdRateMap, portfolioUsd, getWithdrawalNotice } from "@/lib/data";
+import {
+  getFxSnapshot,
+  crossRate,
+  pairChangePct,
+  formatChange,
+} from "@/lib/fx";
 import { formatCurrency, formatNumber, currencyFlag } from "@/lib/format";
 import WithdrawMethods from "../withdraw/withdraw-methods";
 
@@ -41,7 +47,7 @@ const INDEX_PAIRS: [string, string][] = [
 export default async function DashboardPage() {
   const user = await requireCustomer();
 
-  const [walletsRes, rates, txRes, fxRes, withdrawalNotice] = await Promise.all([
+  const [walletsRes, rates, txRes, fxSnap, withdrawalNotice] = await Promise.all([
     supabaseAdmin.from("wallets").select("*").eq("ownerId", user.id).order("sort"),
     usdRateMap(),
     supabaseAdmin
@@ -50,16 +56,21 @@ export default async function DashboardPage() {
       .eq("ownerId", user.id)
       .order("date", { ascending: false })
       .limit(5),
-    supabaseAdmin.from("fx_rates").select("*"),
+    getFxSnapshot(),
     getWithdrawalNotice(),
   ]);
 
   const wallets = walletsRes.data ?? [];
   const transactions = txRes.data ?? [];
-  const fx = fxRes.data ?? [];
 
   const portfolio = portfolioUsd(wallets, rates);
-  const fxLookup = new Map(fx.map((r) => [`${r.base}/${r.quote}`, r]));
+
+  // Live conversion indices, computed from the ECB snapshot.
+  const indices = INDEX_PAIRS.map(([base, quote]) => {
+    const rate = crossRate(fxSnap.today, base, quote);
+    const { label, tone } = formatChange(pairChangePct(fxSnap, base, quote));
+    return { base, quote, rate, change: label, changeTone: tone };
+  }).filter((i) => i.rate > 0);
 
   return (
     <div className="flex flex-col gap-8">
@@ -210,44 +221,51 @@ export default async function DashboardPage() {
         </div>
 
         <div className="flex w-full flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 lg:w-[340px]">
-          <h2 className="text-[15px] font-bold text-slate-900">
-            Conversion Indices
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-[15px] font-bold text-slate-900">
+              Conversion Indices
+            </h2>
+            {fxSnap.source === "live" && (
+              <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-600">
+                <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+                Live
+              </span>
+            )}
+          </div>
           <div className="flex flex-col gap-3.5">
-            {INDEX_PAIRS.map(([base, quote]) => {
-              const r = fxLookup.get(`${base}/${quote}`);
-              if (!r) return null;
-              return (
-                <div
-                  key={`${base}/${quote}`}
-                  className="flex items-center justify-between rounded-lg bg-slate-50 p-3"
-                >
-                  <span className="text-[13px] font-semibold text-slate-900">
-                    {base} / {quote}
+            {indices.map((r) => (
+              <div
+                key={`${r.base}/${r.quote}`}
+                className="flex items-center justify-between rounded-lg bg-slate-50 p-3"
+              >
+                <span className="text-[13px] font-semibold text-slate-900">
+                  {r.base} / {r.quote}
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[13px] font-bold text-slate-900">
+                    {formatNumber(r.rate, 4)}
                   </span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[13px] font-bold text-slate-900">
-                      {formatNumber(r.rate, 4)}
-                    </span>
-                    <span
-                      className={`text-[11px] font-semibold ${
-                        r.changeTone === "down"
-                          ? "text-red-500"
-                          : "text-emerald-500"
-                      }`}
-                    >
-                      {r.change}
-                    </span>
-                  </div>
+                  <span
+                    className={`text-[11px] font-semibold ${
+                      r.changeTone === "down"
+                        ? "text-red-500"
+                        : r.changeTone === "up"
+                          ? "text-emerald-500"
+                          : "text-slate-400"
+                    }`}
+                  >
+                    {r.change}
+                  </span>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
           <div className="flex items-start gap-2.5 rounded-lg bg-emerald-50 p-3">
             <Info className="size-4 shrink-0 text-emerald-500" />
             <p className="text-[11px] text-emerald-500">
-              Conversion rates are direct mid-market values without
-              institutional markup.
+              {fxSnap.source === "live"
+                ? `Live mid-market rates (ECB) · as of ${fxSnap.date}. Updated hourly.`
+                : "Mid-market reference rates. Live feed is temporarily unavailable."}
             </p>
           </div>
         </div>

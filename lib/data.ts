@@ -1,32 +1,29 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getFxSnapshot, crossRate } from "@/lib/fx";
 
-/** Map of currency -> its value in USD (for portfolio totals). */
+/**
+ * Map of currency -> its value in USD (for portfolio totals), from live rates.
+ * `today[X]` is how many X one USD buys, so 1 X is worth 1/today[X] USD.
+ */
 export async function usdRateMap(): Promise<Map<string, number>> {
-  const { data } = await supabaseAdmin
-    .from("fx_rates")
-    .select("base,rate")
-    .eq("quote", "USD");
-
-  const map = new Map<string, number>(
-    (data ?? []).map((r) => [r.base as string, r.rate as number]),
-  );
+  const snap = await getFxSnapshot();
+  const map = new Map<string, number>();
+  for (const [currency, perUsd] of Object.entries(snap.today)) {
+    map.set(currency, perUsd ? 1 / perUsd : 0);
+  }
   map.set("USD", 1);
   return map;
 }
 
-/** Look up a single directional FX rate (base -> quote). */
+/** Live directional FX rate (base -> quote). */
 export async function getFxRate(
   base: string,
   quote: string,
 ): Promise<number | null> {
   if (base === quote) return 1;
-  const { data } = await supabaseAdmin
-    .from("fx_rates")
-    .select("rate")
-    .eq("base", base)
-    .eq("quote", quote)
-    .maybeSingle();
-  return (data?.rate as number | undefined) ?? null;
+  const snap = await getFxSnapshot();
+  const rate = crossRate(snap.today, base, quote);
+  return rate > 0 ? rate : null;
 }
 
 /** Total portfolio value in USD across a set of wallets. */
