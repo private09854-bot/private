@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import {
   Snowflake,
   Clock,
-  Wifi,
   Eye,
   EyeOff,
   RotateCw,
@@ -36,6 +35,45 @@ function groupNumber(n: string): string {
   return n.replace(/(.{4})/g, "$1 ").trim();
 }
 
+/** EMV-style chip — an original gold chip graphic, not a flat rectangle. */
+function CardChip() {
+  return (
+    <svg viewBox="0 0 48 38" className="h-9 w-12" aria-hidden="true">
+      <defs>
+        <linearGradient id="chipg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#F7E6A8" />
+          <stop offset="0.5" stopColor="#E7C766" />
+          <stop offset="1" stopColor="#B8912F" />
+        </linearGradient>
+      </defs>
+      <rect x="1" y="1" width="46" height="36" rx="6" fill="url(#chipg)" />
+      <g stroke="#8a6d1e" strokeWidth="1.1" fill="none" opacity="0.65">
+        <path d="M17 1 V37 M31 1 V37 M1 13 H17 M31 13 H47 M1 25 H17 M31 25 H47" />
+        <rect x="17" y="13" width="14" height="12" rx="1.5" />
+      </g>
+    </svg>
+  );
+}
+
+/** Contactless payment waves. */
+function Contactless({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M8.5 7.5a7 7 0 0 1 0 9" />
+      <path d="M12 5a10 10 0 0 1 0 14" />
+      <path d="M15.5 3a13 13 0 0 1 0 18" />
+    </svg>
+  );
+}
+
 /** Flippable card. Front shows the number (revealable); back shows the CVV. */
 function FlipCard({ card }: { card: Card }) {
   const pending = card.status === "pending";
@@ -44,9 +82,12 @@ function FlipCard({ card }: { card: Card }) {
   const [revealed, setRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const maskedNumber = card.number
-    ? `•••• •••• •••• ${card.last4}`
-    : "•••• •••• •••• ••••";
+  // A card that has not been issued (pending) shows no digits at all, so there
+  // is never a stray last-4 that looks like it should match another card.
+  const maskedNumber =
+    pending || !card.number
+      ? "•••• •••• •••• ••••"
+      : `•••• •••• •••• ${card.last4}`;
 
   async function copyNumber() {
     if (!card.number) return;
@@ -69,18 +110,23 @@ function FlipCard({ card }: { card: Card }) {
         >
           {/* ---------- FRONT ---------- */}
           <div
-            className={`absolute inset-0 flex flex-col justify-between overflow-hidden rounded-2xl p-6 [backface-visibility:hidden] ${
+            className={`absolute inset-0 flex flex-col justify-between overflow-hidden rounded-2xl p-6 text-white [backface-visibility:hidden] ${
               pending
-                ? "bg-slate-400"
+                ? "bg-[linear-gradient(135deg,#64748b_0%,#475569_100%)]"
                 : card.frozen
-                  ? "bg-slate-700"
-                  : "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700"
+                  ? "bg-[linear-gradient(135deg,#475569_0%,#334155_100%)]"
+                  : "bg-[linear-gradient(135deg,#0b3b2e_0%,#0f172a_52%,#134e4a_100%)]"
             }`}
           >
-            <div className="flex items-start justify-between">
+            {/* Background depth: soft brand-gold glow + translucent rings */}
+            <div className="pointer-events-none absolute -right-16 -top-24 size-56 rounded-full bg-emerald-400/10 blur-2xl" />
+            <div className="pointer-events-none absolute -right-8 -top-10 size-40 rounded-full border border-white/10" />
+            <div className="pointer-events-none absolute -bottom-24 -left-12 size-56 rounded-full border border-white/10" />
+
+            <div className="relative flex items-start justify-between">
               <div className="flex flex-col gap-1">
-                <p className="text-lg font-bold text-white">{card.name}</p>
-                <span className="w-fit rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                <p className="text-[15px] font-bold tracking-wide">{card.name}</p>
+                <span className="w-fit rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white/90">
                   {card.type}
                 </span>
               </div>
@@ -92,20 +138,22 @@ function FlipCard({ card }: { card: Card }) {
                   </span>
                 )}
                 {!pending && card.frozen && (
-                  <span className="flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-300">
+                  <span className="flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-200">
                     <Snowflake className="size-3" />
                     FROZEN
                   </span>
                 )}
-                {!pending && <Wifi className="size-4 rotate-90 text-white/70" />}
               </div>
             </div>
 
-            {/* EMV chip + number */}
-            <div className="flex flex-col gap-3">
-              <div className="h-7 w-10 rounded-[5px] bg-gradient-to-br from-amber-200 to-amber-400 shadow-inner" />
+            {/* Chip + contactless + number */}
+            <div className="relative flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <CardChip />
+                {!pending && <Contactless className="size-5 text-white/75" />}
+              </div>
               <div className="flex items-center gap-2">
-                <p className="font-mono text-[19px] font-semibold tracking-[2px] text-white sm:text-[21px]">
+                <p className="font-mono text-[19px] font-semibold tracking-[2px] [text-shadow:0_1px_2px_rgba(0,0,0,0.35)] sm:text-[21px]">
                   {revealed && card.number
                     ? groupNumber(card.number)
                     : maskedNumber}
@@ -117,7 +165,7 @@ function FlipCard({ card }: { card: Card }) {
                     aria-label="Copy card number"
                   >
                     {copied ? (
-                      <Check className="size-4 text-emerald-400" />
+                      <Check className="size-4 text-emerald-300" />
                     ) : (
                       <Copy className="size-4" />
                     )}
@@ -126,34 +174,50 @@ function FlipCard({ card }: { card: Card }) {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="relative flex items-end justify-between">
               <div className="flex flex-col gap-0.5">
-                <p className="text-[10px] text-white/60">CARD HOLDER</p>
-                <p className="text-sm font-semibold text-white">{card.holder}</p>
+                <p className="text-[9px] uppercase tracking-wider text-white/55">
+                  Card Holder
+                </p>
+                <p className="text-sm font-semibold tracking-wide">
+                  {card.holder}
+                </p>
               </div>
               <div className="flex flex-col gap-0.5">
-                <p className="text-[10px] text-white/60">EXPIRES</p>
-                <p className="font-mono text-sm font-semibold text-white">
+                <p className="text-[9px] uppercase tracking-wider text-white/55">
+                  Expires
+                </p>
+                <p className="font-mono text-sm font-semibold">
                   {pending ? "••/••" : card.expiry}
                 </p>
               </div>
-              <p className="font-mono text-xs font-bold italic text-white/90">
+              <p className="font-serif text-lg font-bold italic tracking-tight text-white/95">
                 {card.brand}
               </p>
             </div>
           </div>
 
           {/* ---------- BACK ---------- */}
-          <div className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-            <div className="mt-5 h-11 w-full bg-black/80" />
+          <div className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#0f172a_0%,#134e4a_100%)] [backface-visibility:hidden] [transform:rotateY(180deg)]">
+            <div className="mt-5 h-11 w-full bg-black/85" />
             <div className="flex flex-col gap-2 px-6 pt-5">
-              <p className="text-[10px] text-white/60">CVV</p>
-              <div className="flex h-9 items-center justify-end rounded bg-white px-3">
+              <p className="text-[10px] uppercase tracking-wider text-white/55">
+                CVV
+              </p>
+              <div className="flex h-9 items-center justify-end rounded bg-[repeating-linear-gradient(-60deg,#fff,#fff_6px,#eef2f7_6px,#eef2f7_12px)] px-3">
                 <span className="font-mono text-sm font-bold tracking-[2px] text-slate-900">
                   {revealed && card.cvv ? card.cvv : "•••"}
                 </span>
               </div>
-              <p className="mt-1 text-[10px] leading-relaxed text-white/50">
+              <div className="mt-auto flex items-center justify-between pb-5 pt-3">
+                <span className="font-serif text-base font-bold italic text-white/90">
+                  {card.brand}
+                </span>
+                <span className="text-[9px] uppercase tracking-wider text-white/50">
+                  Profintal Savings
+                </span>
+              </div>
+              <p className="text-[10px] leading-relaxed text-white/45">
                 Demo card — not connected to any card network. Numbers are
                 randomly generated and cannot be charged.
               </p>
