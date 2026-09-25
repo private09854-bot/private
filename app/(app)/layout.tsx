@@ -1,4 +1,5 @@
 import AppSidebar from "@/components/app-sidebar";
+import MobileNav from "@/components/mobile-nav";
 import SupportChat from "@/components/support-chat";
 import { requireCustomer } from "@/lib/session";
 
@@ -14,10 +15,12 @@ export default async function AppLayout({
       <AppSidebar
         user={{ name: user.name, email: user.email, avatar: user.avatar }}
       />
-      <main className="min-w-0 flex-1 overflow-y-auto p-4 md:p-6 lg:p-10">
+      {/* Extra bottom padding on mobile so content clears the fixed tab bar. */}
+      <main className="min-w-0 flex-1 overflow-y-auto px-4 pt-4 pb-28 md:px-6 md:pt-6 lg:p-10">
         {children}
       </main>
       <SupportChat authed />
+      <MobileNav />
     </div>
   );
 }

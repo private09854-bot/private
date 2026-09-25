@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { appNav } from "@/lib/nav";
 import { logout } from "@/app/actions/auth";
 import BrandLogo from "./brand-logo";
@@ -14,55 +13,29 @@ export default function AppSidebar({
   user: { name: string; email: string; avatar: string | null };
 }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-
-  // Close the drawer whenever the route changes.
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900 px-4 py-3 lg:hidden">
+      {/* Mobile top bar — navigation lives in the bottom tab bar */}
+      <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
         <BrandLogo href="/dashboard" compact />
-        <button
-          aria-label="Open menu"
-          onClick={() => setOpen(true)}
-          className="text-slate-300 transition-colors hover:text-white"
-        >
-          <Menu className="size-6" />
-        </button>
+        <Link href="/profile" aria-label="Your profile" className="shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={user.avatar ?? "/avatars/sarah.png"}
+            alt=""
+            className="size-9 rounded-full object-cover ring-2 ring-slate-100"
+          />
+        </Link>
       </div>
 
-      {/* Drawer overlay (mobile only) */}
-      {open && (
-        <div
-          className="fixed inset-0 z-40 bg-slate-900/60 lg:hidden"
-          onClick={() => setOpen(false)}
-        />
-      )}
-
-      {/* Sidebar — drawer on mobile, static on desktop */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] shrink-0 flex-col justify-between border-r border-slate-800 bg-slate-900 px-5 pb-6 pt-8 transition-transform duration-200 lg:static lg:z-auto lg:translate-x-0 ${
-          open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
-      >
+      {/* Desktop sidebar */}
+      <aside className="hidden w-[260px] shrink-0 flex-col justify-between border-r border-slate-800 bg-slate-900 px-5 pb-6 pt-8 lg:flex">
         <div className="flex flex-col gap-10">
-          {/* Logo */}
-          <div className="flex items-center justify-between pl-2">
+          <div className="pl-2">
             <BrandLogo href="/dashboard" compact />
-            <button
-              aria-label="Close menu"
-              onClick={() => setOpen(false)}
-              className="text-slate-400 transition-colors hover:text-white lg:hidden"
-            >
-              <X className="size-5" />
-            </button>
           </div>
 
-          {/* Nav */}
           <nav className="flex flex-col gap-1.5">
             {appNav.map(({ label, href, icon: Icon }) => {
               const active =

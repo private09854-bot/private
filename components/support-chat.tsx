@@ -90,7 +90,11 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
     <>
       {/* Panel */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 flex max-h-[70vh] w-[360px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.18)]">
+        <div
+          className={`fixed right-6 z-50 flex max-h-[70vh] w-[360px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.18)] ${
+            authed ? "bottom-40 lg:bottom-24" : "bottom-24"
+          }`}
+        >
           <div className="flex items-center justify-between bg-blue-600 px-4 py-3.5">
             <div className="flex flex-col">
               <p className="text-sm font-bold text-white">Support</p>
@@ -248,7 +252,9 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
       <button
         aria-label={open ? "Close support chat" : "Open support chat"}
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-6 right-6 z-50 flex size-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-[0_8px_24px_rgba(37,99,235,0.45)] transition-transform hover:scale-105"
+        className={`fixed right-6 z-50 flex size-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-[0_8px_24px_rgba(37,99,235,0.45)] transition-transform hover:scale-105 ${
+          authed ? "bottom-24 lg:bottom-6" : "bottom-6"
+        }`}
       >
         {open ? <X className="size-6" /> : <MessageCircle className="size-6" />}
         {!open && unread > 0 && (
