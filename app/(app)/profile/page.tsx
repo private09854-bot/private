@@ -19,6 +19,7 @@ import {
   currencyFlag,
 } from "@/lib/format";
 import { countryName } from "@/lib/countries";
+import ProfileEditForm from "./profile-edit-form";
 
 const NOT_SET = "—";
 
@@ -216,13 +217,16 @@ export default async function ProfilePage() {
   return (
     <div className="flex h-full flex-col gap-8">
       {/* ------------------------------------------------------------ header */}
-      <div className="flex flex-col gap-1.5">
-        <h1 className="text-[28px] font-bold tracking-[-0.5px] text-slate-900">
-          Account Profile
-        </h1>
-        <p className="text-sm text-slate-600">
-          Everything on file for your account, including verification status.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-[28px] font-bold tracking-[-0.5px] text-slate-900">
+            Account Profile
+          </h1>
+          <p className="text-sm text-slate-600">
+            Everything on file for your account, including verification status.
+          </p>
+        </div>
+        <ProfileEditForm user={user} />
       </div>
 
       {/* ---------------------------------------------------------- identity */}

@@ -1,4 +1,5 @@
 import { Laptop, Smartphone, Tablet, type LucideIcon } from "lucide-react";
+import Link from "next/link";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { formatNumber } from "@/lib/format";
@@ -96,9 +97,9 @@ export default async function SettingsPage() {
                 </span>
               </div>
             </div>
-            <button className="rounded-lg border border-slate-200 px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
+            <Link href="/profile" className="rounded-lg border border-slate-200 px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
               Edit Profile
-            </button>
+            </Link>
           </div>
 
           {/* Security Protocols */}

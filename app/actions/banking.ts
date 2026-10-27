@@ -4,8 +4,102 @@ import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { getFxRate } from "@/lib/data";
+import { countryByCode } from "@/lib/countries";
 
 export type ActionResult = { ok?: boolean; error?: string; message?: string };
+
+export type ProfileDetailsInput = {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  username: string;
+  phone: string;
+  dob: string;
+  addressLine: string;
+  city: string;
+  region?: string;
+  postalCode: string;
+  countryCode: string;
+};
+
+/** Update the contact and identity details that belong to the signed-in user. */
+export async function updateProfileDetails(
+  input: ProfileDetailsInput,
+): Promise<ActionResult> {
+  const user = await requireCustomer();
+  const clean = (value: string | undefined) => (value ?? "").trim();
+
+  const firstName = clean(input.firstName);
+  const middleName = clean(input.middleName);
+  const lastName = clean(input.lastName);
+  const username = clean(input.username);
+  const phone = clean(input.phone);
+  const dob = clean(input.dob);
+  const addressLine = clean(input.addressLine);
+  const city = clean(input.city);
+  const region = clean(input.region);
+  const postalCode = clean(input.postalCode);
+  const countryCode = clean(input.countryCode).toUpperCase();
+
+  if (!firstName || !lastName) return { error: "Enter your first and last name." };
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+    return { error: "Username must be 3–20 letters, numbers, or underscores." };
+  }
+  if (phone.replace(/\D/g, "").length < 6 || phone.replace(/\D/g, "").length > 15) {
+    return { error: "Enter a valid phone number." };
+  }
+  if (!addressLine || !city || !postalCode) {
+    return { error: "Enter your street address, city, and postal code." };
+  }
+  const country = countryByCode(countryCode);
+  if (!country) return { error: "Select a valid country of residence." };
+
+  const birthDate = new Date(`${dob}T00:00:00Z`);
+  if (!dob || Number.isNaN(birthDate.getTime())) {
+    return { error: "Enter a valid date of birth." };
+  }
+  const today = new Date();
+  let age = today.getUTCFullYear() - birthDate.getUTCFullYear();
+  const month = today.getUTCMonth() - birthDate.getUTCMonth();
+  if (month < 0 || (month === 0 && today.getUTCDate() < birthDate.getUTCDate())) age--;
+  if (age < 18 || age > 120) return { error: "Enter a valid date of birth." };
+
+  const { data: existingUsername, error: lookupError } = await supabaseAdmin
+    .from("profiles")
+    .select("id")
+    .ilike("username", username)
+    .neq("id", user.id)
+    .maybeSingle();
+  if (lookupError) return { error: lookupError.message };
+  if (existingUsername) return { error: "That username is already taken." };
+
+  const name = [firstName, middleName, lastName].filter(Boolean).join(" ");
+  const { error } = await supabaseAdmin
+    .from("profiles")
+    .update({
+      name,
+      handle: `@${username}`,
+      firstName,
+      middleName: middleName || null,
+      lastName,
+      username,
+      phone,
+      dob,
+      addressLine,
+      city,
+      region: region || null,
+      postalCode,
+      countryCode,
+      country: country.flag,
+    })
+    .eq("id", user.id);
+  if (error) return { error: error.message };
+
+  revalidatePath("/profile");
+  revalidatePath("/settings");
+  revalidatePath("/dashboard");
+  return { ok: true, message: "Your profile has been updated." };
+}
 
 // ---------------------------------------------------------------------------
 // Send money to a saved recipient (atomic — see supabase/functions.sql)
