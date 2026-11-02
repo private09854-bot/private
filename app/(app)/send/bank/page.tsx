@@ -8,6 +8,7 @@ import {
   ArrowRight,
   type LucideIcon,
 } from "lucide-react";
+import { I18nText } from "@/components/i18n-text";
 
 const upcoming: { icon: LucideIcon; title: string; body: string }[] = [
   {
@@ -32,20 +33,18 @@ export default function SendToBankPage() {
     <div className="flex flex-col gap-8">
       {/* Title + tabs */}
       <div className="flex flex-col gap-5">
-        <h1 className="text-[28px] font-bold text-slate-900">Send Money</h1>
+        <h1 className="text-[28px] font-bold text-slate-900"><I18nText i18nKey="ui.1thzfdj" source="Send Money" /></h1>
         <div className="flex gap-3">
           <Link
             href="/send"
             className="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
           >
-            To a Profintal Savings User
-          </Link>
+            <I18nText i18nKey="ui.13ol614" source="To a Profintal Savings User" /></Link>
           <Link
             href="/send/bank"
             className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white"
           >
-            To a Bank Account
-          </Link>
+            <I18nText i18nKey="ui.e5cev0" source="To a Bank Account" /></Link>
         </div>
       </div>
 
@@ -62,16 +61,11 @@ export default function SendToBankPage() {
           <div className="flex flex-col items-center gap-4">
             <span className="flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-100 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.5px] text-amber-500">
               <span className="size-1.5 rounded-full bg-amber-500" />
-              In Development
-            </span>
+              <I18nText i18nKey="ui.1bnkbf" source="In Development" /></span>
             <h2 className="max-w-xl text-3xl font-extrabold tracking-[-0.5px] text-slate-900">
-              Bank wire transfers are coming soon
-            </h2>
+              <I18nText i18nKey="ui.psfl68" source="Bank wire transfers are coming soon" /></h2>
             <p className="max-w-lg text-[15px] leading-relaxed text-slate-500">
-              We&apos;re finalizing direct SWIFT settlement to external bank
-              accounts. In the meantime, you can instantly send money to any
-              Profintal Savings user free and in real time.
-            </p>
+              <I18nText i18nKey="ui.1ajcjq7" source="We're finalizing direct SWIFT settlement to external bank accounts. In the meantime, you can instantly send money to any Profintal Savings user free and in real time." /></p>
           </div>
         </div>
 
@@ -100,22 +94,20 @@ export default function SendToBankPage() {
             <Bell className="size-4 shrink-0 text-slate-500" />
             <input
               type="email"
-              placeholder="Enter your email to get notified"
+              placeholder="Enter your email to get notified" data-i18n-placeholder={"[\"ui.7ic493\",\"Enter your email to get notified\"]"}
               className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
             />
             <button
               type="button"
               className="shrink-0 rounded-lg bg-slate-900 px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-slate-800"
             >
-              Notify Me
-            </button>
+              <I18nText i18nKey="ui.ef23wa" source="Notify Me" /></button>
           </div>
           <Link
             href="/send"
             className="flex items-center justify-center gap-2 rounded-xl bg-emerald-500 p-4 text-[15px] font-bold text-white transition-colors hover:bg-emerald-600"
           >
-            Send to a Profintal Savings User Instead
-            <ArrowRight className="size-4" />
+            <I18nText i18nKey="ui.1r4q8zu" source="Send to a Profintal Savings User Instead" /><ArrowRight className="size-4" />
           </Link>
         </div>
       </div>

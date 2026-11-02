@@ -4,6 +4,7 @@ import { useState, useTransition, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Send, Loader2, Mail, Circle } from "lucide-react";
 import { replyToSupport, markConversationRead } from "@/app/actions/support";
+import { I18nText } from "@/components/i18n-text";
 
 type Msg = {
   id: string;
@@ -87,11 +88,9 @@ export default function SupportInbox({
     return (
       <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-20 text-center">
         <Mail className="size-7 text-slate-300" />
-        <p className="text-sm font-semibold text-slate-700">No messages yet</p>
+        <p className="text-sm font-semibold text-slate-700"><I18nText i18nKey="ui.mq44lo" source="No messages yet" /></p>
         <p className="max-w-sm text-[13px] text-slate-500">
-          When a customer sends a message from the support widget, their
-          conversation opens here and you can reply.
-        </p>
+          <I18nText i18nKey="ui.el9ri3" source="When a customer sends a message from the support widget, their conversation opens here and you can reply." /></p>
       </div>
     );
   }
@@ -127,7 +126,7 @@ export default function SupportInbox({
                 </div>
                 <p className="truncate text-[12px] text-slate-500">
                   {c.messages[c.messages.length - 1]?.sender === "admin"
-                    ? "You: "
+                    ? <I18nText i18nKey="ui.sfz5ee" source="You: " />
                     : ""}
                   {c.messages[c.messages.length - 1]?.message}
                 </p>
@@ -155,7 +154,7 @@ export default function SupportInbox({
               <button
                 onClick={() => setSelectedKey(null)}
                 className="flex size-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden"
-                aria-label="Back to list"
+                aria-label="Back to list" data-i18n-aria-label={"[\"ui.nzjxl9\",\"Back to list\"]"}
               >
                 <ArrowLeft className="size-4" />
               </button>
@@ -172,8 +171,7 @@ export default function SupportInbox({
               </div>
               {selected.isGuest && (
                 <span className="ml-auto rounded-md bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-600">
-                  Guest
-                </span>
+                  <I18nText i18nKey="ui.rrtj83" source="Guest" /></span>
               )}
             </div>
 
@@ -199,7 +197,7 @@ export default function SupportInbox({
                       {m.message}
                     </div>
                     <span className="px-1 text-[10px] text-slate-400">
-                      {mine ? "Support" : selected.name.split(" ")[0]} ·{" "}
+                      {mine ? <I18nText i18nKey="ui.txsyvc" source="Support" /> : selected.name.split(" ")[0]} <I18nText i18nKey="ui.1degdiu" source="·" />{" "}
                       {timeLabel(m.createdAt)}
                     </span>
                   </div>
@@ -210,10 +208,8 @@ export default function SupportInbox({
             {/* Reply box */}
             {selected.isGuest ? (
               <div className="border-t border-slate-200 bg-amber-50 px-4 py-3 text-[12px] text-amber-700">
-                This message came from a signed-out visitor, so there is no
-                account to reply into. Reach them at{" "}
-                <span className="font-semibold">{selected.email}</span>.
-              </div>
+                <I18nText i18nKey="ui.vo6sdj" source="This message came from a signed-out visitor, so there is no account to reply into. Reach them at" />{" "}
+                <span className="font-semibold">{selected.email}</span><I18nText i18nKey="ui.by08hd" source="." /></div>
             ) : (
               <div className="flex flex-col gap-2 border-t border-slate-200 p-3">
                 {error && (
@@ -228,14 +224,14 @@ export default function SupportInbox({
                     }}
                     rows={2}
                     maxLength={2000}
-                    placeholder="Type your reply…  (⌘/Ctrl + Enter to send)"
+                    placeholder="Type your reply…  (⌘/Ctrl + Enter to send)" data-i18n-placeholder={"[\"ui.4hlz0b\",\"Type your reply…  (⌘/Ctrl + Enter to send)\"]"}
                     className="flex-1 resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                   <button
                     onClick={send}
                     disabled={pending || !reply.trim()}
                     className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
-                    aria-label="Send reply"
+                    aria-label="Send reply" data-i18n-aria-label={"[\"ui.1f4jclr\",\"Send reply\"]"}
                   >
                     {pending ? (
                       <Loader2 className="size-4 animate-spin" />
@@ -251,8 +247,7 @@ export default function SupportInbox({
           <div className="flex flex-1 flex-col items-center justify-center gap-2 p-8 text-center">
             <Circle className="size-6 text-slate-200" />
             <p className="text-[13px] text-slate-500">
-              Select a conversation to read and reply.
-            </p>
+              <I18nText i18nKey="ui.taw8wv" source="Select a conversation to read and reply." /></p>
           </div>
         )}
       </div>

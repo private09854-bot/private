@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/session";
 import { usdRateMap } from "@/lib/data";
 import { formatCompact } from "@/lib/format";
 import AdminTxnView, { type AdminTxn } from "./admin-txn-view";
+import { I18nText } from "@/components/i18n-text";
 
 export default async function AdminTransactionsPage() {
   await requireAdmin();
@@ -74,17 +75,13 @@ export default async function AdminTransactionsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            Transaction Monitoring
-          </h1>
+            <I18nText i18nKey="ui.s4fuj7" source="Transaction Monitoring" /></h1>
           <p className="text-sm text-slate-600">
-            Live oversight of network settlement flows, wire routing and flagged
-            activity.
-          </p>
+            <I18nText i18nKey="ui.1hntfla" source="Live oversight of network settlement flows, wire routing and flagged activity." /></p>
         </div>
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <Download className="size-3.5 text-slate-500" />
-          Export Ledger
-        </button>
+          <I18nText i18nKey="ui.c8n7rs" source="Export Ledger" /></button>
       </div>
 
       {/* KPI strip */}

@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import AuthShell from "@/components/auth-shell";
 import PasswordField from "@/components/ui/password-field";
 import { login, type AuthState } from "@/app/actions/auth";
+import { I18nText } from "@/components/i18n-text";
 
 const initial: AuthState = {};
 
@@ -17,7 +18,7 @@ function SubmitButton() {
       disabled={pending}
       className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
     >
-      {pending ? "Signing in…" : "Sign in"}
+      {pending ? <I18nText i18nKey="ui.7dn7hr" source="Signing in…" /> : <I18nText i18nKey="ui.w9nig3" source="Sign in" />}
       {!pending && <ArrowRight className="size-4" />}
     </button>
   );
@@ -37,15 +38,14 @@ export default function LoginForm() {
             htmlFor="email"
             className="text-[13px] font-semibold text-slate-900"
           >
-            Email address
-          </label>
+            <I18nText i18nKey="ui.1cdit03" source="Email address" /></label>
           <input
             id="email"
             name="email"
             type="email"
             inputMode="email"
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder="you@example.com" data-i18n-placeholder={"[\"ui.1f9hkpt\",\"you@example.com\"]"}
             className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
           />
         </div>
@@ -67,13 +67,12 @@ export default function LoginForm() {
       </form>
 
       <p className="text-center text-sm text-slate-500">
-        New to Profintal Savings?{" "}
+        <I18nText i18nKey="ui.h4ct5d" source="New to Profintal Savings?" />{" "}
         <Link
           href="/signup"
           className="font-semibold text-emerald-600 hover:text-emerald-700"
         >
-          Open an account
-        </Link>
+          <I18nText i18nKey="ui.18xzeun" source="Open an account" /></Link>
       </p>
     </AuthShell>
   );

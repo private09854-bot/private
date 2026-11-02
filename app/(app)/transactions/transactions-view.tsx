@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 export type TxRow = {
   id: string;
@@ -71,7 +72,7 @@ function Dropdown({
 }) {
   return (
     <div className="relative flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-      {label}: {value}
+      {label}<I18nText i18nKey="ui.hhsact" source=":" />{value}
       <ChevronDown className="size-2.5 text-slate-500" />
       <select
         value={value}
@@ -139,7 +140,7 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search transaction ref..."
+            placeholder="Search transaction ref..." data-i18n-placeholder={"[\"ui.1263gym\",\"Search transaction ref...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -148,8 +149,7 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
         <Dropdown label="Status" value={status} options={statuses} onChange={setStatus} />
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <Calendar className="size-3.5 text-slate-500" />
-          Last 30 Days
-        </button>
+          <I18nText i18nKey="ui.ll7v9v" source="Last 30 Days" /></button>
       </div>
 
       {/* Split workspace */}
@@ -157,12 +157,12 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
         {/* Table */}
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
-            <span className="w-[120px]">DATE &amp; TIME</span>
-            <span className="w-[260px]">DESCRIPTION</span>
-            <span className="w-[80px]">CURRENCY</span>
-            <span className="w-[120px] text-right">AMOUNT</span>
-            <span className="w-[80px] text-right">FEE</span>
-            <span className="w-[100px] text-center">STATUS</span>
+            <span className="w-[120px]"><I18nText i18nKey="ui.viiv38" source="DATE & TIME" /></span>
+            <span className="w-[260px]"><I18nText i18nKey="ui.i91n7t" source="DESCRIPTION" /></span>
+            <span className="w-[80px]"><I18nText i18nKey="ui.1uk0j1y" source="CURRENCY" /></span>
+            <span className="w-[120px] text-right"><I18nText i18nKey="ui.1xotqa1" source="AMOUNT" /></span>
+            <span className="w-[80px] text-right"><I18nText i18nKey="ui.ijvun7" source="FEE" /></span>
+            <span className="w-[100px] text-center"><I18nText i18nKey="ui.165vtrj" source="STATUS" /></span>
           </div>
           <div className="flex flex-col">
             {filtered.map((r) => {
@@ -215,24 +215,19 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
             })}
             {filtered.length === 0 && (
               <div className="px-6 py-10 text-center text-[13px] text-slate-500">
-                No transactions match your filters.
-              </div>
+                <I18nText i18nKey="ui.1d46kx0" source="No transactions match your filters." /></div>
             )}
           </div>
           <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
             <p className="text-[13px] text-slate-500">
-              Showing {filtered.length} of {rows.length} transactions
-            </p>
+              <I18nText i18nKey="ui.1j6rifw" source="Showing" />{filtered.length} <I18nText i18nKey="ui.t6uqnc" source="of" />{rows.length} <I18nText i18nKey="ui.13bg7w0" source="transactions" /></p>
             <div className="flex items-center gap-2">
               <button className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100">
-                Previous
-              </button>
+                <I18nText i18nKey="ui.1t5jxvs" source="Previous" /></button>
               <span className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white">
-                1
-              </span>
+                <I18nText i18nKey="ui.efwnq4" source="1" /></span>
               <button className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-                Next
-              </button>
+                <I18nText i18nKey="ui.1padbm0" source="Next" /></button>
             </div>
           </div>
         </div>
@@ -242,10 +237,9 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
           <div className="flex w-full shrink-0 flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[340px]">
             <div className="flex items-center justify-between">
               <h2 className="text-[15px] font-bold text-slate-900">
-                Transaction Details
-              </h2>
+                <I18nText i18nKey="ui.1m2bz4x" source="Transaction Details" /></h2>
               <button
-                aria-label="Close"
+                aria-label="Close" data-i18n-aria-label={"[\"ui.1l0xxoj\",\"Close\"]"}
                 onClick={() => setSelectedId("")}
                 className="text-slate-500 hover:text-slate-900"
               >
@@ -255,8 +249,7 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
 
             <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-[18px]">
               <p className="text-[11px] font-bold text-slate-500">
-                TRANSACTION ID
-              </p>
+                <I18nText i18nKey="ui.168cw64" source="TRANSACTION ID" /></p>
               <p className="font-mono text-sm font-bold text-slate-900">
                 {selected.ref}
               </p>
@@ -294,7 +287,7 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
             </div>
 
             <div className="flex flex-col gap-4">
-              <p className="text-xs font-bold text-slate-500">TIMELINE STATUS</p>
+              <p className="text-xs font-bold text-slate-500"><I18nText i18nKey="ui.1xtpnsc" source="TIMELINE STATUS" /></p>
               <div className="flex flex-col gap-3">
                 {[
                   `Transfer Initiated — ${selected.timeLabel}`,
@@ -321,8 +314,7 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
 
             <button className="flex items-center justify-center gap-2 rounded-lg bg-slate-900 p-3 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800">
               <Download className="size-3.5" />
-              Download PDF Receipt
-            </button>
+              <I18nText i18nKey="ui.1ctoj33" source="Download PDF Receipt" /></button>
           </div>
         )}
       </div>

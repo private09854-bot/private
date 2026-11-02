@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { toggleCardFreeze, adjustCardLimit } from "@/app/actions/banking";
 import { formatCurrency } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 type Card = {
   id: string;
@@ -134,14 +135,12 @@ function FlipCard({ card }: { card: Card }) {
                 {pending && (
                   <span className="flex items-center gap-1 rounded-full bg-amber-400/25 px-2 py-0.5 text-[10px] font-bold text-amber-100">
                     <Clock className="size-3" />
-                    PENDING
-                  </span>
+                    <I18nText i18nKey="ui.4vwo4c" source="PENDING" /></span>
                 )}
                 {!pending && card.frozen && (
                   <span className="flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-200">
                     <Snowflake className="size-3" />
-                    FROZEN
-                  </span>
+                    <I18nText i18nKey="ui.12ir4g3" source="FROZEN" /></span>
                 )}
               </div>
             </div>
@@ -162,7 +161,7 @@ function FlipCard({ card }: { card: Card }) {
                   <button
                     onClick={copyNumber}
                     className="text-white/60 transition-colors hover:text-white"
-                    aria-label="Copy card number"
+                    aria-label="Copy card number" data-i18n-aria-label={"[\"ui.1ucsn77\",\"Copy card number\"]"}
                   >
                     {copied ? (
                       <Check className="size-4 text-emerald-300" />
@@ -177,18 +176,16 @@ function FlipCard({ card }: { card: Card }) {
             <div className="relative flex items-end justify-between">
               <div className="flex flex-col gap-0.5">
                 <p className="text-[9px] uppercase tracking-wider text-white/55">
-                  Card Holder
-                </p>
+                  <I18nText i18nKey="ui.1vnzy4n" source="Card Holder" /></p>
                 <p className="text-sm font-semibold tracking-wide">
                   {card.holder}
                 </p>
               </div>
               <div className="flex flex-col gap-0.5">
                 <p className="text-[9px] uppercase tracking-wider text-white/55">
-                  Expires
-                </p>
+                  <I18nText i18nKey="ui.1jee0pv" source="Expires" /></p>
                 <p className="font-mono text-sm font-semibold">
-                  {pending ? "••/••" : card.expiry}
+                  {pending ? <I18nText i18nKey="ui.13liqci" source="••/••" /> : card.expiry}
                 </p>
               </div>
               <p className="font-serif text-lg font-bold italic tracking-tight text-white/95">
@@ -202,11 +199,10 @@ function FlipCard({ card }: { card: Card }) {
             <div className="mt-5 h-11 w-full bg-black/85" />
             <div className="flex flex-col gap-2 px-6 pt-5">
               <p className="text-[10px] uppercase tracking-wider text-white/55">
-                CVV
-              </p>
+                <I18nText i18nKey="ui.1223eoe" source="CVV" /></p>
               <div className="flex h-9 items-center justify-end rounded bg-[repeating-linear-gradient(-60deg,#fff,#fff_6px,#eef2f7_6px,#eef2f7_12px)] px-3">
                 <span className="font-mono text-sm font-bold tracking-[2px] text-slate-900">
-                  {revealed && card.cvv ? card.cvv : "•••"}
+                  {revealed && card.cvv ? card.cvv : <I18nText i18nKey="ui.1oh3cv9" source="•••" />}
                 </span>
               </div>
               <div className="mt-auto flex items-center justify-between pb-5 pt-3">
@@ -214,13 +210,10 @@ function FlipCard({ card }: { card: Card }) {
                   {card.brand}
                 </span>
                 <span className="text-[9px] uppercase tracking-wider text-white/50">
-                  Profintal Savings
-                </span>
+                  <I18nText i18nKey="ui.14rzj89" source="Profintal Savings" /></span>
               </div>
               <p className="text-[10px] leading-relaxed text-white/45">
-                Demo card — not connected to any card network. Numbers are
-                randomly generated and cannot be charged.
-              </p>
+                <I18nText i18nKey="ui.18gjj4x" source="Demo card — not connected to any card network. Numbers are randomly generated and cannot be charged." /></p>
             </div>
           </div>
         </div>
@@ -238,14 +231,14 @@ function FlipCard({ card }: { card: Card }) {
             ) : (
               <Eye className="size-4" />
             )}
-            {revealed ? "Hide details" : "Show details"}
+            {revealed ? <I18nText i18nKey="ui.12grv3z" source="Hide details" /> : <I18nText i18nKey="ui.1p2cciq" source="Show details" />}
           </button>
           <button
             onClick={() => setFlipped((v) => !v)}
             className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] font-semibold text-slate-800 transition-colors hover:bg-slate-50"
           >
             <RotateCw className="size-4" />
-            {flipped ? "Front" : "Flip for CVV"}
+            {flipped ? <I18nText i18nKey="ui.uhugl4" source="Front" /> : <I18nText i18nKey="ui.ai8n0s" source="Flip for CVV" />}
           </button>
         </div>
       )}
@@ -287,12 +280,9 @@ export default function CardPanel({ card }: { card: Card }) {
           <Clock className="mt-0.5 size-4 shrink-0 text-amber-600" />
           <div className="flex flex-col gap-0.5">
             <p className="text-[13px] font-bold text-amber-900">
-              Your physical card is being prepared
-            </p>
+              <I18nText i18nKey="ui.sf6t1b" source="Your physical card is being prepared" /></p>
             <p className="text-[12px] leading-relaxed text-amber-800">
-              We&apos;re processing your request. You&apos;ll be able to activate
-              the card once it arrives.
-            </p>
+              <I18nText i18nKey="ui.1dtww1i" source="We're processing your request. You'll be able to activate the card once it arrives." /></p>
           </div>
         </div>
       </div>
@@ -306,12 +296,11 @@ export default function CardPanel({ card }: { card: Card }) {
       {/* Limit tracker */}
       <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_4px_6px_rgba(15,23,42,0.03)]">
         <p className="text-base font-semibold text-slate-900">
-          Monthly Spend Progress
-        </p>
+          <I18nText i18nKey="ui.ea2qj9" source="Monthly Spend Progress" /></p>
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between text-[13px] text-slate-500">
-            <p>Spent: {formatCurrency(card.spent, "USD")}</p>
-            <p>Limit: {formatCurrency(card.limit, "USD")}</p>
+            <p><I18nText i18nKey="ui.r9hq2j" source="Spent:" />{formatCurrency(card.spent, "USD")}</p>
+            <p><I18nText i18nKey="ui.1qvdokq" source="Limit:" />{formatCurrency(card.limit, "USD")}</p>
           </div>
           <div className="flex h-2 w-full overflow-hidden rounded bg-slate-50">
             <div
@@ -336,8 +325,7 @@ export default function CardPanel({ card }: { card: Card }) {
               disabled={pending}
               className="rounded-lg bg-emerald-500 px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-emerald-600 disabled:opacity-60"
             >
-              Save
-            </button>
+              <I18nText i18nKey="ui.lewgh4" source="Save" /></button>
           </div>
         )}
 
@@ -352,13 +340,13 @@ export default function CardPanel({ card }: { card: Card }) {
                 : "border-slate-200 text-red-500 hover:bg-red-50"
             }`}
           >
-            {card.frozen ? "Unfreeze Card" : "Freeze Card"}
+            {card.frozen ? <I18nText i18nKey="ui.1supnut" source="Unfreeze Card" /> : <I18nText i18nKey="ui.1t51sd0" source="Freeze Card" />}
           </button>
           <button
             onClick={() => setEditing((v) => !v)}
             className="flex flex-1 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-[13px] text-slate-900 transition-colors hover:bg-slate-100"
           >
-            {editing ? "Close" : "Adjust Limit"}
+            {editing ? <I18nText i18nKey="ui.1l0xxoj" source="Close" /> : <I18nText i18nKey="ui.1d1cs2x" source="Adjust Limit" />}
           </button>
         </div>
       </div>

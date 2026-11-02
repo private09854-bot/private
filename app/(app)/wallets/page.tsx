@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { formatCurrency, currencyFlag, formatDate } from "@/lib/format";
 import CopyButton from "./copy-button";
+import { I18nText } from "@/components/i18n-text";
 
 interface ActionBtn {
   label: string;
@@ -44,8 +45,8 @@ export default async function WalletsPage() {
   if (!wallet) {
     return (
       <div className="flex flex-col gap-2">
-        <h1 className="text-[28px] font-bold text-slate-900">Wallets</h1>
-        <p className="text-sm text-slate-500">No wallets found.</p>
+        <h1 className="text-[28px] font-bold text-slate-900"><I18nText i18nKey="ui.8mlup9" source="Wallets" /></h1>
+        <p className="text-sm text-slate-500"><I18nText i18nKey="ui.16tigd6" source="No wallets found." /></p>
       </div>
     );
   }
@@ -96,17 +97,15 @@ export default async function WalletsPage() {
           </div>
           <div className="flex flex-col gap-1">
             <h1 className="text-[28px] font-bold text-slate-900">
-              {currencyName[wallet.currency] ?? wallet.currency} Wallet
-            </h1>
+              {currencyName[wallet.currency] ?? wallet.currency} <I18nText i18nKey="ui.f2ll8" source="Wallet" /></h1>
             <p className="text-sm text-slate-500">
-              Direct deposit account {wallet.currency}
+              <I18nText i18nKey="ui.1rr4j1l" source="Direct deposit account" />{wallet.currency}
             </p>
           </div>
         </div>
         <div className="rounded-md border border-emerald-500 bg-emerald-50 px-3 py-1.5">
           <span className="text-xs font-bold text-emerald-500">
-            Primary Settlement
-          </span>
+            <I18nText i18nKey="ui.125qaww" source="Primary Settlement" /></span>
         </div>
       </div>
 
@@ -114,8 +113,7 @@ export default async function WalletsPage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <div className="flex flex-1 flex-col gap-4 rounded-2xl bg-slate-900 p-7">
           <p className="text-xs font-semibold text-slate-500">
-            CONSOLIDATED BALANCE AVAILABLE
-          </p>
+            <I18nText i18nKey="ui.1a0ir79" source="CONSOLIDATED BALANCE AVAILABLE" /></p>
           <div className="flex items-baseline gap-2">
             <span className="text-5xl font-extrabold text-white">
               {formatCurrency(wallet.balance, wallet.currency)}
@@ -126,7 +124,7 @@ export default async function WalletsPage() {
           </div>
           <div className="flex gap-6 text-[13px] text-slate-500">
             <p>
-              Available:{" "}
+              <I18nText i18nKey="ui.1pbceue" source="Available:" />{" "}
               <span className="font-semibold text-slate-300">
                 {formatCurrency(
                   wallet.available ?? wallet.balance,
@@ -135,7 +133,7 @@ export default async function WalletsPage() {
               </span>
             </p>
             <p>
-              Pending:{" "}
+              <I18nText i18nKey="ui.1d5oe8i" source="Pending:" />{" "}
               <span className="font-semibold text-slate-300">
                 {formatCurrency(wallet.pending ?? 0, wallet.currency)}
               </span>
@@ -146,8 +144,7 @@ export default async function WalletsPage() {
         {/* Action hub */}
         <div className="flex w-full shrink-0 flex-col items-center gap-5 rounded-2xl border border-slate-200 bg-white p-7 lg:w-[400px]">
           <p className="text-sm font-bold text-slate-900">
-            Instant Wallet Actions
-          </p>
+            <I18nText i18nKey="ui.14m2eyc" source="Instant Wallet Actions" /></p>
           <div className="flex w-full flex-wrap items-center justify-center gap-3">
             {actions.map((a) => {
               const Icon = a.icon;
@@ -176,11 +173,9 @@ export default async function WalletsPage() {
         <div className="flex flex-1 flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-7">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-slate-900">
-              {wallet.currency} Receiving Details
-            </h2>
+              {wallet.currency} <I18nText i18nKey="ui.1mlu29j" source="Receiving Details" /></h2>
             <span className="text-xs font-semibold text-emerald-500">
-              Global Swift Validated
-            </span>
+              <I18nText i18nKey="ui.1jx5enj" source="Global Swift Validated" /></span>
           </div>
           <div className="flex flex-col gap-3">
             {receivingDetails.map((det) => (
@@ -207,8 +202,7 @@ export default async function WalletsPage() {
           {/* Recent transactions */}
           <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6">
             <h2 className="text-[15px] font-bold text-slate-900">
-              Recent {wallet.currency} Transactions
-            </h2>
+              <I18nText i18nKey="ui.mg65fi" source="Recent" />{wallet.currency} <I18nText i18nKey="ui.14dfqxc" source="Transactions" /></h2>
             <div className="flex flex-col">
               {txns.slice(0, 4).map((t) => (
                 <div
@@ -234,8 +228,7 @@ export default async function WalletsPage() {
               ))}
               {txns.length === 0 && (
                 <p className="py-4 text-center text-[13px] text-slate-500">
-                  No transactions yet.
-                </p>
+                  <I18nText i18nKey="ui.wpqqrp" source="No transactions yet." /></p>
               )}
             </div>
           </div>
@@ -243,23 +236,22 @@ export default async function WalletsPage() {
           {/* Insights */}
           <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6">
             <h2 className="text-[15px] font-bold text-slate-900">
-              {wallet.currency} Wallet Activity Insights
-            </h2>
+              {wallet.currency} <I18nText i18nKey="ui.97h5s6" source="Wallet Activity Insights" /></h2>
             <div className="flex flex-col gap-3 text-[13px]">
               <div className="flex items-center justify-between">
-                <span className="text-slate-600">Total Incoming</span>
+                <span className="text-slate-600"><I18nText i18nKey="ui.5ogvbz" source="Total Incoming" /></span>
                 <span className="font-bold text-emerald-500">
                   {formatCurrency(incoming, wallet.currency, { sign: true })}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-600">Total Outgoing</span>
+                <span className="text-slate-600"><I18nText i18nKey="ui.2y7s3t" source="Total Outgoing" /></span>
                 <span className="font-bold text-slate-900">
                   {formatCurrency(outgoing, wallet.currency, { sign: true })}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-600">Average Transfer Size</span>
+                <span className="text-slate-600"><I18nText i18nKey="ui.6h5qgw" source="Average Transfer Size" /></span>
                 <span className="font-bold text-slate-900">
                   {formatCurrency(avg, wallet.currency)}
                 </span>

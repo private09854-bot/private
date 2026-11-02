@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Home, Wallet, CreditCard, UserRound, LayoutGrid, LogOut } from "lucide-react";
 import { appNav } from "@/lib/nav";
 import { logout } from "@/app/actions/auth";
+import { I18nText } from "@/components/i18n-text";
 
 /** The four quick-access tabs; the fifth slot is the elevated "More" button. */
 const TABS = [
@@ -60,7 +61,7 @@ export default function MobileNav() {
           {/* Elevated "More" button */}
           <button
             onClick={() => setOpen(true)}
-            aria-label="More"
+            aria-label="More" data-i18n-aria-label={"[\"ui.lz65mo\",\"More\"]"}
             className={`absolute left-1/2 top-0 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-lg ring-4 ring-white transition-colors ${
               onTab ? "bg-slate-900" : "bg-emerald-600"
             }`}
@@ -89,7 +90,7 @@ export default function MobileNav() {
           }`}
         >
           <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-slate-200" />
-          <p className="mb-4 text-[15px] font-bold text-slate-900">All features</p>
+          <p className="mb-4 text-[15px] font-bold text-slate-900"><I18nText i18nKey="ui.kvriy3" source="All features" /></p>
 
           <div className="grid grid-cols-3 gap-3">
             {appNav.map(({ label, href, icon: Icon }) => {
@@ -132,8 +133,7 @@ export default function MobileNav() {
               className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 py-3 text-[13px] font-semibold text-red-500 transition-colors hover:bg-red-50"
             >
               <LogOut className="size-4" />
-              Sign out
-            </button>
+              <I18nText i18nKey="ui.12niv00" source="Sign out" /></button>
           </form>
         </div>
       </div>

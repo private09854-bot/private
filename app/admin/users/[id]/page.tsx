@@ -15,6 +15,7 @@ import { countryName } from "@/lib/countries";
 import Badge from "@/components/ui/badge";
 import UserActions from "./user-actions";
 import KycDecision from "./kyc-decision";
+import { I18nText } from "@/components/i18n-text";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -206,8 +207,7 @@ export default async function AdminUserDetailPage({
         className="flex w-fit items-center gap-2 text-[13px] font-semibold text-slate-500 transition-colors hover:text-slate-900"
       >
         <ArrowLeft className="size-4" />
-        Back to users
-      </Link>
+        <I18nText i18nKey="ui.18f56ef" source="Back to users" /></Link>
 
       {/* Identity */}
       <div className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 lg:flex-row lg:items-center lg:justify-between">
@@ -229,7 +229,7 @@ export default async function AdminUserDetailPage({
             <div className="flex flex-wrap items-center gap-2">
               <Badge tone={st.tone}>{st.label}</Badge>
               <Badge tone="neutral">{user.tier ?? "Tier 1"}</Badge>
-              {user.flagged && <Badge tone="danger">Flagged</Badge>}
+              {user.flagged && <Badge tone="danger"><I18nText i18nKey="ui.dq1l0x" source="Flagged" /></Badge>}
             </div>
           </div>
         </div>
@@ -237,8 +237,7 @@ export default async function AdminUserDetailPage({
         <div className="flex shrink-0 flex-col items-start gap-3 lg:items-end">
           <div className="flex flex-col lg:items-end">
             <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">
-              Total balance
-            </p>
+              <I18nText i18nKey="ui.1tgmi4l" source="Total balance" /></p>
             <p className="text-2xl font-extrabold text-slate-900">
               {formatCurrency(totalUsd, "USD")}
             </p>
@@ -249,24 +248,23 @@ export default async function AdminUserDetailPage({
               className="flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800"
             >
               <Send className="size-3.5" />
-              Send funds
-            </Link>
+              <I18nText i18nKey="ui.157mewv" source="Send funds" /></Link>
             <UserActions userId={user.id} frozen={user.kycStatus === "Frozen"} />
           </div>
         </div>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <Card title="Personal information">
+        <Card title="Personal information" data-i18n-title={"[\"ui.z6ed4b\",\"Personal information\"]"}>
           <Rows rows={personal} />
         </Card>
-        <Card title="Account">
+        <Card title="Account" data-i18n-title={"[\"ui.oyp43g\",\"Account\"]"}>
           <Rows rows={account} />
         </Card>
       </div>
 
       {/* Wallets */}
-      <Card title="Wallets">
+      <Card title="Wallets" data-i18n-title={"[\"ui.8mlup9\",\"Wallets\"]"}>
         <div className="flex flex-col">
           {wallets.map((w, i) => (
             <div
@@ -284,8 +282,7 @@ export default async function AdminUserDetailPage({
                 </span>
                 {w.primary && (
                   <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-600">
-                    PRIMARY
-                  </span>
+                    <I18nText i18nKey="ui.z603w9" source="PRIMARY" /></span>
                 )}
               </span>
               <span className="shrink-0 font-mono text-[13px] font-bold text-slate-900">
@@ -295,14 +292,13 @@ export default async function AdminUserDetailPage({
           ))}
           {wallets.length === 0 && (
             <p className="px-5 py-8 text-center text-[13px] text-slate-500">
-              No wallets on this account.
-            </p>
+              <I18nText i18nKey="ui.62mt9q" source="No wallets on this account." /></p>
           )}
         </div>
       </Card>
 
       {/* KYC */}
-      <Card title="Identity verification">
+      <Card title="Identity verification" data-i18n-title={"[\"ui.re834a\",\"Identity verification\"]"}>
         <div className="flex flex-col gap-5 p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-col gap-0.5">
@@ -311,7 +307,7 @@ export default async function AdminUserDetailPage({
                   ? kyc.status === "draft"
                     ? "Not submitted yet"
                     : `Application ${kyc.status}`
-                  : "No application opened"}
+                  : <I18nText i18nKey="ui.15v6v31" source="No application opened" />}
               </p>
               <p className="text-[11px] text-slate-500">
                 {kyc?.reviewedAt
@@ -334,15 +330,14 @@ export default async function AdminUserDetailPage({
 
           {kyc?.reviewNote && (
             <p className="rounded-lg bg-red-50 px-3.5 py-2.5 text-[13px] text-red-700">
-              <span className="font-bold">Reason given:</span> {kyc.reviewNote}
+              <span className="font-bold"><I18nText i18nKey="ui.1lrxrbe" source="Reason given:" /></span> {kyc.reviewNote}
             </p>
           )}
 
           {documents.length > 0 && (
             <div className="flex flex-col gap-2">
               <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">
-                Documents
-              </p>
+                <I18nText i18nKey="ui.oz47lx" source="Documents" /></p>
               {documents.map((d) => (
                 <div
                   key={d.id}
@@ -360,19 +355,17 @@ export default async function AdminUserDetailPage({
                 </div>
               ))}
               <p className="text-[11px] text-slate-400">
-                Open documents from the{" "}
+                <I18nText i18nKey="ui.1k56ioa" source="Open documents from the" />{" "}
                 <Link href="/admin/kyc" className="font-semibold underline">
-                  KYC queue
-                </Link>
-                .
-              </p>
+                  <I18nText i18nKey="ui.rdzm99" source="KYC queue" /></Link>
+                <I18nText i18nKey="ui.by08hd" source="." /></p>
             </div>
           )}
         </div>
       </Card>
 
       {/* Activity */}
-      <Card title="Recent activity">
+      <Card title="Recent activity" data-i18n-title={"[\"ui.13woufb\",\"Recent activity\"]"}>
         <div className="flex flex-col">
           {txns.map((t, i) => (
             <div
@@ -386,7 +379,7 @@ export default async function AdminUserDetailPage({
                   {t.title}
                 </p>
                 <p className="truncate text-[11px] text-slate-500">
-                  {t.ref} • {formatDate(t.date)}
+                  {t.ref} <I18nText i18nKey="ui.aw0l2d" source="•" />{formatDate(t.date)}
                 </p>
               </div>
               <span
@@ -400,8 +393,7 @@ export default async function AdminUserDetailPage({
           ))}
           {txns.length === 0 && (
             <p className="px-5 py-8 text-center text-[13px] text-slate-500">
-              No transactions on this account yet.
-            </p>
+              <I18nText i18nKey="ui.1v8j9rt" source="No transactions on this account yet." /></p>
           )}
         </div>
       </Card>

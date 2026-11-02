@@ -19,6 +19,7 @@ import {
 } from "@/lib/fx";
 import { formatCurrency, formatNumber, currencyFlag } from "@/lib/format";
 import WithdrawMethods from "../withdraw/withdraw-methods";
+import { I18nText } from "@/components/i18n-text";
 
 function activityIcon(kind: string, amount: number): LucideIcon {
   if (kind === "convert") return RefreshCw;
@@ -78,16 +79,14 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-bold tracking-[-0.5px] text-slate-900">
-            Welcome back, {user.name.split(" ")[0]}
+            <I18nText i18nKey="ui.1iiqa4e" source="Welcome back," />{user.name.split(" ")[0]}
           </h1>
           <p className="text-sm text-slate-600">
-            Institutional fintech portal • Account Active • Verified
-          </p>
+            <I18nText i18nKey="ui.1ins26g" source="Institutional fintech portal • Account Active • Verified" /></p>
         </div>
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2">
           <span className="font-mono text-xs font-bold text-slate-900">
-            BASE: USD
-          </span>
+            <I18nText i18nKey="ui.1t8dfki" source="BASE: USD" /></span>
           <ChevronDown className="size-3 text-slate-900" />
         </button>
       </div>
@@ -95,13 +94,12 @@ export default async function DashboardPage() {
       {/* Total portfolio */}
       <div className="flex flex-col gap-2 rounded-2xl bg-slate-900 p-7">
         <p className="text-[13px] font-semibold uppercase text-slate-500">
-          Dashboard
-        </p>
+          <I18nText i18nKey="ui.4zftyz" source="Dashboard" /></p>
         <div className="flex items-baseline gap-3">
           <span className="font-mono text-[40px] font-extrabold text-white">
             {formatCurrency(portfolio, "USD")}
           </span>
-          <span className="text-xl font-semibold text-emerald-500">USD</span>
+          <span className="text-xl font-semibold text-emerald-500"><I18nText i18nKey="ui.174gkvb" source="USD" /></span>
         </div>
       </div>
 
@@ -109,14 +107,12 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
         <div className="flex items-center justify-between">
           <h2 className="text-[15px] font-bold text-slate-900">
-            Withdrawal Methods
-          </h2>
+            <I18nText i18nKey="ui.h6vdpc" source="Withdrawal Methods" /></h2>
           <Link
             href="/withdraw"
             className="text-[13px] font-semibold text-emerald-600 hover:text-emerald-700"
           >
-            View all
-          </Link>
+            <I18nText i18nKey="ui.kmabij" source="View all" /></Link>
         </div>
         <WithdrawMethods
           compact
@@ -165,14 +161,12 @@ export default async function DashboardPage() {
         <div className="flex flex-1 flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-slate-900">
-              Recent Activity
-            </h2>
+              <I18nText i18nKey="ui.5nt4o7" source="Recent Activity" /></h2>
             <Link
               href="/transactions"
               className="text-[13px] font-semibold text-emerald-500 hover:text-emerald-600"
             >
-              View Audit Trail
-            </Link>
+              <I18nText i18nKey="ui.1rwen9f" source="View Audit Trail" /></Link>
           </div>
           <div className="flex flex-col">
             {transactions.map((t) => {
@@ -223,13 +217,11 @@ export default async function DashboardPage() {
         <div className="flex w-full flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 lg:w-[340px]">
           <div className="flex items-center justify-between">
             <h2 className="text-[15px] font-bold text-slate-900">
-              Conversion Indices
-            </h2>
+              <I18nText i18nKey="ui.htzzss" source="Conversion Indices" /></h2>
             {fxSnap.source === "live" && (
               <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-600">
                 <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
-                Live
-              </span>
+                <I18nText i18nKey="ui.11rknnz" source="Live" /></span>
             )}
           </div>
           <div className="flex flex-col gap-3.5">
@@ -239,7 +231,7 @@ export default async function DashboardPage() {
                 className="flex items-center justify-between rounded-lg bg-slate-50 p-3"
               >
                 <span className="text-[13px] font-semibold text-slate-900">
-                  {r.base} / {r.quote}
+                  {r.base} <I18nText i18nKey="ui.bo0mse" source="/" />{r.quote}
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-[13px] font-bold text-slate-900">
@@ -265,7 +257,7 @@ export default async function DashboardPage() {
             <p className="text-[11px] text-emerald-500">
               {fxSnap.source === "live"
                 ? `Live mid-market rates (ECB) · as of ${fxSnap.date}. Updated hourly.`
-                : "Mid-market reference rates. Live feed is temporarily unavailable."}
+                : <I18nText i18nKey="ui.1jc4hum" source="Mid-market reference rates. Live feed is temporarily unavailable." />}
             </p>
           </div>
         </div>

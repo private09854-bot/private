@@ -2,6 +2,7 @@ import Link from "next/link";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import SendForm from "./send-form";
+import { I18nText } from "@/components/i18n-text";
 
 export default async function SendToUserPage() {
   const user = await requireCustomer();
@@ -23,20 +24,18 @@ export default async function SendToUserPage() {
     <div className="flex flex-col gap-8">
       {/* Title + tabs */}
       <div className="flex flex-col gap-5">
-        <h1 className="text-[28px] font-bold text-slate-900">Send Money</h1>
+        <h1 className="text-[28px] font-bold text-slate-900"><I18nText i18nKey="ui.1thzfdj" source="Send Money" /></h1>
         <div className="flex gap-3">
           <Link
             href="/send"
             className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white"
           >
-              To a Profintal Savings User
-          </Link>
+              <I18nText i18nKey="ui.13ol614" source="To a Profintal Savings User" /></Link>
           <Link
             href="/send/bank"
             className="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
           >
-            To a Bank Account
-          </Link>
+            <I18nText i18nKey="ui.e5cev0" source="To a Bank Account" /></Link>
         </div>
       </div>
 

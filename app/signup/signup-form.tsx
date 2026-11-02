@@ -9,6 +9,7 @@ import PasswordField from "@/components/ui/password-field";
 import { COUNTRIES, countryByCode } from "@/lib/countries";
 import { ACCOUNT_TYPES, SIGNUP_CURRENCIES } from "@/lib/account-options";
 import { signup, type AuthState } from "@/app/actions/auth";
+import { I18nText } from "@/components/i18n-text";
 
 const initial: AuthState = {};
 
@@ -70,7 +71,7 @@ function SubmitButton() {
       disabled={pending}
       className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
     >
-      {pending ? "Creating account…" : "Create account"}
+      {pending ? <I18nText i18nKey="ui.1gdkki9" source="Creating account…" /> : <I18nText i18nKey="ui.mfp3qa" source="Create account" />}
       {!pending && <ArrowRight className="size-4" />}
     </button>
   );
@@ -89,7 +90,7 @@ export default function SignupForm() {
     >
       <form action={formAction} className="flex flex-col gap-7">
         {/* ------------------------------------------------ personal */}
-        <Section title="Your details">
+        <Section title="Your details" data-i18n-title={"[\"ui.f0azo\",\"Your details\"]"}>
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-3">
             <Field id="firstName" label="First name">
               <input
@@ -97,7 +98,7 @@ export default function SignupForm() {
                 name="firstName"
                 type="text"
                 autoComplete="given-name"
-                placeholder="Jane"
+                placeholder="Jane" data-i18n-placeholder={"[\"ui.y6xor5\",\"Jane\"]"}
                 className={FIELD}
               />
             </Field>
@@ -107,7 +108,7 @@ export default function SignupForm() {
                 name="lastName"
                 type="text"
                 autoComplete="family-name"
-                placeholder="Cooper"
+                placeholder="Cooper" data-i18n-placeholder={"[\"ui.amxbdb\",\"Cooper\"]"}
                 className={FIELD}
               />
             </Field>
@@ -119,7 +120,7 @@ export default function SignupForm() {
               name="middleName"
               type="text"
               autoComplete="additional-name"
-              placeholder="Amara"
+              placeholder="Amara" data-i18n-placeholder={"[\"ui.1232zlj\",\"Amara\"]"}
               className={FIELD}
             />
           </Field>
@@ -142,7 +143,7 @@ export default function SignupForm() {
         </Section>
 
         {/* ------------------------------------------------- account */}
-        <Section title="Your account">
+        <Section title="Your account" data-i18n-title={"[\"ui.4cg6m9\",\"Your account\"]"}>
           <Field
             id="username"
             label="Username"
@@ -150,14 +151,13 @@ export default function SignupForm() {
           >
             <div className="flex">
               <span className="flex shrink-0 items-center rounded-l-lg border border-r-0 border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-500">
-                @
-              </span>
+                <I18nText i18nKey="ui.1io8tpb" source="@" /></span>
               <input
                 id="username"
                 name="username"
                 type="text"
                 autoComplete="username"
-                placeholder="jane_cooper"
+                placeholder="jane_cooper" data-i18n-placeholder={"[\"ui.qwhthk\",\"jane_cooper\"]"}
                 className={`${FIELD} rounded-l-none`}
               />
             </div>
@@ -172,7 +172,7 @@ export default function SignupForm() {
             >
               {ACCOUNT_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
-                  {t.label} — {t.desc}
+                  {t.label} <I18nText i18nKey="ui.4s9bsz" source="—" />{t.desc}
                 </option>
               ))}
             </select>
@@ -191,7 +191,7 @@ export default function SignupForm() {
             >
               {SIGNUP_CURRENCIES.map((c) => (
                 <option key={c.code} value={c.code}>
-                  {c.flag}  {c.code} — {c.label}
+                  {c.flag}  {c.code} <I18nText i18nKey="ui.4s9bsz" source="—" />{c.label}
                 </option>
               ))}
             </select>
@@ -199,7 +199,7 @@ export default function SignupForm() {
         </Section>
 
         {/* ------------------------------------------------- contact */}
-        <Section title="Contact">
+        <Section title="Contact" data-i18n-title={"[\"ui.w3fq2r\",\"Contact\"]"}>
           <Field id="email" label="Email address">
             <input
               id="email"
@@ -207,7 +207,7 @@ export default function SignupForm() {
               type="email"
               inputMode="email"
               autoComplete="email"
-              placeholder="you@example.com"
+              placeholder="you@example.com" data-i18n-placeholder={"[\"ui.1f9hkpt\",\"you@example.com\"]"}
               className={FIELD}
             />
           </Field>
@@ -242,7 +242,7 @@ export default function SignupForm() {
                 type="tel"
                 inputMode="tel"
                 autoComplete="tel-national"
-                placeholder="7700 900123"
+                placeholder="7700 900123" data-i18n-placeholder={"[\"ui.732c9k\",\"7700 900123\"]"}
                 className={FIELD}
               />
             </div>
@@ -250,14 +250,14 @@ export default function SignupForm() {
         </Section>
 
         {/* ------------------------------------------------- address */}
-        <Section title="Residential address">
+        <Section title="Residential address" data-i18n-title={"[\"ui.1sj0e25\",\"Residential address\"]"}>
           <Field id="addressLine" label="Street address">
             <input
               id="addressLine"
               name="addressLine"
               type="text"
               autoComplete="street-address"
-              placeholder="24 Mercer Street, Apt 5"
+              placeholder="24 Mercer Street, Apt 5" data-i18n-placeholder={"[\"ui.xci2zy\",\"24 Mercer Street, Apt 5\"]"}
               className={FIELD}
             />
           </Field>
@@ -269,7 +269,7 @@ export default function SignupForm() {
                 name="city"
                 type="text"
                 autoComplete="address-level2"
-                placeholder="New York"
+                placeholder="New York" data-i18n-placeholder={"[\"ui.zatwy0\",\"New York\"]"}
                 className={FIELD}
               />
             </Field>
@@ -279,7 +279,7 @@ export default function SignupForm() {
                 name="postalCode"
                 type="text"
                 autoComplete="postal-code"
-                placeholder="10013"
+                placeholder="10013" data-i18n-placeholder={"[\"ui.tyf5v0\",\"10013\"]"}
                 className={FIELD}
               />
             </Field>
@@ -291,14 +291,14 @@ export default function SignupForm() {
               name="region"
               type="text"
               autoComplete="address-level1"
-              placeholder="New York"
+              placeholder="New York" data-i18n-placeholder={"[\"ui.zatwy0\",\"New York\"]"}
               className={FIELD}
             />
           </Field>
         </Section>
 
         {/* ------------------------------------------------ security */}
-        <Section title="Security">
+        <Section title="Security" data-i18n-title={"[\"ui.1i3q76j\",\"Security\"]"}>
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-3">
             <div className="min-w-0 flex-1">
               <PasswordField
@@ -318,9 +318,7 @@ export default function SignupForm() {
             </div>
           </div>
           <p className="-mt-1 text-[11px] text-slate-400">
-            At least 8 characters. Use one you do not reuse anywhere else — this
-            is a demonstration project and holds no real money.
-          </p>
+            <I18nText i18nKey="ui.1xgrbjm" source="At least 8 characters. Use one you do not reuse anywhere else — this is a demonstration project and holds no real money." /></p>
 
           <label
             htmlFor="terms"
@@ -333,16 +331,13 @@ export default function SignupForm() {
               className="mt-0.5 size-4 shrink-0 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
             />
             <span className="text-[13px] leading-relaxed text-slate-600">
-              I confirm the details above are mine and I accept the{" "}
+              <I18nText i18nKey="ui.1cjfq1q" source="I confirm the details above are mine and I accept the" />{" "}
               <span className="font-semibold text-emerald-700">
-                Terms of Use
-              </span>{" "}
-              and{" "}
+                <I18nText i18nKey="ui.1wr163q" source="Terms of Use" /></span>{" "}
+              <I18nText i18nKey="ui.47gkh2" source="and" />{" "}
               <span className="font-semibold text-emerald-700">
-                Privacy Policy
-              </span>
-              .
-            </span>
+                <I18nText i18nKey="ui.ab2tcv" source="Privacy Policy" /></span>
+              <I18nText i18nKey="ui.by08hd" source="." /></span>
           </label>
         </Section>
 
@@ -356,13 +351,12 @@ export default function SignupForm() {
       </form>
 
       <p className="text-center text-sm text-slate-500">
-        Already have an account?{" "}
+        <I18nText i18nKey="ui.nuf7je" source="Already have an account?" />{" "}
         <Link
           href="/login"
           className="font-semibold text-emerald-600 hover:text-emerald-700"
         >
-          Sign in
-        </Link>
+          <I18nText i18nKey="ui.w9nig3" source="Sign in" /></Link>
       </p>
     </AuthShell>
   );

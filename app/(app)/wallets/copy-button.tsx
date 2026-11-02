@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { I18nText } from "@/components/i18n-text";
 
 export default function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
@@ -24,7 +25,7 @@ export default function CopyButton({ value }: { value: string }) {
           : "border-slate-200 text-slate-500 hover:bg-white"
       }`}
     >
-      {copied ? "Copied" : "Copy"}
+      {copied ? <I18nText i18nKey="ui.13bzcw5" source="Copied" /> : <I18nText i18nKey="ui.s6g5lw" source="Copy" />}
     </button>
   );
 }

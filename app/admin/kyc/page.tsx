@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/session";
 import { relativeTime, formatDateOnly } from "@/lib/format";
 import { countryName } from "@/lib/countries";
 import KycQueue, { type Applicant, type KycDoc } from "./kyc-queue";
+import { I18nText } from "@/components/i18n-text";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -127,17 +128,13 @@ export default async function AdminKycPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            KYC Verification Queue
-          </h1>
+            <I18nText i18nKey="ui.1lle21q" source="KYC Verification Queue" /></h1>
           <p className="text-sm text-slate-600">
-            Review pending identity submissions, document integrity and tier
-            upgrade requests.
-          </p>
+            <I18nText i18nKey="ui.14wgs76" source="Review pending identity submissions, document integrity and tier upgrade requests." /></p>
         </div>
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <Download className="size-3.5 text-slate-500" />
-          Export Compliance Log
-        </button>
+          <I18nText i18nKey="ui.pwhdqg" source="Export Compliance Log" /></button>
       </div>
 
       {/* KPI strip */}

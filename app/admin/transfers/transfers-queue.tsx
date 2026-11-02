@@ -6,6 +6,7 @@ import { Search, ChevronDown, AlertTriangle, CheckCircle2 } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { authorizeTransfer, rejectTransfer } from "@/app/actions/admin";
 import { formatCurrency } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -77,7 +78,7 @@ export default function TransfersQueue({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by reference or recipient..."
+            placeholder="Search by reference or recipient..." data-i18n-placeholder={"[\"ui.1cral67\",\"Search by reference or recipient...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -97,13 +98,13 @@ export default function TransfersQueue({
         {/* Queue table */}
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
-            <span className="w-[130px]">REFERENCE</span>
-            <span className="flex-1">RECIPIENT</span>
-            <span className="w-[110px]">ROUTE</span>
-            <span className="w-[130px] text-right">AMOUNT</span>
-            <span className="w-[100px] text-right">REQUESTED</span>
-            <span className="w-[90px] text-center">PRIORITY</span>
-            <span className="w-[80px] text-right">ACTION</span>
+            <span className="w-[130px]"><I18nText i18nKey="ui.1jbvnsq" source="REFERENCE" /></span>
+            <span className="flex-1"><I18nText i18nKey="ui.i4vcbc" source="RECIPIENT" /></span>
+            <span className="w-[110px]"><I18nText i18nKey="ui.16p96ny" source="ROUTE" /></span>
+            <span className="w-[130px] text-right"><I18nText i18nKey="ui.1xotqa1" source="AMOUNT" /></span>
+            <span className="w-[100px] text-right"><I18nText i18nKey="ui.12yn90j" source="REQUESTED" /></span>
+            <span className="w-[90px] text-center"><I18nText i18nKey="ui.c3iitl" source="PRIORITY" /></span>
+            <span className="w-[80px] text-right"><I18nText i18nKey="ui.7u4trz" source="ACTION" /></span>
           </div>
           <div className="flex flex-col">
             {filtered.map((t) => (
@@ -130,7 +131,7 @@ export default function TransfersQueue({
                   {t.route}
                 </span>
                 <span className="w-[130px] text-right font-mono text-[13px] font-semibold text-slate-900">
-                  -{formatCurrency(t.amount, "USD")}
+                  <I18nText i18nKey="ui.b41feg" source="-" />{formatCurrency(t.amount, "USD")}
                 </span>
                 <span className="w-[100px] text-right text-[11px] text-slate-500">
                   {t.submitted}
@@ -151,36 +152,29 @@ export default function TransfersQueue({
                     onClick={() => setSelectedId(t.id)}
                     className="text-[13px] font-semibold text-blue-500 hover:text-blue-600"
                   >
-                    Review
-                  </button>
+                    <I18nText i18nKey="ui.tnr3lt" source="Review" /></button>
                 </div>
               </div>
             ))}
             {filtered.length === 0 && (
               <div className="flex flex-col items-center gap-1.5 border-b border-slate-200 px-6 py-14 text-center">
                 <p className="text-sm font-semibold text-slate-700">
-                  Nothing in the queue
-                </p>
+                  <I18nText i18nKey="ui.1s06jlx" source="Nothing in the queue" /></p>
                 <p className="max-w-sm text-[13px] text-slate-500">
-                  Transfers needing authorisation will show up here.
-                </p>
+                  <I18nText i18nKey="ui.ivikpn" source="Transfers needing authorisation will show up here." /></p>
               </div>
             )}
           </div>
           <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
             <p className="text-[13px] text-slate-500">
-              Showing {filtered.length} of {transfers.length} pending
-            </p>
+              <I18nText i18nKey="ui.1j6rifw" source="Showing" />{filtered.length} <I18nText i18nKey="ui.t6uqnc" source="of" />{transfers.length} <I18nText i18nKey="ui.16nqv5o" source="pending" /></p>
             <div className="flex items-center gap-2">
               <button className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100">
-                Previous
-              </button>
+                <I18nText i18nKey="ui.1t5jxvs" source="Previous" /></button>
               <span className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white">
-                1
-              </span>
+                <I18nText i18nKey="ui.efwnq4" source="1" /></span>
               <button className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-                Next
-              </button>
+                <I18nText i18nKey="ui.1padbm0" source="Next" /></button>
             </div>
           </div>
         </div>
@@ -190,8 +184,7 @@ export default function TransfersQueue({
           <div className="flex w-full shrink-0 flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[360px]">
             <div className="flex items-center justify-between">
               <h2 className="text-[15px] font-bold text-slate-900">
-                Authorization Detail
-              </h2>
+                <I18nText i18nKey="ui.wyptfv" source="Authorization Detail" /></h2>
               <Badge tone={statusTone[selected.status] ?? "neutral"}>
                 {selected.status}
               </Badge>
@@ -203,26 +196,25 @@ export default function TransfersQueue({
                 {selected.party}
               </p>
               <p className="font-mono text-2xl font-extrabold text-slate-900">
-                -{formatCurrency(selected.amount, "USD")}
+                <I18nText i18nKey="ui.b41feg" source="-" />{formatCurrency(selected.amount, "USD")}
               </p>
               <div className="w-full border-t border-slate-200" />
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-slate-500">Reference</span>
+                <span className="text-slate-500"><I18nText i18nKey="ui.1c7vrcq" source="Reference" /></span>
                 <span className="font-mono font-semibold text-slate-900">
                   {selected.ref}
                 </span>
               </div>
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-slate-500">Route</span>
+                <span className="text-slate-500"><I18nText i18nKey="ui.1nvxkfy" source="Route" /></span>
                 <span className="font-semibold text-slate-900">
                   {selected.route}
                 </span>
               </div>
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-slate-500">Originating</span>
+                <span className="text-slate-500"><I18nText i18nKey="ui.4it1d2" source="Originating" /></span>
                 <span className="font-semibold text-slate-900">
-                  Not recorded
-                </span>
+                  <I18nText i18nKey="ui.wm31ze" source="Not recorded" /></span>
               </div>
             </div>
 
@@ -230,39 +222,34 @@ export default function TransfersQueue({
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-500">
-                  RISK ASSESSMENT
-                </span>
+                  <I18nText i18nKey="ui.nrt4rw" source="RISK ASSESSMENT" /></span>
                 <span className="flex items-center gap-1.5 text-[13px] font-bold text-slate-600">
                   <AlertTriangle className="size-3.5" />
                   {selected.risk || "Not assessed"}
                 </span>
               </div>
               <p className="text-[11px] text-slate-500">
-                Automated screening result for this instruction.
-              </p>
+                <I18nText i18nKey="ui.swcwi7" source="Automated screening result for this instruction." /></p>
             </div>
 
             {/* Dual authorization */}
             <div className="flex flex-col gap-3">
               <p className="text-xs font-bold text-slate-500">
-                DUAL AUTHORIZATION
-              </p>
+                <I18nText i18nKey="ui.es4nra" source="DUAL AUTHORIZATION" /></p>
               <div className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2.5">
                 <span className="text-[13px] text-slate-900">
-                  Approver 1 · Not assigned
-                </span>
-                <Badge tone="success">Signed</Badge>
+                  <I18nText i18nKey="ui.14qbfl" source="Approver 1 · Not assigned" /></span>
+                <Badge tone="success"><I18nText i18nKey="ui.b170hh" source="Signed" /></Badge>
               </div>
               <div className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2.5">
                 <span className="text-[13px] text-slate-900">
-                  Approver 2 · Not assigned
-                </span>
+                  <I18nText i18nKey="ui.ijhtye" source="Approver 2 · Not assigned" /></span>
                 <Badge
                   tone={
                     selected.status === "Authorized" ? "success" : "warning"
                   }
                 >
-                  {selected.status === "Authorized" ? "Signed" : "Pending"}
+                  {selected.status === "Authorized" ? <I18nText i18nKey="ui.b170hh" source="Signed" /> : <I18nText i18nKey="ui.e8nfto" source="Pending" />}
                 </Badge>
               </div>
             </div>
@@ -289,13 +276,12 @@ export default function TransfersQueue({
                 className="rounded-lg bg-slate-900 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800 disabled:opacity-60"
               >
                 {selected.status === "Authorized"
-                  ? "Authorized"
-                  : "Authorize Transfer"}
+                  ? <I18nText i18nKey="ui.fsoo9o" source="Authorized" />
+                  : <I18nText i18nKey="ui.kt45o3" source="Authorize Transfer" />}
               </button>
               <div className="flex gap-3">
                 <button className="flex-1 rounded-lg border border-slate-200 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-                  Hold
-                </button>
+                  <I18nText i18nKey="ui.cqyh94" source="Hold" /></button>
                 <button
                   disabled={pending || selected.status === "Rejected"}
                   onClick={() =>
@@ -306,8 +292,7 @@ export default function TransfersQueue({
                   }
                   className="flex-1 rounded-lg border border-red-200 py-2.5 text-[13px] font-semibold text-red-500 transition-colors hover:bg-red-50 disabled:opacity-60"
                 >
-                  Reject
-                </button>
+                  <I18nText i18nKey="ui.1kej36u" source="Reject" /></button>
               </div>
             </div>
           </div>

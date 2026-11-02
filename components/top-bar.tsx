@@ -1,4 +1,5 @@
 import { Search, Bell } from "lucide-react";
+import { translationAttribute } from "@/lib/i18n/keys";
 
 export default function TopBar({
   placeholder = "Search...",
@@ -18,6 +19,7 @@ export default function TopBar({
         <input
           type="text"
           placeholder={placeholder}
+          {...translationAttribute("placeholder", placeholder)}
           className="w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none"
         />
       </div>
@@ -25,7 +27,7 @@ export default function TopBar({
         {children}
         <button
           type="button"
-          aria-label="Notifications"
+          aria-label="Notifications" data-i18n-aria-label={"[\"ui.fki4un\",\"Notifications\"]"}
           className="flex items-center justify-center rounded-[10px] border border-slate-200 bg-white p-2.5 text-slate-700 transition-colors hover:bg-slate-50"
         >
           <Bell className="size-[18px]" />

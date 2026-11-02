@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { I18nText } from "@/components/i18n-text";
 
 export default function BrandLogo({
   href,
@@ -32,8 +33,7 @@ export default function BrandLogo({
           compact ? "text-sm" : "text-base"
         } ${inverse ? "text-white" : "text-slate-900"}`}
       >
-        Profintal Savings
-      </span>
+        <I18nText i18nKey="ui.14rzj89" source="Profintal Savings" /></span>
     </span>
   );
 

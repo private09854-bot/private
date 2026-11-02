@@ -2,6 +2,7 @@ import TopBar from "@/components/top-bar";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import ConvertForm from "./convert-form";
+import { I18nText } from "@/components/i18n-text";
 
 export default async function ConvertPage() {
   const user = await requireCustomer();
@@ -19,16 +20,15 @@ export default async function ConvertPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <TopBar placeholder="Search fx rate histories, swap limits, active pairs...">
+      <TopBar placeholder="Search fx rate histories, swap limits, active pairs..." data-i18n-placeholder={"[\"ui.17w7uj5\",\"Search fx rate histories, swap limits, active pairs...\"]"}>
         <div className="flex items-center gap-1.5 rounded-full border border-emerald-500 bg-emerald-50 px-3 py-1.5">
           <span className="size-1.5 rounded-full bg-emerald-500" />
           <span className="text-xs font-semibold text-emerald-500">
-            SWIFT Live Gateway
-          </span>
+            <I18nText i18nKey="ui.15fdf3k" source="SWIFT Live Gateway" /></span>
         </div>
       </TopBar>
 
-      <h1 className="text-[28px] font-bold text-slate-900">Convert Currency</h1>
+      <h1 className="text-[28px] font-bold text-slate-900"><I18nText i18nKey="ui.bm0gs3" source="Convert Currency" /></h1>
 
       <ConvertForm
         wallets={wallets.map((w) => ({

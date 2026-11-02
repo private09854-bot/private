@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { formatCurrency } from "@/lib/format";
 import RuleToggle from "./rule-toggle";
+import { I18nText } from "@/components/i18n-text";
 
 const filters = ["Severity: All", "Trigger: All", "Status: Open"];
 
@@ -55,17 +56,13 @@ export default async function AdminRiskPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            Risk &amp; Fraud Center
-          </h1>
+            <I18nText i18nKey="ui.1qg619v" source="Risk & Fraud Center" /></h1>
           <p className="text-sm text-slate-600">
-            Investigate flagged activity, tune detection rules and manage open
-            fraud cases.
-          </p>
+            <I18nText i18nKey="ui.vg60hs" source="Investigate flagged activity, tune detection rules and manage open fraud cases." /></p>
         </div>
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <Download className="size-3.5 text-slate-500" />
-          Export Case Log
-        </button>
+          <I18nText i18nKey="ui.1li2z87" source="Export Case Log" /></button>
       </div>
 
       {/* KPI strip */}
@@ -90,7 +87,7 @@ export default async function AdminRiskPage() {
           <Search className="size-3.5 shrink-0 text-slate-500" />
           <input
             type="text"
-            placeholder="Search by account, case ID or trigger..."
+            placeholder="Search by account, case ID or trigger..." data-i18n-placeholder={"[\"ui.d1dt0r\",\"Search by account, case ID or trigger...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -110,23 +107,20 @@ export default async function AdminRiskPage() {
         {/* Flagged activity table */}
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
-            <span className="w-[160px]">ACCOUNT</span>
-            <span className="flex-1">TRIGGER</span>
-            <span className="w-[70px] text-center">RISK</span>
-            <span className="w-[120px] text-right">AMOUNT</span>
-            <span className="w-[100px] text-right">TIME</span>
-            <span className="w-[100px] text-right">ACTION</span>
+            <span className="w-[160px]"><I18nText i18nKey="ui.1sxr6ws" source="ACCOUNT" /></span>
+            <span className="flex-1"><I18nText i18nKey="ui.1xsttk3" source="TRIGGER" /></span>
+            <span className="w-[70px] text-center"><I18nText i18nKey="ui.dml3my" source="RISK" /></span>
+            <span className="w-[120px] text-right"><I18nText i18nKey="ui.1xotqa1" source="AMOUNT" /></span>
+            <span className="w-[100px] text-right"><I18nText i18nKey="ui.9n2gis" source="TIME" /></span>
+            <span className="w-[100px] text-right"><I18nText i18nKey="ui.7u4trz" source="ACTION" /></span>
           </div>
           <div className="flex flex-col">
             {flagged.length === 0 && (
               <div className="flex flex-col items-center gap-1.5 border-b border-slate-200 px-6 py-14 text-center">
                 <p className="text-sm font-semibold text-slate-700">
-                  No flagged activity
-                </p>
+                  <I18nText i18nKey="ui.dqwprt" source="No flagged activity" /></p>
                 <p className="max-w-sm text-[13px] text-slate-500">
-                  Accounts appear here when live activity trips one of the
-                  detection rules below.
-                </p>
+                  <I18nText i18nKey="ui.4v2os4" source="Accounts appear here when live activity trips one of the detection rules below." /></p>
               </div>
             )}
             {flagged.map((f) => {
@@ -165,8 +159,7 @@ export default async function AdminRiskPage() {
                   </span>
                   <div className="flex w-[100px] justify-end">
                     <button className="text-[13px] font-semibold text-blue-500 hover:text-blue-600">
-                      Investigate
-                    </button>
+                      <I18nText i18nKey="ui.19zs578" source="Investigate" /></button>
                   </div>
                 </div>
               );
@@ -174,18 +167,14 @@ export default async function AdminRiskPage() {
           </div>
           <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
             <p className="text-[13px] text-slate-500">
-              Showing {flagged.length} of {flagged.length} open cases
-            </p>
+              <I18nText i18nKey="ui.1j6rifw" source="Showing" />{flagged.length} <I18nText i18nKey="ui.t6uqnc" source="of" />{flagged.length} <I18nText i18nKey="ui.yskr3w" source="open cases" /></p>
             <div className="flex items-center gap-2">
               <button className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100">
-                Previous
-              </button>
+                <I18nText i18nKey="ui.1t5jxvs" source="Previous" /></button>
               <span className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white">
-                1
-              </span>
+                <I18nText i18nKey="ui.efwnq4" source="1" /></span>
               <button className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-                Next
-              </button>
+                <I18nText i18nKey="ui.1padbm0" source="Next" /></button>
             </div>
           </div>
         </div>
@@ -195,8 +184,7 @@ export default async function AdminRiskPage() {
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="size-4 text-amber-500" />
             <h2 className="text-[15px] font-bold text-slate-900">
-              Detection Rules
-            </h2>
+              <I18nText i18nKey="ui.1npxo97" source="Detection Rules" /></h2>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -219,21 +207,18 @@ export default async function AdminRiskPage() {
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500">
-                MODEL SENSITIVITY
-              </span>
-              <span className="text-[13px] font-bold text-amber-500">Balanced</span>
+                <I18nText i18nKey="ui.h1ov7p" source="MODEL SENSITIVITY" /></span>
+              <span className="text-[13px] font-bold text-amber-500"><I18nText i18nKey="ui.1hht4cd" source="Balanced" /></span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
               <div className="h-full w-[65%] rounded-full bg-amber-500" />
             </div>
             <p className="text-[11px] text-slate-500">
-              Higher sensitivity flags more activity but raises false positives.
-            </p>
+              <I18nText i18nKey="ui.1opytl3" source="Higher sensitivity flags more activity but raises false positives." /></p>
           </div>
 
           <button className="rounded-lg bg-slate-900 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800">
-            Save Rule Changes
-          </button>
+            <I18nText i18nKey="ui.mhrq6n" source="Save Rule Changes" /></button>
         </div>
       </div>
     </div>

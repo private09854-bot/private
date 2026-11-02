@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { approveKyc, rejectKyc } from "@/app/actions/admin";
+import { I18nText } from "@/components/i18n-text";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -40,11 +41,9 @@ export default function KycReviewCard({
     return (
       <div className="flex w-full shrink-0 flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[360px]">
         <h2 className="text-[15px] font-bold text-slate-900">
-          KYC Review Queue
-        </h2>
+          <I18nText i18nKey="ui.p6cby9" source="KYC Review Queue" /></h2>
         <p className="text-[13px] text-slate-500">
-          No applications are awaiting review.
-        </p>
+          <I18nText i18nKey="ui.aflj5d" source="No applications are awaiting review." /></p>
       </div>
     );
   }
@@ -75,9 +74,8 @@ export default function KycReviewCard({
     <div className="flex w-full shrink-0 flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[360px]">
       <div className="flex items-center justify-between">
         <h2 className="text-[15px] font-bold text-slate-900">
-          KYC Review Queue
-        </h2>
-        <Badge tone="neutral">{queued} queued</Badge>
+          <I18nText i18nKey="ui.p6cby9" source="KYC Review Queue" /></h2>
+        <Badge tone="neutral">{queued} <I18nText i18nKey="ui.ogvpec" source="queued" /></Badge>
       </div>
 
       {/* Applicant */}
@@ -92,19 +90,18 @@ export default function KycReviewCard({
           <div className="flex flex-col gap-0.5">
             <p className="text-sm font-bold text-slate-900">{applicant.name}</p>
             <p className="text-[11px] text-slate-500">
-              {applicant.handle} • {applicant.flag}
+              {applicant.handle} <I18nText i18nKey="ui.aw0l2d" source="•" />{applicant.flag}
             </p>
           </div>
         </div>
         <div className="w-full border-t border-slate-200" />
         <div className="flex items-center justify-between text-[11px]">
-          <span className="text-slate-500">Requesting</span>
+          <span className="text-slate-500"><I18nText i18nKey="ui.1br7x1q" source="Requesting" /></span>
           <span className="font-semibold text-slate-900">
-            {applicant.requesting} upgrade
-          </span>
+            {applicant.requesting} <I18nText i18nKey="ui.1p7fwc7" source="upgrade" /></span>
         </div>
         <div className="flex items-center justify-between text-[11px]">
-          <span className="text-slate-500">Applied</span>
+          <span className="text-slate-500"><I18nText i18nKey="ui.gpyu7e" source="Applied" /></span>
           <span className="font-mono font-semibold text-slate-900">
             {applicant.submitted}
           </span>
@@ -114,7 +111,7 @@ export default function KycReviewCard({
       {/* Details given at sign-up */}
       {applicant.details.length > 0 && (
         <div className="flex flex-col gap-2.5">
-          <p className="text-xs font-bold text-slate-500">REGISTERED DETAILS</p>
+          <p className="text-xs font-bold text-slate-500"><I18nText i18nKey="ui.f7fznn" source="REGISTERED DETAILS" /></p>
           {applicant.details.map((d) => (
             <div key={d.label} className="flex items-start justify-between gap-3">
               <span className="shrink-0 text-[11px] text-slate-500">
@@ -131,8 +128,7 @@ export default function KycReviewCard({
       {/* Checklist */}
       <div className="flex flex-col gap-3.5">
         <p className="text-xs font-bold text-slate-500">
-          VERIFICATION CHECKLIST
-        </p>
+          <I18nText i18nKey="ui.19mphty" source="VERIFICATION CHECKLIST" /></p>
         {applicant.documents.map((c) => (
           <div key={c.label} className="flex items-center justify-between">
             <span className="text-[13px] text-slate-900">{c.label}</span>
@@ -145,11 +141,10 @@ export default function KycReviewCard({
       <div className="flex flex-col gap-2.5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-slate-500">
-            RISK ASSESSMENT
-          </span>
+            <I18nText i18nKey="ui.nrt4rw" source="RISK ASSESSMENT" /></span>
           <span className={`flex items-center gap-1.5 text-[13px] font-bold ${textColor}`}>
             <ShieldCheck className="size-3.5" />
-            {applicant.riskScore} / 100 {applicant.riskLabel}
+            {applicant.riskScore} <I18nText i18nKey="ui.tl3a3d" source="/ 100" />{applicant.riskLabel}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
@@ -181,12 +176,10 @@ export default function KycReviewCard({
           }
           className="rounded-lg bg-slate-900 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800 disabled:opacity-60"
         >
-          Approve {applicant.targetTier} Upgrade
-        </button>
+          <I18nText i18nKey="ui.1s2ov2y" source="Approve" />{applicant.targetTier} <I18nText i18nKey="ui.3ofr4n" source="Upgrade" /></button>
         <div className="flex gap-3">
           <button className="flex-1 rounded-lg border border-slate-200 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-            Request Info
-          </button>
+            <I18nText i18nKey="ui.1vmftvq" source="Request Info" /></button>
           <button
             disabled={pending}
             onClick={() =>
@@ -194,8 +187,7 @@ export default function KycReviewCard({
             }
             className="flex-1 rounded-lg border border-red-200 py-2.5 text-[13px] font-semibold text-red-500 transition-colors hover:bg-red-50 disabled:opacity-60"
           >
-            Reject
-          </button>
+            <I18nText i18nKey="ui.1kej36u" source="Reject" /></button>
         </div>
       </div>
     </div>

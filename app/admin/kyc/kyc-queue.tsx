@@ -12,6 +12,7 @@ import {
 import Badge from "@/components/ui/badge";
 import { approveKyc, rejectKyc, escalateKyc } from "@/app/actions/admin";
 import { getKycDocumentUrl } from "@/app/actions/kyc";
+import { I18nText } from "@/components/i18n-text";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -119,7 +120,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by applicant, account ID or document ref..."
+            placeholder="Search by applicant, account ID or document ref..." data-i18n-placeholder={"[\"ui.1d6somj\",\"Search by applicant, account ID or document ref...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -139,23 +140,20 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
         {/* Queue table */}
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
-            <span className="flex-1">APPLICANT</span>
-            <span className="w-[150px]">REQUESTING</span>
-            <span className="w-[130px]">DOCUMENTS</span>
-            <span className="w-[110px]">SUBMITTED</span>
-            <span className="w-[80px]">RISK</span>
-            <span className="w-[70px] text-right">ACTION</span>
+            <span className="flex-1"><I18nText i18nKey="ui.dmt0td" source="APPLICANT" /></span>
+            <span className="w-[150px]"><I18nText i18nKey="ui.1nfwicu" source="REQUESTING" /></span>
+            <span className="w-[130px]"><I18nText i18nKey="ui.16sn18l" source="DOCUMENTS" /></span>
+            <span className="w-[110px]"><I18nText i18nKey="ui.63auw2" source="SUBMITTED" /></span>
+            <span className="w-[80px]"><I18nText i18nKey="ui.dml3my" source="RISK" /></span>
+            <span className="w-[70px] text-right"><I18nText i18nKey="ui.7u4trz" source="ACTION" /></span>
           </div>
           <div className="flex flex-col">
             {filtered.length === 0 && (
               <div className="flex flex-col items-center gap-1.5 border-b border-slate-200 px-6 py-14 text-center">
                 <p className="text-sm font-semibold text-slate-700">
-                  Queue is empty
-                </p>
+                  <I18nText i18nKey="ui.ujwvg1" source="Queue is empty" /></p>
                 <p className="max-w-sm text-[13px] text-slate-500">
-                  Applications appear here once a customer submits their
-                  documents from the verification page.
-                </p>
+                  <I18nText i18nKey="ui.1h4zmpj" source="Applications appear here once a customer submits their documents from the verification page." /></p>
               </div>
             )}
             {filtered.map((a) => (
@@ -202,26 +200,21 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                     onClick={() => setSelectedId(a.id)}
                     className="text-[13px] font-semibold text-blue-500 hover:text-blue-600"
                   >
-                    Review
-                  </button>
+                    <I18nText i18nKey="ui.tnr3lt" source="Review" /></button>
                 </div>
               </div>
             ))}
           </div>
           <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
             <p className="text-[13px] text-slate-500">
-              Showing {filtered.length} of {applicants.length} in queue
-            </p>
+              <I18nText i18nKey="ui.1j6rifw" source="Showing" />{filtered.length} <I18nText i18nKey="ui.t6uqnc" source="of" />{applicants.length} <I18nText i18nKey="ui.lo7h65" source="in queue" /></p>
             <div className="flex items-center gap-2">
               <button className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100">
-                Previous
-              </button>
+                <I18nText i18nKey="ui.1t5jxvs" source="Previous" /></button>
               <span className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white">
-                1
-              </span>
+                <I18nText i18nKey="ui.efwnq4" source="1" /></span>
               <button className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-                Next
-              </button>
+                <I18nText i18nKey="ui.1padbm0" source="Next" /></button>
             </div>
           </div>
         </div>
@@ -231,8 +224,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
           <div className="flex w-full shrink-0 flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[360px]">
             <div className="flex items-center justify-between">
               <h2 className="text-[15px] font-bold text-slate-900">
-                Active Review
-              </h2>
+                <I18nText i18nKey="ui.1t3qz0p" source="Active Review" /></h2>
               <Badge tone={statusBadge[selected.status]?.tone ?? "neutral"}>
                 {statusBadge[selected.status]?.label ?? selected.status}
               </Badge>
@@ -252,19 +244,18 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                     {selected.name}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    {selected.handle} • {selected.flag} {selected.country}
+                    {selected.handle} <I18nText i18nKey="ui.aw0l2d" source="•" />{selected.flag} {selected.country}
                   </p>
                 </div>
               </div>
               <div className="w-full border-t border-slate-200" />
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-slate-500">Requesting</span>
+                <span className="text-slate-500"><I18nText i18nKey="ui.1br7x1q" source="Requesting" /></span>
                 <span className="font-semibold text-slate-900">
-                  {selected.requesting} upgrade
-                </span>
+                  {selected.requesting} <I18nText i18nKey="ui.1p7fwc7" source="upgrade" /></span>
               </div>
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-slate-500">Submitted</span>
+                <span className="text-slate-500"><I18nText i18nKey="ui.12at4de" source="Submitted" /></span>
                 <span className="font-mono font-semibold text-slate-900">
                   {selected.submittedLabel}
                 </span>
@@ -274,7 +265,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
             {/* What the customer submitted */}
             {selected.submission.length > 0 && (
               <div className="flex flex-col gap-2.5">
-                <p className="text-xs font-bold text-slate-500">SUBMITTED DETAILS</p>
+                <p className="text-xs font-bold text-slate-500"><I18nText i18nKey="ui.3v0se4" source="SUBMITTED DETAILS" /></p>
                 {selected.submission.map((f) => (
                   <div
                     key={f.label}
@@ -294,8 +285,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
             {/* Uploaded documents - opened through a short-lived signed URL */}
             <div className="flex flex-col gap-3">
               <p className="text-xs font-bold text-slate-500">
-                VERIFICATION CHECKLIST
-              </p>
+                <I18nText i18nKey="ui.19mphty" source="VERIFICATION CHECKLIST" /></p>
               {selected.documents.map((docm) => {
                 const size = prettySize(docm.fileSize);
                 return (
@@ -317,7 +307,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                       <p className="truncate text-[11px] text-slate-500">
                         {docm.fileName
                           ? `${docm.fileName}${size ? ` • ${size}` : ""}`
-                          : "No file uploaded"}
+                          : <I18nText i18nKey="ui.1wvfx4w" source="No file uploaded" />}
                       </p>
                     </div>
                     <Badge tone={docm.tone}>{docm.state}</Badge>
@@ -327,7 +317,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                         disabled={opening === docm.id}
                         className="shrink-0 text-[13px] font-semibold text-blue-500 transition-colors hover:text-blue-600 disabled:opacity-50"
                       >
-                        {opening === docm.id ? "…" : "Open"}
+                        {opening === docm.id ? <I18nText i18nKey="ui.9s26ah" source="…" /> : <I18nText i18nKey="ui.n6hn1l" source="Open" />}
                       </button>
                     )}
                   </div>
@@ -339,8 +329,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-500">
-                  RISK ASSESSMENT
-                </span>
+                  <I18nText i18nKey="ui.nrt4rw" source="RISK ASSESSMENT" /></span>
                 <span
                   className={`flex items-center gap-1.5 text-[13px] font-bold ${
                     selected.riskTone === "danger"
@@ -351,7 +340,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                   }`}
                 >
                   <ShieldCheck className="size-3.5" />
-                  {selected.riskScore} / 100 {selected.riskLabel}
+                  {selected.riskScore} <I18nText i18nKey="ui.tl3a3d" source="/ 100" />{selected.riskLabel}
                 </span>
               </div>
               <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
@@ -390,7 +379,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                 className="rounded-lg bg-slate-900 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800 disabled:opacity-60"
               >
                 {selected.status === "approved"
-                  ? "Approved"
+                  ? <I18nText i18nKey="ui.1j3qly2" source="Approved" />
                   : `Approve ${selected.targetTier} Upgrade`}
               </button>
               <div className="flex gap-3">
@@ -404,8 +393,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                   }
                   className="flex-1 rounded-lg border border-slate-200 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50 disabled:opacity-60"
                 >
-                  Escalate
-                </button>
+                  <I18nText i18nKey="ui.13fpsqh" source="Escalate" /></button>
                 <button
                   disabled={pending || selected.status === "rejected"}
                   onClick={() =>
@@ -416,8 +404,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                   }
                   className="flex-1 rounded-lg border border-red-200 py-2.5 text-[13px] font-semibold text-red-500 transition-colors hover:bg-red-50 disabled:opacity-60"
                 >
-                  Reject
-                </button>
+                  <I18nText i18nKey="ui.1kej36u" source="Reject" /></button>
               </div>
             </div>
           </div>

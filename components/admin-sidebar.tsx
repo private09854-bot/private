@@ -7,6 +7,7 @@ import { LogOut, Menu, X } from "lucide-react";
 import { adminNav } from "@/lib/nav";
 import { logout } from "@/app/actions/auth";
 import BrandLogo from "./brand-logo";
+import { I18nText } from "@/components/i18n-text";
 
 export default function AdminSidebar({
   user,
@@ -27,11 +28,10 @@ export default function AdminSidebar({
         <Link href="/admin" className="flex items-center gap-2.5">
           <BrandLogo compact />
           <span className="text-[9px] font-bold uppercase tracking-[1px] text-amber-500">
-            Admin
-          </span>
+            <I18nText i18nKey="ui.1pbhrck" source="Admin" /></span>
         </Link>
         <button
-          aria-label="Open menu"
+          aria-label="Open menu" data-i18n-aria-label={"[\"ui.1ey0tzw\",\"Open menu\"]"}
           onClick={() => setOpen(true)}
           className="text-slate-300 transition-colors hover:text-white"
         >
@@ -59,11 +59,10 @@ export default function AdminSidebar({
             <div className="flex items-center gap-3">
               <BrandLogo href="/admin" compact />
               <span className="text-[9px] font-bold uppercase tracking-[1px] text-amber-500">
-                Admin Panel
-              </span>
+                <I18nText i18nKey="ui.pulv4q" source="Admin Panel" /></span>
             </div>
             <button
-              aria-label="Close menu"
+              aria-label="Close menu" data-i18n-aria-label={"[\"ui.oob172\",\"Close menu\"]"}
               onClick={() => setOpen(false)}
               className="text-slate-400 transition-colors hover:text-white lg:hidden"
             >
@@ -118,7 +117,7 @@ export default function AdminSidebar({
               className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-[13px] font-medium text-slate-500 transition-colors hover:bg-slate-800/50 hover:text-slate-300"
             >
               <LogOut className="size-4" />
-              <span>Sign out</span>
+              <span><I18nText i18nKey="ui.12niv00" source="Sign out" /></span>
             </button>
           </form>
         </div>

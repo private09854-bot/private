@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { usdRateMap } from "@/lib/data";
 import { formatCompact, formatCurrency } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 const filters = ["Route: All", "Status: All"];
 
@@ -65,17 +66,13 @@ export default async function AdminFeesPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            Fees &amp; Limits
-          </h1>
+            <I18nText i18nKey="ui.3mfp2a" source="Fees & Limits" /></h1>
           <p className="text-sm text-slate-600">
-            Manage the platform fee schedule, tier pricing and settlement
-            thresholds.
-          </p>
+            <I18nText i18nKey="ui.e1g5db" source="Manage the platform fee schedule, tier pricing and settlement thresholds." /></p>
         </div>
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <Download className="size-3.5 text-slate-500" />
-          Export Schedule
-        </button>
+          <I18nText i18nKey="ui.1frbgqg" source="Export Schedule" /></button>
       </div>
 
       {/* KPI strip */}
@@ -100,7 +97,7 @@ export default async function AdminFeesPage() {
           <Search className="size-3.5 shrink-0 text-slate-500" />
           <input
             type="text"
-            placeholder="Search fee type..."
+            placeholder="Search fee type..." data-i18n-placeholder={"[\"ui.17b5alb\",\"Search fee type...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -120,10 +117,10 @@ export default async function AdminFeesPage() {
         {/* Fee schedule table */}
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
-            <span className="flex-1">TRANSACTION TYPE</span>
-            <span className="w-[150px]">TIER</span>
-            <span className="w-[120px] text-right">FEE</span>
-            <span className="w-[90px] text-right">STATUS</span>
+            <span className="flex-1"><I18nText i18nKey="ui.4m2zdd" source="TRANSACTION TYPE" /></span>
+            <span className="w-[150px]"><I18nText i18nKey="ui.r54utl" source="TIER" /></span>
+            <span className="w-[120px] text-right"><I18nText i18nKey="ui.ijvun7" source="FEE" /></span>
+            <span className="w-[90px] text-right"><I18nText i18nKey="ui.165vtrj" source="STATUS" /></span>
           </div>
           <div className="flex flex-col">
             {fees.map((f) => (
@@ -144,24 +141,22 @@ export default async function AdminFeesPage() {
                   {f.amount}
                 </span>
                 <div className="flex w-[90px] justify-end">
-                  <Badge tone="success">Active</Badge>
+                  <Badge tone="success"><I18nText i18nKey="ui.8qzyhb" source="Active" /></Badge>
                 </div>
               </div>
             ))}
           </div>
           <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
             <p className="text-[13px] text-slate-500">
-              {fees.length} fee rules configured
-            </p>
+              {fees.length} <I18nText i18nKey="ui.1hsyzgk" source="fee rules configured" /></p>
             <button className="text-[13px] font-semibold text-blue-500 hover:text-blue-600">
-              + Add Fee Rule
-            </button>
+              <I18nText i18nKey="ui.1g7qo1" source="+ Add Fee Rule" /></button>
           </div>
         </div>
 
         {/* Global limits */}
         <div className="flex w-full shrink-0 flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[360px]">
-          <h2 className="text-[15px] font-bold text-slate-900">Global Limits</h2>
+          <h2 className="text-[15px] font-bold text-slate-900"><I18nText i18nKey="ui.1tyuo5a" source="Global Limits" /></h2>
 
           <div className="flex flex-col gap-3">
             {globalLimits.map((l) => (
@@ -180,12 +175,12 @@ export default async function AdminFeesPage() {
           <div className="w-full border-t border-slate-200" />
 
           <div className="flex flex-col gap-3">
-            <p className="text-xs font-bold text-slate-500">CUSTOMERS BY TIER</p>
+            <p className="text-xs font-bold text-slate-500"><I18nText i18nKey="ui.1g376jx" source="CUSTOMERS BY TIER" /></p>
             {tierCounts.map((t) => (
               <div key={t.tier} className="flex items-center justify-between">
                 <span className="text-[13px] text-slate-900">{t.tier}</span>
                 <span className="font-mono text-[13px] font-semibold text-slate-900">
-                  {t.count} {t.count === 1 ? "user" : "users"}
+                  {t.count} {t.count === 1 ? <I18nText i18nKey="ui.qrm3n6" source="user" /> : <I18nText i18nKey="ui.q7t3bn" source="users" />}
                 </span>
               </div>
             ))}
@@ -197,11 +192,9 @@ export default async function AdminFeesPage() {
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500">
-                NETWORK DAILY UTILIZATION
-              </span>
+                <I18nText i18nKey="ui.1n3ae60" source="NETWORK DAILY UTILIZATION" /></span>
               <span className="text-[13px] font-bold text-amber-500">
-                {utilization}%
-              </span>
+                {utilization}<I18nText i18nKey="ui.8w4luo" source="%" /></span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
               <div
@@ -212,8 +205,7 @@ export default async function AdminFeesPage() {
           </div>
 
           <button className="rounded-lg bg-slate-900 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800">
-            Adjust Limits
-          </button>
+            <I18nText i18nKey="ui.14jqz72" source="Adjust Limits" /></button>
         </div>
       </div>
     </div>

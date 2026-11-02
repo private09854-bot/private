@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import BrandLogo from "./brand-logo";
+import { I18nText } from "@/components/i18n-text";
 
 const links = [
   { label: "Features", href: "#features" },
@@ -42,14 +43,12 @@ export default function SiteHeader() {
             href="/login"
             className="rounded-lg px-3.5 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100"
           >
-            Sign in
-          </Link>
+            <I18nText i18nKey="ui.w9nig3" source="Sign in" /></Link>
           <Link
             href="/signup"
             className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
           >
-            Open account
-          </Link>
+            <I18nText i18nKey="ui.1afzndq" source="Open account" /></Link>
         </div>
 
         <button
@@ -82,15 +81,13 @@ export default function SiteHeader() {
                 onClick={() => setOpen(false)}
                 className="rounded-lg border border-slate-200 px-4 py-2.5 text-center text-sm font-semibold text-slate-700"
               >
-                Sign in
-              </Link>
+                <I18nText i18nKey="ui.w9nig3" source="Sign in" /></Link>
               <Link
                 href="/signup"
                 onClick={() => setOpen(false)}
                 className="rounded-lg bg-emerald-600 px-4 py-2.5 text-center text-sm font-semibold text-white"
               >
-                Open account
-              </Link>
+                <I18nText i18nKey="ui.1afzndq" source="Open account" /></Link>
             </div>
           </nav>
         </div>

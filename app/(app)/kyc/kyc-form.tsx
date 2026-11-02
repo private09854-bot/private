@@ -15,6 +15,7 @@ import {
   KYC_ALLOWED_MIME,
   KYC_ACCEPT,
 } from "@/lib/kyc-options";
+import { I18nText } from "@/components/i18n-text";
 
 const FIELD =
   "w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500";
@@ -138,19 +139,15 @@ export default function KycForm({
       <section className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6">
         <div className="flex flex-col gap-1">
           <h2 className="text-base font-bold text-slate-900">
-            Identity document
-          </h2>
+            <I18nText i18nKey="ui.m75vko" source="Identity document" /></h2>
           <p className="text-[13px] text-slate-500">
-            Details must match the document exactly, and the name on it must
-            match <span className="font-semibold">{accountName}</span>.
-          </p>
+            <I18nText i18nKey="ui.56ldke" source="Details must match the document exactly, and the name on it must match" /><span className="font-semibold">{accountName}</span><I18nText i18nKey="ui.by08hd" source="." /></p>
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-3">
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <label htmlFor="documentType" className={LABEL}>
-              Document type
-            </label>
+              <I18nText i18nKey="ui.lxt55g" source="Document type" /></label>
             <select
               id="documentType"
               value={documentType}
@@ -166,13 +163,12 @@ export default function KycForm({
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <label htmlFor="documentNumber" className={LABEL}>
-              Document number
-            </label>
+              <I18nText i18nKey="ui.1p5u631" source="Document number" /></label>
             <input
               id="documentNumber"
               value={documentNumber}
               onChange={(e) => setDocumentNumber(e.target.value)}
-              placeholder="e.g. P1234567"
+              placeholder="e.g. P1234567" data-i18n-placeholder={"[\"ui.1hpks9l\",\"e.g. P1234567\"]"}
               className={FIELD}
             />
           </div>
@@ -181,8 +177,7 @@ export default function KycForm({
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-3">
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <label htmlFor="issuingCountry" className={LABEL}>
-              Issuing country
-            </label>
+              <I18nText i18nKey="ui.100d405" source="Issuing country" /></label>
             <select
               id="issuingCountry"
               value={issuingCountry}
@@ -198,8 +193,7 @@ export default function KycForm({
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <label htmlFor="documentExpiry" className={LABEL}>
-              Expiry date
-            </label>
+              <I18nText i18nKey="ui.i7m7by" source="Expiry date" /></label>
             <input
               id="documentExpiry"
               type="date"
@@ -214,29 +208,26 @@ export default function KycForm({
       {/* ---------------------------------------------------------- about */}
       <section className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6">
         <div className="flex flex-col gap-1">
-          <h2 className="text-base font-bold text-slate-900">About you</h2>
+          <h2 className="text-base font-bold text-slate-900"><I18nText i18nKey="ui.1hah3md" source="About you" /></h2>
           <p className="text-[13px] text-slate-500">
-            Required for anti-money-laundering checks.
-          </p>
+            <I18nText i18nKey="ui.1t0dkfj" source="Required for anti-money-laundering checks." /></p>
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-3">
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <label htmlFor="occupation" className={LABEL}>
-              Occupation
-            </label>
+              <I18nText i18nKey="ui.dlbn6i" source="Occupation" /></label>
             <input
               id="occupation"
               value={occupation}
               onChange={(e) => setOccupation(e.target.value)}
-              placeholder="e.g. Software engineer"
+              placeholder="e.g. Software engineer" data-i18n-placeholder={"[\"ui.1vyldm9\",\"e.g. Software engineer\"]"}
               className={FIELD}
             />
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <label htmlFor="sourceOfFunds" className={LABEL}>
-              Main source of funds
-            </label>
+              <I18nText i18nKey="ui.1qahnqi" source="Main source of funds" /></label>
             <select
               id="sourceOfFunds"
               value={sourceOfFunds}
@@ -256,10 +247,9 @@ export default function KycForm({
       {/* -------------------------------------------------------- uploads */}
       <section className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6">
         <div className="flex flex-col gap-1">
-          <h2 className="text-base font-bold text-slate-900">Upload documents</h2>
+          <h2 className="text-base font-bold text-slate-900"><I18nText i18nKey="ui.7unzf6" source="Upload documents" /></h2>
           <p className="text-[13px] text-slate-500">
-            JPG, PNG, WEBP or PDF — up to 5 MB each.
-          </p>
+            <I18nText i18nKey="ui.jxxa5l" source="JPG, PNG, WEBP or PDF — up to 5 MB each." /></p>
         </div>
 
         <div className="flex flex-col gap-3">
@@ -294,8 +284,7 @@ export default function KycForm({
                       {slot.label}
                       {!slot.required && (
                         <span className="ml-1.5 font-normal text-slate-400">
-                          (optional)
-                        </span>
+                          <I18nText i18nKey="ui.6pi6gi" source="(optional)" /></span>
                       )}
                     </p>
                     <p className="truncate text-[11px] text-slate-500">
@@ -335,7 +324,7 @@ export default function KycForm({
                     ) : (
                       <Upload className="size-3.5" />
                     )}
-                    {busy ? "Uploading…" : done ? "Replace" : "Choose file"}
+                    {busy ? <I18nText i18nKey="ui.tvrypa" source="Uploading…" /> : done ? "Replace" : "Choose file"}
                     <input
                       type="file"
                       accept={KYC_ACCEPT}
@@ -370,18 +359,16 @@ export default function KycForm({
           {pending ? (
             <>
               <Loader2 className="size-4 animate-spin" />
-              Submitting…
-            </>
+              <I18nText i18nKey="ui.ruylux" source="Submitting…" /></>
           ) : (
             <>
               <ShieldCheck className="size-4" />
-              Submit for review
-            </>
+              <I18nText i18nKey="ui.jcncqe" source="Submit for review" /></>
           )}
         </button>
         {missingRequired.length > 0 && (
           <p className="text-center text-[11px] text-slate-500">
-            Still needed: {missingRequired.map((s) => s.label).join(", ")}
+            <I18nText i18nKey="ui.18qr2lg" source="Still needed:" />{missingRequired.map((s) => s.label).join(", ")}
           </p>
         )}
       </div>

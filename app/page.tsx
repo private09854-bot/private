@@ -17,6 +17,7 @@ import {
 import SiteHeader from "@/components/site-header";
 import BrandLogo from "@/components/brand-logo";
 import SupportChat from "@/components/support-chat";
+import { I18nText } from "@/components/i18n-text";
 
 /* ------------------------------------------------------------------ data */
 
@@ -181,33 +182,26 @@ export default function LandingPage() {
           <div className="flex max-w-2xl flex-col items-start gap-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-300 backdrop-blur">
               <ShieldCheck className="size-3.5" />
-              No monthly fees, no minimum balance
-            </span>
+              <I18nText i18nKey="ui.opupc7" source="No monthly fees, no minimum balance" /></span>
 
             <h1 className="text-[34px] font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-[56px]">
-              Banking that keeps up with your money
-            </h1>
+              <I18nText i18nKey="ui.sl7nb2" source="Banking that keeps up with your money" /></h1>
 
             <p className="max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Profintal Savings gives you four currency wallets, transfers you
-              can track, and cards you control — all from one clean dashboard
-              that works just as well on your phone as on your laptop.
-            </p>
+              <I18nText i18nKey="ui.wsou0" source="Profintal Savings gives you four currency wallets, transfers you can track, and cards you control — all from one clean dashboard that works just as well on your phone as on your laptop." /></p>
 
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
               <Link
                 href="/signup"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-colors hover:bg-emerald-700"
               >
-                Open a free account
-                <ArrowRight className="size-4" />
+                <I18nText i18nKey="ui.1pj0kwf" source="Open a free account" /><ArrowRight className="size-4" />
               </Link>
               <Link
                 href="/login"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur transition-colors hover:bg-white/20"
               >
-                Sign in
-              </Link>
+                <I18nText i18nKey="ui.w9nig3" source="Sign in" /></Link>
             </div>
 
             <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-300">
@@ -247,16 +241,11 @@ export default function LandingPage() {
         <div className={`${SECTION} py-16 sm:py-20 lg:py-24`}>
           <div className="max-w-2xl">
             <p className="text-sm font-bold uppercase tracking-wide text-emerald-600">
-              What you get
-            </p>
+              <I18nText i18nKey="ui.120sha0" source="What you get" /></p>
             <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
-              Everything in one place, nothing buried
-            </h2>
+              <I18nText i18nKey="ui.1cvs2bq" source="Everything in one place, nothing buried" /></h2>
             <p className="mt-4 text-base leading-relaxed text-slate-600">
-              We built the account we wanted to use ourselves: clear balances,
-              honest fees, and controls that take one tap instead of a phone
-              call.
-            </p>
+              <I18nText i18nKey="ui.1b0vfc6" source="We built the account we wanted to use ourselves: clear balances, honest fees, and controls that take one tap instead of a phone call." /></p>
           </div>
 
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:gap-6">
@@ -286,7 +275,7 @@ export default function LandingPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={CARD_IMG}
-                alt="A payment card resting on a laptop keyboard"
+                alt="A payment card resting on a laptop keyboard" data-i18n-alt={"[\"ui.1h65oa1\",\"A payment card resting on a laptop keyboard\"]"}
                 className="aspect-[3/2] w-full object-cover"
                 loading="lazy"
               />
@@ -294,17 +283,11 @@ export default function LandingPage() {
 
             <div className="order-1 flex flex-col items-start gap-5 lg:order-2">
               <p className="text-sm font-bold uppercase tracking-wide text-emerald-600">
-                Cards
-              </p>
+                <I18nText i18nKey="ui.bp21us" source="Cards" /></p>
               <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
-                Freeze it, limit it, watch it
-              </h2>
+                <I18nText i18nKey="ui.cigw3b" source="Freeze it, limit it, watch it" /></h2>
               <p className="text-base leading-relaxed text-slate-600">
-                Issue a virtual card in seconds and order a physical one when
-                you need it. Set the monthly limit yourself, and if the card
-                ever goes missing, freeze it from your phone before you have
-                finished looking for it.
-              </p>
+                <I18nText i18nKey="ui.gvnjaq" source="Issue a virtual card in seconds and order a physical one when you need it. Set the monthly limit yourself, and if the card ever goes missing, freeze it from your phone before you have finished looking for it." /></p>
               <ul className="flex flex-col gap-3">
                 {[
                   "Instant freeze and unfreeze",
@@ -322,8 +305,7 @@ export default function LandingPage() {
                 href="/signup"
                 className="mt-2 inline-flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-800"
               >
-                Get your card
-                <ArrowRight className="size-4" />
+                <I18nText i18nKey="ui.v95jjw" source="Get your card" /><ArrowRight className="size-4" />
               </Link>
             </div>
           </div>
@@ -335,11 +317,9 @@ export default function LandingPage() {
         <div className={`${SECTION} py-16 sm:py-20 lg:py-24`}>
           <div className="max-w-2xl">
             <p className="text-sm font-bold uppercase tracking-wide text-emerald-600">
-              Getting started
-            </p>
+              <I18nText i18nKey="ui.1hcyv4u" source="Getting started" /></p>
             <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
-              Three steps and you are banking
-            </h2>
+              <I18nText i18nKey="ui.kqwn16" source="Three steps and you are banking" /></h2>
           </div>
 
           <div className="mt-10 grid gap-6 sm:grid-cols-3 lg:mt-14 lg:gap-8">
@@ -364,21 +344,16 @@ export default function LandingPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             <div className="flex flex-col items-start gap-5">
               <p className="text-sm font-bold uppercase tracking-wide text-emerald-400">
-                Security
-              </p>
+                <I18nText i18nKey="ui.1i3q76j" source="Security" /></p>
               <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">
-                Your account, locked down by default
-              </h2>
+                <I18nText i18nKey="ui.1e1iqnj" source="Your account, locked down by default" /></h2>
               <p className="text-base leading-relaxed text-slate-300">
-                Security should not be something you have to go and switch on.
-                Sessions are encrypted, sign-ins are checked, and you can see
-                every device connected to your account from the settings page.
-              </p>
+                <I18nText i18nKey="ui.1kgoleh" source="Security should not be something you have to go and switch on. Sessions are encrypted, sign-ins are checked, and you can see every device connected to your account from the settings page." /></p>
               <div className="mt-2 w-full overflow-hidden rounded-2xl bg-slate-800 shadow-lg">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={PHONE_IMG}
-                  alt="Approving a payment on a mobile phone"
+                  alt="Approving a payment on a mobile phone" data-i18n-alt={"[\"ui.1c005nw\",\"Approving a payment on a mobile phone\"]"}
                   className="aspect-[3/2] w-full object-cover"
                   loading="lazy"
                 />
@@ -409,8 +384,7 @@ export default function LandingPage() {
       <section className="bg-white">
         <div className={`${SECTION} py-16 sm:py-20 lg:py-24`}>
           <h2 className="max-w-2xl text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
-            Why people choose Profintal
-          </h2>
+            <I18nText i18nKey="ui.1ubghmo" source="Why people choose Profintal" /></h2>
 
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-6">
             {quotes.map((q) => (
@@ -424,8 +398,7 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <blockquote className="flex-1 text-sm leading-relaxed text-slate-700">
-                  &ldquo;{q.text}&rdquo;
-                </blockquote>
+                  <I18nText i18nKey="ui.13j0wox" source="&ldquo;" />{q.text}<I18nText i18nKey="ui.1iovyl3" source="&rdquo;" /></blockquote>
                 <figcaption className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -455,12 +428,9 @@ export default function LandingPage() {
           <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
             <div>
               <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
-                Questions, answered
-              </h2>
+                <I18nText i18nKey="ui.2u9rc9" source="Questions, answered" /></h2>
               <p className="mt-4 text-base leading-relaxed text-slate-600">
-                Still stuck? Tap the support button in the corner and a real
-                person will get back to you.
-              </p>
+                <I18nText i18nKey="ui.agyh8k" source="Still stuck? Tap the support button in the corner and a real person will get back to you." /></p>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -472,8 +442,7 @@ export default function LandingPage() {
                   <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-sm font-bold text-slate-900 sm:text-base">
                     <span className="min-w-0">{f.q}</span>
                     <span className="mt-0.5 shrink-0 text-lg leading-none text-emerald-600 transition-transform group-open:rotate-45">
-                      +
-                    </span>
+                      <I18nText i18nKey="ui.crz1ka" source="+" /></span>
                   </summary>
                   <p className="mt-3 text-sm leading-relaxed text-slate-600">
                     {f.a}
@@ -491,19 +460,15 @@ export default function LandingPage() {
           <div className="flex flex-col items-start gap-6 rounded-3xl bg-emerald-600 p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
             <div className="max-w-xl">
               <h2 className="text-2xl font-extrabold leading-tight tracking-tight text-white sm:text-3xl">
-                Open your account today
-              </h2>
+                <I18nText i18nKey="ui.2c2f1a" source="Open your account today" /></h2>
               <p className="mt-3 text-sm leading-relaxed text-emerald-50 sm:text-base">
-                It is free, it takes about two minutes, and you can start moving
-                money the moment you are in.
-              </p>
+                <I18nText i18nKey="ui.1nbgkza" source="It is free, it takes about two minutes, and you can start moving money the moment you are in." /></p>
             </div>
             <Link
               href="/signup"
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-emerald-700 transition-colors hover:bg-emerald-50 sm:w-auto"
             >
-              Get started
-              <ArrowRight className="size-4" />
+              <I18nText i18nKey="ui.1sfqzn2" source="Get started" /><ArrowRight className="size-4" />
             </Link>
           </div>
         </div>
@@ -516,9 +481,7 @@ export default function LandingPage() {
             <div className="flex max-w-sm flex-col gap-4">
               <BrandLogo inverse />
               <p className="text-sm leading-relaxed text-slate-400">
-                Multi-currency wallets, transfers you can track, and cards you
-                control — in one account built to stay out of your way.
-              </p>
+                <I18nText i18nKey="ui.1nxh33r" source="Multi-currency wallets, transfers you can track, and cards you control — in one account built to stay out of your way." /></p>
             </div>
 
             <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
@@ -544,28 +507,19 @@ export default function LandingPage() {
           <div className="mt-12 border-t border-slate-700 pt-8">
             <p className="text-xs leading-relaxed text-slate-400">
               <span className="font-bold text-slate-300">
-                Demonstration project.
-              </span>{" "}
-              Profintal Savings is a portfolio build created to showcase a
-              complete banking interface. It is not a bank or a licensed
-              financial institution, it holds no real money, and it is not
-              connected to any payment network. Balances, transactions and
-              customer quotes shown on this site are illustrative.
-            </p>
+                <I18nText i18nKey="ui.1wo1rb9" source="Demonstration project." /></span>{" "}
+              <I18nText i18nKey="ui.d8h4py" source="Profintal Savings is a portfolio build created to showcase a complete banking interface. It is not a bank or a licensed financial institution, it holds no real money, and it is not connected to any payment network. Balances, transactions and customer quotes shown on this site are illustrative." /></p>
           </div>
 
           <div className="mt-8 flex flex-col gap-4 text-[13px] text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2026 Profintal Savings.</p>
+            <p><I18nText i18nKey="ui.17ckcja" source="© 2026 Profintal Savings." /></p>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               <a href="#" className="transition-colors hover:text-white">
-                Privacy
-              </a>
+                <I18nText i18nKey="ui.1th4hrb" source="Privacy" /></a>
               <a href="#" className="transition-colors hover:text-white">
-                Terms
-              </a>
+                <I18nText i18nKey="ui.154fb2k" source="Terms" /></a>
               <a href="#" className="transition-colors hover:text-white">
-                Status
-              </a>
+                <I18nText i18nKey="ui.3pd73" source="Status" /></a>
             </div>
           </div>
         </div>

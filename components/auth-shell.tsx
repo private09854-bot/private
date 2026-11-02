@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShieldCheck, Check, ArrowLeft } from "lucide-react";
 import BrandLogo from "./brand-logo";
+import { I18nText } from "@/components/i18n-text";
 
 const points = [
   "Four currency wallets from day one",
@@ -33,12 +34,9 @@ export default function AuthShell({
 
         <div className="flex flex-col gap-6">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-white xl:text-4xl">
-            Money that moves the way you do.
-          </h1>
+            <I18nText i18nKey="ui.drta14" source="Money that moves the way you do." /></h1>
           <p className="text-sm leading-relaxed text-slate-400">
-            Hold four currencies, send and convert between them, and keep every
-            card under your own control — from one account.
-          </p>
+            <I18nText i18nKey="ui.lx7k1z" source="Hold four currencies, send and convert between them, and keep every card under your own control — from one account." /></p>
           <ul className="flex flex-col gap-3">
             {points.map((p) => (
               <li key={p} className="flex items-start gap-3">
@@ -51,8 +49,7 @@ export default function AuthShell({
 
         <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
           <ShieldCheck className="size-4 shrink-0 text-emerald-500" />
-          Encrypted sessions · Two-factor sign-in
-        </div>
+          <I18nText i18nKey="ui.10vqqai" source="Encrypted sessions · Two-factor sign-in" /></div>
       </div>
 
       {/* Mobile brand bar */}
@@ -65,8 +62,7 @@ export default function AuthShell({
           className="flex shrink-0 items-center gap-1.5 text-[13px] font-semibold text-slate-500 transition-colors hover:text-slate-900"
         >
           <ArrowLeft className="size-4" />
-          Home
-        </Link>
+          <I18nText i18nKey="ui.n0mxf2" source="Home" /></Link>
       </div>
 
       {/* Form panel */}

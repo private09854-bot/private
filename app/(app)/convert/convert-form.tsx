@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChevronDown, ArrowLeftRight, CheckCircle2 } from "lucide-react";
 import { convertMoney } from "@/app/actions/banking";
 import { formatCurrency, formatNumber, currencyFlag } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 type Wallet = {
   currency: string;
@@ -34,7 +35,7 @@ function CurrencySelect({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="absolute inset-0 cursor-pointer opacity-0"
-        aria-label="Currency"
+        aria-label="Currency" data-i18n-aria-label={"[\"ui.5o3zh2\",\"Currency\"]"}
       >
         {wallets.map((w) => (
           <option key={w.currency} value={w.currency}>
@@ -109,8 +110,7 @@ export default function ConvertForm({
         {/* From */}
         <div className="flex flex-col gap-2.5">
           <p className="text-xs font-semibold text-slate-600">
-            FROM SOURCE WALLET
-          </p>
+            <I18nText i18nKey="ui.e3ylq7" source="FROM SOURCE WALLET" /></p>
           <div className="flex items-center justify-between rounded-[10px] border border-slate-200 bg-slate-50 p-4">
             <input
               type="number"
@@ -123,7 +123,7 @@ export default function ConvertForm({
             <CurrencySelect value={from} onChange={setFrom} wallets={wallets} />
           </div>
           <p className="text-xs text-slate-500">
-            Available Balance:{" "}
+            <I18nText i18nKey="ui.u88l8y" source="Available Balance:" />{" "}
             {formatCurrency(fromWallet?.balance ?? 0, from)} {from}
           </p>
         </div>
@@ -141,8 +141,7 @@ export default function ConvertForm({
         {/* To */}
         <div className="flex flex-col gap-2.5">
           <p className="text-xs font-semibold text-slate-600">
-            TO TARGET WALLET (ESTIMATED)
-          </p>
+            <I18nText i18nKey="ui.1exugb7" source="TO TARGET WALLET (ESTIMATED)" /></p>
           <div className="flex items-center justify-between rounded-[10px] border border-slate-200 bg-slate-50 p-4">
             <span className="font-mono text-[28px] font-bold text-slate-900">
               {formatNumber(grossReceive, 2)}
@@ -150,7 +149,7 @@ export default function ConvertForm({
             <CurrencySelect value={to} onChange={setTo} wallets={wallets} />
           </div>
           <p className="text-xs text-slate-500">
-            Available Balance: {formatCurrency(toWallet?.balance ?? 0, to)} {to}
+            <I18nText i18nKey="ui.u88l8y" source="Available Balance:" />{formatCurrency(toWallet?.balance ?? 0, to)} {to}
           </p>
         </div>
 
@@ -164,8 +163,7 @@ export default function ConvertForm({
         {result.ok && (
           <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3.5 py-2.5 text-[13px] font-semibold text-emerald-600">
             <CheckCircle2 className="size-4" />
-            Conversion complete.
-          </div>
+            <I18nText i18nKey="ui.1af886e" source="Conversion complete." /></div>
         )}
 
         <button
@@ -174,7 +172,7 @@ export default function ConvertForm({
           className="flex items-center justify-center rounded-[10px] bg-emerald-500 p-4 text-[15px] font-bold text-white transition-colors hover:bg-emerald-600 disabled:opacity-60"
         >
           {pending
-            ? "Converting…"
+            ? <I18nText i18nKey="ui.x8r676" source="Converting…" />
             : `Convert ${formatCurrency(amountNum, from)} ${from} to ${to}`}
         </button>
       </div>
@@ -184,37 +182,35 @@ export default function ConvertForm({
         {/* Live rate calculations */}
         <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6">
           <p className="text-sm font-bold text-slate-900">
-            Live Rate Calculations
-          </p>
+            <I18nText i18nKey="ui.kzg3tj" source="Live Rate Calculations" /></p>
           <div className="flex flex-col gap-3 text-xs">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">You convert</span>
+              <span className="text-slate-600"><I18nText i18nKey="ui.nuv22b" source="You convert" /></span>
               <span className="font-mono font-bold text-slate-900">
                 {formatCurrency(amountNum, from)} {from}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-slate-600">
-                Conversion Fee ({(FEE_RATE * 100).toFixed(2)}%)
-              </span>
+                <I18nText i18nKey="ui.hly7kd" source="Conversion Fee (" />{(FEE_RATE * 100).toFixed(2)}<I18nText i18nKey="ui.1y4e1t7" source="%)" /></span>
               <span className="font-mono font-bold text-slate-900">
                 {formatCurrency(fee, from)} {from}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Net conversion amount</span>
+              <span className="text-slate-600"><I18nText i18nKey="ui.15pk164" source="Net conversion amount" /></span>
               <span className="font-mono font-bold text-slate-900">
                 {formatCurrency(net, from)} {from}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Calculated mid-market rate</span>
+              <span className="text-slate-600"><I18nText i18nKey="ui.1hyrwbs" source="Calculated mid-market rate" /></span>
               <span className="font-mono font-bold text-slate-900">
-                1 {from} = {rate != null ? formatNumber(rate, 4) : "—"} {to}
+                <I18nText i18nKey="ui.efwnq4" source="1" />{from} <I18nText i18nKey="ui.fjv2i0" source="=" />{rate != null ? formatNumber(rate, 4) : <I18nText i18nKey="ui.4s9bsz" source="—" />} {to}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">You receive</span>
+              <span className="text-slate-600"><I18nText i18nKey="ui.va18uh" source="You receive" /></span>
               <span className="font-mono font-bold text-slate-900">
                 {formatCurrency(netReceive, to)} {to}
               </span>
@@ -222,9 +218,9 @@ export default function ConvertForm({
           </div>
           <div className="w-full border-t border-slate-200" />
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-600">Rate expires in</span>
+            <span className="text-slate-600"><I18nText i18nKey="ui.b6k856" source="Rate expires in" /></span>
             <span className="font-mono font-bold text-amber-500">
-              {Math.floor(expiry / 60)}:{String(expiry % 60).padStart(2, "0")}
+              {Math.floor(expiry / 60)}<I18nText i18nKey="ui.hhsact" source=":" />{String(expiry % 60).padStart(2, "0")}
             </span>
           </div>
         </div>
@@ -232,8 +228,7 @@ export default function ConvertForm({
         {/* Sparkline */}
         <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6">
           <p className="text-sm font-bold text-slate-900">
-            24h {from}/{to} Sparkline Chart
-          </p>
+            <I18nText i18nKey="ui.10l6loh" source="24h" />{from}<I18nText i18nKey="ui.bo0mse" source="/" />{to} <I18nText i18nKey="ui.17xophs" source="Sparkline Chart" /></p>
           <svg
             viewBox="0 0 352 80"
             className="h-20 w-full"
@@ -253,13 +248,12 @@ export default function ConvertForm({
         {/* Comparisons */}
         <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6">
           <p className="text-sm font-bold text-slate-900">
-            How Our Rate Compares
-          </p>
+            <I18nText i18nKey="ui.12cuy8d" source="How Our Rate Compares" /></p>
           <div className="flex justify-between border-b border-transparent pb-1 text-[11px] font-semibold text-slate-500">
-            <span className="w-[120px]">PROVIDER</span>
-            <span className="w-[100px]">RATE</span>
-            <span className="w-[80px]">FEE</span>
-            <span className="text-right">SAVINGS</span>
+            <span className="w-[120px]"><I18nText i18nKey="ui.40h67w" source="PROVIDER" /></span>
+            <span className="w-[100px]"><I18nText i18nKey="ui.1boecvb" source="RATE" /></span>
+            <span className="w-[80px]"><I18nText i18nKey="ui.ijvun7" source="FEE" /></span>
+            <span className="text-right"><I18nText i18nKey="ui.1p67wpc" source="SAVINGS" /></span>
           </div>
           <div className="flex flex-col">
             {providers.map((r) => (

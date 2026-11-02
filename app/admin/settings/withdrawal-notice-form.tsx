@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { updateWithdrawalNotice } from "@/app/actions/admin";
+import { I18nText } from "@/components/i18n-text";
 
 export default function WithdrawalNoticeForm({
   initial,
@@ -41,8 +42,7 @@ export default function WithdrawalNoticeForm({
           htmlFor="notice-title"
           className="text-[13px] font-semibold text-slate-900"
         >
-          Heading
-        </label>
+          <I18nText i18nKey="ui.1xz14fp" source="Heading" /></label>
         <input
           id="notice-title"
           value={title}
@@ -57,8 +57,7 @@ export default function WithdrawalNoticeForm({
           htmlFor="notice-body"
           className="text-[13px] font-semibold text-slate-900"
         >
-          Message
-        </label>
+          <I18nText i18nKey="ui.1cam7ic" source="Message" /></label>
         <textarea
           id="notice-body"
           value={body}
@@ -68,19 +67,17 @@ export default function WithdrawalNoticeForm({
           className="resize-y rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm leading-relaxed text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
         />
         <p className="text-[11px] text-slate-500">
-          Type{" "}
+          <I18nText i18nKey="ui.1m2zofh" source="Type" />{" "}
           <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-slate-700">
-            {"{method}"}
+            <I18nText i18nKey="ui.1u8ogni" source="{method}" />
           </code>{" "}
-          where you want the payout method’s name (PayPal, Wise…) to appear.
-        </p>
+          <I18nText i18nKey="ui.fupric" source="where you want the payout method’s name (PayPal, Wise…) to appear." /></p>
       </div>
 
       {/* Live preview of what the customer sees */}
       <div className="flex flex-col gap-2 rounded-xl border border-amber-200 bg-amber-50 p-4">
         <p className="text-[11px] font-bold uppercase tracking-wide text-amber-600">
-          Customer sees
-        </p>
+          <I18nText i18nKey="ui.1daxa4v" source="Customer sees" /></p>
         <p className="text-sm font-bold text-slate-900">
           {title || "Withdrawals unavailable"}
         </p>
@@ -102,16 +99,15 @@ export default function WithdrawalNoticeForm({
           className="flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {pending && <Loader2 className="size-3.5 animate-spin" />}
-          {pending ? "Saving…" : "Save message"}
+          {pending ? <I18nText i18nKey="ui.w7dncv" source="Saving…" /> : <I18nText i18nKey="ui.1fqp5kf" source="Save message" />}
         </button>
         {saved && (
           <span className="flex items-center gap-1.5 text-[13px] font-semibold text-emerald-600">
             <CheckCircle2 className="size-4" />
-            Saved — customers see it now
-          </span>
+            <I18nText i18nKey="ui.xqa1of" source="Saved — customers see it now" /></span>
         )}
         {dirty && !pending && !saved && (
-          <span className="text-[13px] text-slate-500">Unsaved changes</span>
+          <span className="text-[13px] text-slate-500"><I18nText i18nKey="ui.1tghr44" source="Unsaved changes" /></span>
         )}
       </div>
     </div>

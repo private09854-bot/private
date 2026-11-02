@@ -6,6 +6,7 @@ import { LogOut } from "lucide-react";
 import { appNav } from "@/lib/nav";
 import { logout } from "@/app/actions/auth";
 import BrandLogo from "./brand-logo";
+import { I18nText } from "@/components/i18n-text";
 
 export default function AppSidebar({
   user,
@@ -19,7 +20,7 @@ export default function AppSidebar({
       {/* Mobile top bar — navigation lives in the bottom tab bar */}
       <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
         <BrandLogo href="/dashboard" compact />
-        <Link href="/profile" aria-label="Your profile" className="shrink-0">
+        <Link href="/profile" aria-label="Your profile" data-i18n-aria-label={"[\"ui.14tpxlv\",\"Your profile\"]"} className="shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={user.avatar ?? "/avatars/sarah.png"}
@@ -80,7 +81,7 @@ export default function AppSidebar({
               className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-800/50 hover:text-slate-300"
             >
               <LogOut className="size-[18px]" />
-              <span>Sign out</span>
+              <span><I18nText i18nKey="ui.12niv00" source="Sign out" /></span>
             </button>
           </form>
         </div>

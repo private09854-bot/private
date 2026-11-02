@@ -8,6 +8,7 @@ import {
   getMyUnreadCount,
   type SupportMessage,
 } from "@/app/actions/support";
+import { I18nText } from "@/components/i18n-text";
 
 function timeLabel(iso: string): string {
   const d = new Date(iso);
@@ -97,15 +98,15 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
         >
           <div className="flex items-center justify-between bg-blue-600 px-4 py-3.5">
             <div className="flex flex-col">
-              <p className="text-sm font-bold text-white">Support</p>
+              <p className="text-sm font-bold text-white"><I18nText i18nKey="ui.txsyvc" source="Support" /></p>
               <p className="text-[11px] text-blue-100">
                 {authed
-                  ? "We usually reply within a few hours"
-                  : "Leave a message and we'll reply by email"}
+                  ? <I18nText i18nKey="ui.1rv3xdt" source="We usually reply within a few hours" />
+                  : <I18nText i18nKey="ui.1hj059" source="Leave a message and we'll reply by email" />}
               </p>
             </div>
             <button
-              aria-label="Close chat"
+              aria-label="Close chat" data-i18n-aria-label={"[\"ui.14hgjuv\",\"Close chat\"]"}
               onClick={() => setOpen(false)}
               className="text-blue-100 transition-colors hover:text-white"
             >
@@ -126,9 +127,7 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
                   </div>
                 ) : messages.length === 0 ? (
                   <div className="rounded-xl bg-white p-3 text-[13px] text-slate-600 shadow-sm">
-                    👋 Hi! How can we help you today? Send us a message and our
-                    team will reply right here.
-                  </div>
+                    <I18nText i18nKey="ui.j27s2v" source="👋 Hi! How can we help you today? Send us a message and our team will reply right here." /></div>
                 ) : (
                   messages.map((m) => {
                     const mine = m.sender === "customer";
@@ -149,7 +148,7 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
                           {m.message}
                         </div>
                         <span className="px-1 text-[10px] text-slate-400">
-                          {mine ? "You" : "Support"} · {timeLabel(m.createdAt)}
+                          {mine ? <I18nText i18nKey="ui.1efd4xo" source="You" /> : <I18nText i18nKey="ui.txsyvc" source="Support" />} <I18nText i18nKey="ui.1degdiu" source="·" />{timeLabel(m.createdAt)}
                         </span>
                       </div>
                     );
@@ -174,14 +173,14 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
                       }
                     }}
                     rows={1}
-                    placeholder="Type your message…"
+                    placeholder="Type your message…" data-i18n-placeholder={"[\"ui.h81duf\",\"Type your message…\"]"}
                     className="max-h-24 flex-1 resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                   <button
                     onClick={onSend}
                     disabled={pending || !message.trim()}
                     className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
-                    aria-label="Send message"
+                    aria-label="Send message" data-i18n-aria-label={"[\"ui.1ocggf0\",\"Send message\"]"}
                   >
                     {pending ? (
                       <Loader2 className="size-4 animate-spin" />
@@ -199,33 +198,27 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <CheckCircle2 className="size-8 text-emerald-500" />
                   <p className="text-sm font-semibold text-slate-900">
-                    Message sent
-                  </p>
+                    <I18nText i18nKey="ui.rn4bm" source="Message sent" /></p>
                   <p className="text-[13px] text-slate-500">
-                    Our team has been notified and will get back to you by email.
-                  </p>
+                    <I18nText i18nKey="ui.1l8tjip" source="Our team has been notified and will get back to you by email." /></p>
                   <button
                     onClick={() => setSent(false)}
                     className="mt-1 text-[13px] font-semibold text-blue-600 hover:text-blue-700"
                   >
-                    Send another
-                  </button>
+                    <I18nText i18nKey="ui.1nbcw5o" source="Send another" /></button>
                 </div>
               ) : (
                 <>
                   <div className="rounded-xl bg-slate-50 p-3 text-[13px] text-slate-600">
-                    👋 Hi! How can we help? Leave a message and we&apos;ll reply
-                    by email. Have an account?{" "}
+                    <I18nText i18nKey="ui.1x0c1yq" source="👋 Hi! How can we help? Leave a message and we'll reply by email. Have an account?" />{" "}
                     <a href="/login" className="font-semibold text-blue-600">
-                      Sign in
-                    </a>{" "}
-                    to chat with us live.
-                  </div>
+                      <I18nText i18nKey="ui.w9nig3" source="Sign in" /></a>{" "}
+                    <I18nText i18nKey="ui.167r3z6" source="to chat with us live." /></div>
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     rows={3}
-                    placeholder="Type your message…"
+                    placeholder="Type your message…" data-i18n-placeholder={"[\"ui.h81duf\",\"Type your message…\"]"}
                     className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                   {error && (
@@ -239,7 +232,7 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
                     className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
                   >
                     <Send className="size-3.5" />
-                    {pending ? "Sending…" : "Send message"}
+                    {pending ? <I18nText i18nKey="ui.15r3dgd" source="Sending…" /> : <I18nText i18nKey="ui.1ocggf0" source="Send message" />}
                   </button>
                 </>
               )}
@@ -259,7 +252,7 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
         {open ? <X className="size-6" /> : <MessageCircle className="size-6" />}
         {!open && unread > 0 && (
           <span className="absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white">
-            {unread > 9 ? "9+" : unread}
+            {unread > 9 ? <I18nText i18nKey="ui.atifd9" source="9+" /> : unread}
           </span>
         )}
       </button>

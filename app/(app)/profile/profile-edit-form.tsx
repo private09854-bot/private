@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { Pencil, X } from "lucide-react";
 import { COUNTRIES } from "@/lib/countries";
 import { updateProfileDetails } from "@/app/actions/banking";
+import { I18nText } from "@/components/i18n-text";
 
 type ProfileValues = {
   firstName: string | null; middleName: string | null; lastName: string | null;
@@ -19,7 +20,7 @@ export default function ProfileEditForm({ user }: { user: ProfileValues }) {
   const [notice, setNotice] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
-  if (!editing) return <button type="button" onClick={() => setEditing(true)} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-emerald-700"><Pencil className="size-4" />Edit profile</button>;
+  if (!editing) return <button type="button" onClick={() => setEditing(true)} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-emerald-700"><Pencil className="size-4" /><I18nText i18nKey="ui.u0q7ik" source="Edit profile" /></button>;
 
   function save(formData: FormData) {
     setNotice(null);
@@ -38,7 +39,7 @@ export default function ProfileEditForm({ user }: { user: ProfileValues }) {
   }
 
   return <form action={save} className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
-    <div className="mb-5 flex items-start justify-between gap-4"><div><h2 className="text-base font-bold text-slate-900">Edit personal details</h2><p className="mt-1 text-[13px] text-slate-500">Your email, account type, and bank account details are protected and cannot be changed here.</p></div><button type="button" aria-label="Cancel editing" onClick={() => setEditing(false)} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"><X className="size-4" /></button></div>
+    <div className="mb-5 flex items-start justify-between gap-4"><div><h2 className="text-base font-bold text-slate-900"><I18nText i18nKey="ui.1wqk6gh" source="Edit personal details" /></h2><p className="mt-1 text-[13px] text-slate-500"><I18nText i18nKey="ui.1jc3s0q" source="Your email, account type, and bank account details are protected and cannot be changed here." /></p></div><button type="button" aria-label="Cancel editing" data-i18n-aria-label={"[\"ui.136r3bf\",\"Cancel editing\"]"} onClick={() => setEditing(false)} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"><X className="size-4" /></button></div>
     <div className="grid gap-4 sm:grid-cols-2">
       <Input label="First name" name="firstName" value={user.firstName ?? ""} required /><Input label="Last name" name="lastName" value={user.lastName ?? ""} required />
       <Input label="Middle name (optional)" name="middleName" value={user.middleName ?? ""} /><Input label="Username" name="username" value={user.username ?? ""} required />
@@ -46,10 +47,10 @@ export default function ProfileEditForm({ user }: { user: ProfileValues }) {
       <div className="sm:col-span-2"><Input label="Street address" name="addressLine" value={user.addressLine ?? ""} required /></div>
       <Input label="City" name="city" value={user.city ?? ""} required /><Input label="State / region (optional)" name="region" value={user.region ?? ""} />
       <Input label="Postal / ZIP code" name="postalCode" value={user.postalCode ?? ""} required />
-      <label className="flex flex-col gap-1.5 text-[13px] font-semibold text-slate-900">Country of residence<select name="countryCode" defaultValue={user.countryCode ?? "US"} className={field}>{COUNTRIES.map((country) => <option key={country.code} value={country.code}>{country.flag} {country.name}</option>)}</select></label>
+      <label className="flex flex-col gap-1.5 text-[13px] font-semibold text-slate-900"><I18nText i18nKey="ui.11juv2e" source="Country of residence" /><select name="countryCode" defaultValue={user.countryCode ?? "US"} className={field}>{COUNTRIES.map((country) => <option key={country.code} value={country.code}>{country.flag} {country.name}</option>)}</select></label>
     </div>
     {notice && <p className="mt-4 text-sm font-medium text-red-600" role="alert">{notice}</p>}
-    <div className="mt-5 flex items-center gap-3"><button disabled={pending} className="rounded-xl bg-emerald-600 px-5 py-2.5 text-[13px] font-bold text-white hover:bg-emerald-700 disabled:opacity-60">{pending ? "Saving…" : "Save changes"}</button><button type="button" onClick={() => setEditing(false)} className="px-3 py-2.5 text-[13px] font-semibold text-slate-600">Cancel</button></div>
+    <div className="mt-5 flex items-center gap-3"><button disabled={pending} className="rounded-xl bg-emerald-600 px-5 py-2.5 text-[13px] font-bold text-white hover:bg-emerald-700 disabled:opacity-60">{pending ? <I18nText i18nKey="ui.w7dncv" source="Saving…" /> : <I18nText i18nKey="ui.r69b3t" source="Save changes" />}</button><button type="button" onClick={() => setEditing(false)} className="px-3 py-2.5 text-[13px] font-semibold text-slate-600"><I18nText i18nKey="ui.ew9em3" source="Cancel" /></button></div>
   </form>;
 }
 

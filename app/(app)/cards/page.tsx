@@ -4,6 +4,7 @@ import { requireCustomer } from "@/lib/session";
 import { formatCurrency } from "@/lib/format";
 import CardPanel from "./card-panel";
 import IssueCards from "./issue-cards";
+import { I18nText } from "@/components/i18n-text";
 
 type CardAuth = {
   id: string;
@@ -39,11 +40,9 @@ export default async function CardsPage() {
     <div className="flex flex-col gap-8">
       {/* Heading */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-[28px] font-bold text-slate-900">Cards &amp; Limits</h1>
+        <h1 className="text-[28px] font-bold text-slate-900"><I18nText i18nKey="ui.17mctym" source="Cards & Limits" /></h1>
         <p className="text-sm text-slate-500">
-          Create a virtual card, request a physical one, set spending limits and
-          freeze a card the moment you need to.
-        </p>
+          <I18nText i18nKey="ui.1f3dukm" source="Create a virtual card, request a physical one, set spending limits and freeze a card the moment you need to." /></p>
       </div>
 
       {/* Workspace */}
@@ -78,21 +77,19 @@ export default async function CardsPage() {
         <div className="flex flex-1 flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_4px_6px_rgba(15,23,42,0.03)]">
           <div className="flex items-center justify-between">
             <p className="text-base font-semibold text-slate-900">
-              Recent Card Activity
-            </p>
-            <p className="text-[13px] text-slate-500">Last 30 days</p>
+              <I18nText i18nKey="ui.1isbtbh" source="Recent Card Activity" /></p>
+            <p className="text-[13px] text-slate-500"><I18nText i18nKey="ui.1lubgoj" source="Last 30 days" /></p>
           </div>
           <div className="flex flex-col">
             {auths.length === 0 && (
               <div className="flex flex-col items-center gap-1.5 py-14 text-center">
                 <CreditCard className="size-6 text-slate-300" />
                 <p className="text-sm font-semibold text-slate-700">
-                  No card activity yet
-                </p>
+                  <I18nText i18nKey="ui.1r11crr" source="No card activity yet" /></p>
                 <p className="max-w-xs text-[13px] text-slate-500">
                   {cards.length === 0
-                    ? "Create a card to start spending."
-                    : "Purchases on your card will show up here."}
+                    ? <I18nText i18nKey="ui.1ofc8bn" source="Create a card to start spending." />
+                    : <I18nText i18nKey="ui.c0nb57" source="Purchases on your card will show up here." />}
                 </p>
               </div>
             )}
@@ -109,7 +106,7 @@ export default async function CardsPage() {
                     {a.merchant}
                   </p>
                   <p className="text-xs text-slate-500">
-                    {a.category} • {a.when}
+                    {a.category} <I18nText i18nKey="ui.aw0l2d" source="•" />{a.when}
                   </p>
                 </div>
                 <p className="font-mono text-sm font-semibold text-slate-900">

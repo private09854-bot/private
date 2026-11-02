@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CreditCard, Truck, Loader2, Plus } from "lucide-react";
 import { createVirtualCard, requestPhysicalCard } from "@/app/actions/banking";
+import { I18nText } from "@/components/i18n-text";
 
 export default function IssueCards({
   hasVirtual,
@@ -38,7 +39,7 @@ export default function IssueCards({
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6">
-      <p className="text-base font-semibold text-slate-900">Add a card</p>
+      <p className="text-base font-semibold text-slate-900"><I18nText i18nKey="ui.4pq4qn" source="Add a card" /></p>
 
       {!hasVirtual && (
         <button
@@ -55,11 +56,9 @@ export default function IssueCards({
           </span>
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="text-sm font-bold text-slate-900">
-              Create a virtual card
-            </span>
+              <I18nText i18nKey="ui.zqkm3t" source="Create a virtual card" /></span>
             <span className="text-[12px] text-slate-500">
-              Issued instantly in your name — use it online right away.
-            </span>
+              <I18nText i18nKey="ui.18m02zi" source="Issued instantly in your name — use it online right away." /></span>
           </span>
           <Plus className="size-4 shrink-0 text-slate-400" />
         </button>
@@ -80,11 +79,9 @@ export default function IssueCards({
           </span>
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="text-sm font-bold text-slate-900">
-              Request a physical card
-            </span>
+              <I18nText i18nKey="ui.1w9cwwc" source="Request a physical card" /></span>
             <span className="text-[12px] text-slate-500">
-              Shipped to your address — shows as pending until it arrives.
-            </span>
+              <I18nText i18nKey="ui.l7s0qk" source="Shipped to your address — shows as pending until it arrives." /></span>
           </span>
           <Plus className="size-4 shrink-0 text-slate-400" />
         </button>

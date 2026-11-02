@@ -26,6 +26,10 @@ export default function LanguageSwitcher() {
     <select id="site-language" value={language} onChange={(event) => void changeLanguage(event.target.value)} disabled={pending} className="max-w-36 bg-transparent text-xs font-semibold text-slate-800 outline-none disabled:opacity-60">
       {SUPPORTED_LOCALES.map((code) => <option key={code} value={code}>{localeName(code)}</option>)}
     </select>
-    {error && <span role="status" className="sr-only">{t("common.languageError")}</span>}
+    {error && (
+      <span role="alert" className="max-w-48 text-xs text-red-700">
+        {t("common.languageError")}
+      </span>
+    )}
   </div>;
 }

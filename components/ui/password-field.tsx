@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { I18nText } from "@/components/i18n-text";
+import { translationAttribute } from "@/lib/i18n/keys";
 
 /**
  * Password input with a show/hide toggle. The toggle is a real 44px target so
@@ -25,7 +27,7 @@ export default function PasswordField({
   return (
     <div className="flex min-w-0 flex-col gap-1.5">
       <label htmlFor={id} className="text-[13px] font-semibold text-slate-900">
-        {label}
+        <I18nText source={label} />
       </label>
       <div className="relative">
         <input
@@ -34,6 +36,7 @@ export default function PasswordField({
           type={shown ? "text" : "password"}
           autoComplete={autoComplete}
           placeholder={placeholder}
+          {...translationAttribute("placeholder", placeholder)}
           className="w-full rounded-lg border border-slate-200 bg-white py-3 pl-3.5 pr-11 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
         />
         <button

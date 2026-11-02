@@ -5,8 +5,10 @@ import { I18nextProvider, initReactI18next } from "react-i18next";
 import { useEffect } from "react";
 import { englishResource } from "@/lib/i18n/resources";
 import { RTL_LOCALES, resolveLocale, type SupportedLocale } from "@/lib/i18n/config";
+import { I18nAttributeProvider } from "@/components/i18n-text";
 
 const STORAGE_KEY = "profintal-language";
+const RESOURCE_VERSION = "v2";
 let initialization: Promise<void> | undefined;
 
 function configureI18n() {
@@ -19,7 +21,8 @@ function configureI18n() {
         resources: { en: { translation: englishResource } },
         interpolation: { escapeValue: false },
         react: { useSuspense: false },
-      });
+      })
+      .then(() => undefined);
   }
   return initialization;
 }
@@ -47,7 +50,7 @@ function browserLocale(): SupportedLocale {
 }
 
 function cachedResource(locale: SupportedLocale) {
-  const raw = readStorage(`profintal-i18n-${locale}`);
+  const raw = readStorage(`profintal-i18n-${RESOURCE_VERSION}-${locale}`);
   if (!raw) return null;
 
   try {
@@ -64,13 +67,18 @@ export async function setLocale(localeValue: string) {
   let resource = locale === "en" ? englishResource : cachedResource(locale);
 
   if (!resource) {
-    const response = await fetch(`/api/i18n/${locale}`);
+    const response = await fetch(`/api/i18n/${locale}?v=${RESOURCE_VERSION}`, {
+      cache: "no-store",
+    });
     if (!response.ok) {
       throw new Error(`Unable to load translations (${response.status}).`);
     }
 
     resource = await response.json();
-    writeStorage(`profintal-i18n-${locale}`, JSON.stringify(resource));
+    writeStorage(
+      `profintal-i18n-${RESOURCE_VERSION}-${locale}`,
+      JSON.stringify(resource),
+    );
   }
 
   i18n.addResourceBundle(locale, "translation", resource, true, true);
@@ -98,5 +106,10 @@ export default function I18nProvider({
     });
   }, []);
 
-  return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
+  return (
+    <I18nextProvider i18n={i18n}>
+      <I18nAttributeProvider />
+      {children}
+    </I18nextProvider>
+  );
 }

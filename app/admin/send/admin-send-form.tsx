@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, ChevronDown, CheckCircle2, Send } from "lucide-react";
 import { adminSendToUser } from "@/app/actions/admin";
 import { formatCurrency, currencyFlag } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 type TargetUser = {
   id: string;
@@ -78,15 +79,14 @@ export default function AdminSendForm({
         {/* Recipient picker */}
         <div className="flex flex-col gap-2.5">
           <label className="text-xs font-bold tracking-[0.5px] text-slate-500">
-            RECIPIENT ACCOUNT
-          </label>
+            <I18nText i18nKey="ui.pf1g47" source="RECIPIENT ACCOUNT" /></label>
           <div className="flex items-center gap-2.5 rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3">
             <Search className="size-[18px] shrink-0 text-slate-500" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search any user by name, handle or email..."
+              placeholder="Search any user by name, handle or email..." data-i18n-placeholder={"[\"ui.167u2b5\",\"Search any user by name, handle or email...\"]"}
               className="w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none"
             />
           </div>
@@ -119,8 +119,7 @@ export default function AdminSendForm({
             ))}
             {filtered.length === 0 && (
               <p className="py-4 text-center text-[13px] text-slate-500">
-                No users match your search.
-              </p>
+                <I18nText i18nKey="ui.1trdadw" source="No users match your search." /></p>
             )}
           </div>
         </div>
@@ -128,8 +127,7 @@ export default function AdminSendForm({
         {/* Amount + currency */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-bold tracking-[0.5px] text-slate-500">
-            DISBURSEMENT AMOUNT
-          </label>
+            <I18nText i18nKey="ui.19t3xpc" source="DISBURSEMENT AMOUNT" /></label>
           <div className="flex items-center justify-between rounded-[10px] border border-slate-200 bg-slate-50 p-4">
             <div className="flex items-baseline gap-1">
               <span className="font-mono text-[28px] font-bold text-slate-900">
@@ -153,7 +151,7 @@ export default function AdminSendForm({
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
                 className="absolute inset-0 cursor-pointer opacity-0"
-                aria-label="Currency"
+                aria-label="Currency" data-i18n-aria-label={"[\"ui.5o3zh2\",\"Currency\"]"}
               >
                 {wallets.map((w) => (
                   <option key={w.currency} value={w.currency}>
@@ -164,7 +162,7 @@ export default function AdminSendForm({
             </div>
           </div>
           <p className="text-xs text-slate-500">
-            Treasury balance:{" "}
+            <I18nText i18nKey="ui.16p3sdm" source="Treasury balance:" />{" "}
             <span className="font-semibold text-slate-900">
               {formatCurrency(wallet?.balance ?? 0, currency)} {currency}
             </span>
@@ -174,14 +172,13 @@ export default function AdminSendForm({
         {/* Note */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-bold tracking-[0.5px] text-slate-500">
-            REFERENCE / NOTE (OPTIONAL)
-          </label>
+            <I18nText i18nKey="ui.1e98lek" source="REFERENCE / NOTE (OPTIONAL)" /></label>
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
             <input
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Add a reference or note"
+              placeholder="Add a reference or note" data-i18n-placeholder={"[\"ui.1khi4o1\",\"Add a reference or note\"]"}
               className="w-full bg-transparent text-[13px] text-slate-600 placeholder:text-slate-400 focus:outline-none"
             />
           </div>
@@ -190,29 +187,28 @@ export default function AdminSendForm({
 
       {/* Right: summary + action */}
       <div className="flex w-full shrink-0 flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7 lg:w-[380px]">
-        <h2 className="text-base font-bold text-slate-900">Transfer Summary</h2>
+        <h2 className="text-base font-bold text-slate-900"><I18nText i18nKey="ui.1ogkpvi" source="Transfer Summary" /></h2>
         <div className="flex flex-col gap-4 text-[13px]">
           <div className="flex items-center justify-between">
-            <span className="text-slate-600">Recipient</span>
+            <span className="text-slate-600"><I18nText i18nKey="ui.1oncz6g" source="Recipient" /></span>
             <span className="font-semibold text-slate-900">
               {target?.name ?? "—"}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-600">Amount</span>
+            <span className="text-slate-600"><I18nText i18nKey="ui.a2ky21" source="Amount" /></span>
             <span className="font-mono font-bold text-slate-900">
               {formatCurrency(amountNum, currency)} {currency}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-600">Fee</span>
+            <span className="text-slate-600"><I18nText i18nKey="ui.9l4mg3" source="Fee" /></span>
             <span className="font-mono font-bold text-slate-900">
-              Not configured
-            </span>
+              <I18nText i18nKey="ui.4tqh3i" source="Not configured" /></span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-600">Delivery</span>
-            <span className="font-semibold text-slate-900">Not configured</span>
+            <span className="text-slate-600"><I18nText i18nKey="ui.k8ovhx" source="Delivery" /></span>
+            <span className="font-semibold text-slate-900"><I18nText i18nKey="ui.4tqh3i" source="Not configured" /></span>
           </div>
         </div>
 
@@ -237,14 +233,12 @@ export default function AdminSendForm({
         >
           <Send className="size-4" />
           {pending
-            ? "Sending…"
+            ? <I18nText i18nKey="ui.15r3dgd" source="Sending…" />
             : `Send ${formatCurrency(amountNum, currency)} ${currency}`}
         </button>
 
         <p className="text-[11px] leading-relaxed text-slate-400">
-          Admin-only disbursement. Funds move from the platform treasury into
-          the selected user&apos;s wallet and appear instantly in their account.
-        </p>
+          <I18nText i18nKey="ui.qrzy76" source="Admin-only disbursement. Funds move from the platform treasury into the selected user's wallet and appear instantly in their account." /></p>
       </div>
     </div>
   );

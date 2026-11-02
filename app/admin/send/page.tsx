@@ -2,6 +2,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { formatCurrency, currencyFlag } from "@/lib/format";
 import AdminSendForm from "./admin-send-form";
+import { I18nText } from "@/components/i18n-text";
 
 export default async function AdminSendPage() {
   const admin = await requireAdmin();
@@ -30,17 +31,14 @@ export default async function AdminSendPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            Send Funds
-          </h1>
+            <I18nText i18nKey="ui.1u97yhr" source="Send Funds" /></h1>
           <p className="text-sm text-slate-600">
-            Disburse treasury funds directly to any platform user. Admin-only
-            capability.
-          </p>
+            <I18nText i18nKey="ui.1cpylf8" source="Disburse treasury funds directly to any platform user. Admin-only capability." /></p>
         </div>
         <div className="flex items-center gap-2 rounded-lg border border-amber-500 bg-amber-100/50 px-3.5 py-2">
           <span className="size-1.5 rounded-full bg-amber-500" />
           <span className="text-[13px] font-bold text-amber-600">
-            Treasury: {formatCurrency(treasuryTotal, "USD")}
+            <I18nText i18nKey="ui.1e7l76m" source="Treasury:" />{formatCurrency(treasuryTotal, "USD")}
           </span>
         </div>
       </div>
@@ -70,12 +68,9 @@ export default async function AdminSendPage() {
       {users.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
           <p className="text-base font-bold text-slate-800">
-            No customers to send to yet
-          </p>
+            <I18nText i18nKey="ui.1k54vdd" source="No customers to send to yet" /></p>
           <p className="max-w-md text-sm text-slate-500">
-            Once someone registers an account through the sign-up page they will
-            appear here and you can disburse treasury funds to them.
-          </p>
+            <I18nText i18nKey="ui.qiqx9q" source="Once someone registers an account through the sign-up page they will appear here and you can disburse treasury funds to them." /></p>
         </div>
       ) : (
       <AdminSendForm

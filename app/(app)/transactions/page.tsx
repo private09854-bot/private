@@ -2,6 +2,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireCustomer } from "@/lib/session";
 import { formatDate } from "@/lib/format";
 import TransactionsView, { type TxRow } from "./transactions-view";
+import { I18nText } from "@/components/i18n-text";
 
 export default async function TransactionsPage() {
   const user = await requireCustomer();
@@ -38,11 +39,9 @@ export default async function TransactionsPage() {
     <div className="flex h-full flex-col gap-8">
       <div className="flex flex-col gap-1.5">
         <h1 className="text-[28px] font-bold tracking-[-0.5px] text-slate-900">
-          Transaction History
-        </h1>
+          <I18nText i18nKey="ui.5vd4wb" source="Transaction History" /></h1>
         <p className="text-sm text-slate-600">
-          All activity across your consolidated multi-currency wallets.
-        </p>
+          <I18nText i18nKey="ui.bnxef9" source="All activity across your consolidated multi-currency wallets." /></p>
       </div>
 
       <TransactionsView rows={rows} />

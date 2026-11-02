@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/session";
 import { formatDate, formatDateOnly, relativeTime } from "@/lib/format";
 import { countryFlag, countryName } from "@/lib/countries";
 import KycReviewCard, { type ReviewApplicant } from "./kyc-review-card";
+import { I18nText } from "@/components/i18n-text";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -173,17 +174,13 @@ export default async function AdminUsersPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            User &amp; KYC Management
-          </h1>
+            <I18nText i18nKey="ui.16cygl4" source="User & KYC Management" /></h1>
           <p className="text-sm text-slate-600">
-            Review platform accounts, verification tiers and pending identity
-            checks.
-          </p>
+            <I18nText i18nKey="ui.3vr11v" source="Review platform accounts, verification tiers and pending identity checks." /></p>
         </div>
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <Download className="size-3.5 text-slate-500" />
-          Export Registry
-        </button>
+          <I18nText i18nKey="ui.59cz7e" source="Export Registry" /></button>
       </div>
 
       {/* KPI strip */}
@@ -208,7 +205,7 @@ export default async function AdminUsersPage() {
           <Search className="size-3.5 shrink-0 text-slate-500" />
           <input
             type="text"
-            placeholder="Search by name, handle or account ID..."
+            placeholder="Search by name, handle or account ID..." data-i18n-placeholder={"[\"ui.1ib4qra\",\"Search by name, handle or account ID...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -228,25 +225,22 @@ export default async function AdminUsersPage() {
         {/* Users table */}
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <div className="hidden items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500 lg:flex">
-            <span className="flex-1">USER</span>
-            <span className="w-[90px]">TYPE</span>
-            <span className="w-[150px]">PHONE</span>
-            <span className="w-[160px]">COUNTRY</span>
-            <span className="w-[90px]">KYC TIER</span>
-            <span className="w-[90px]">STATUS</span>
-            <span className="w-[100px]">JOINED</span>
-            <span className="w-[70px] text-right">ACTION</span>
+            <span className="flex-1"><I18nText i18nKey="ui.q0wg8i" source="USER" /></span>
+            <span className="w-[90px]"><I18nText i18nKey="ui.5ln631" source="TYPE" /></span>
+            <span className="w-[150px]"><I18nText i18nKey="ui.42rgy7" source="PHONE" /></span>
+            <span className="w-[160px]"><I18nText i18nKey="ui.lkap0x" source="COUNTRY" /></span>
+            <span className="w-[90px]"><I18nText i18nKey="ui.f66hjm" source="KYC TIER" /></span>
+            <span className="w-[90px]"><I18nText i18nKey="ui.165vtrj" source="STATUS" /></span>
+            <span className="w-[100px]"><I18nText i18nKey="ui.1e4hwr4" source="JOINED" /></span>
+            <span className="w-[70px] text-right"><I18nText i18nKey="ui.7u4trz" source="ACTION" /></span>
           </div>
           <div className="flex flex-col">
             {users.length === 0 && (
               <div className="flex flex-col items-center gap-1.5 border-b border-slate-200 px-6 py-14 text-center">
                 <p className="text-sm font-semibold text-slate-700">
-                  No customers yet
-                </p>
+                  <I18nText i18nKey="ui.1l258nx" source="No customers yet" /></p>
                 <p className="max-w-sm text-[13px] text-slate-500">
-                  Accounts appear here as soon as someone registers through the
-                  sign-up page.
-                </p>
+                  <I18nText i18nKey="ui.1lsajqr" source="Accounts appear here as soon as someone registers through the sign-up page." /></p>
               </div>
             )}
             {users.map((u) => {
@@ -312,18 +306,14 @@ export default async function AdminUsersPage() {
           </div>
           <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
             <p className="text-[13px] text-slate-500">
-              Showing {users.length} of {users.length} accounts
-            </p>
+              <I18nText i18nKey="ui.1j6rifw" source="Showing" />{users.length} <I18nText i18nKey="ui.t6uqnc" source="of" />{users.length} <I18nText i18nKey="ui.ff95h9" source="accounts" /></p>
             <div className="flex items-center gap-2">
               <button className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100">
-                Previous
-              </button>
+                <I18nText i18nKey="ui.1t5jxvs" source="Previous" /></button>
               <span className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white">
-                1
-              </span>
+                <I18nText i18nKey="ui.efwnq4" source="1" /></span>
               <button className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-                Next
-              </button>
+                <I18nText i18nKey="ui.1padbm0" source="Next" /></button>
             </div>
           </div>
         </div>

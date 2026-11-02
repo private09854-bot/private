@@ -5,6 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { usdRateMap } from "@/lib/data";
 import { formatNumber, formatCompact } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 const filters = ["Base: All", "Status: All"];
 
@@ -72,17 +73,13 @@ export default async function AdminRatesPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            Exchange Rate Management
-          </h1>
+            <I18nText i18nKey="ui.1w7vj19" source="Exchange Rate Management" /></h1>
           <p className="text-sm text-slate-600">
-            Configure institutional FX pairs, spreads and the markup applied to
-            customer conversions.
-          </p>
+            <I18nText i18nKey="ui.1lr406w" source="Configure institutional FX pairs, spreads and the markup applied to customer conversions." /></p>
         </div>
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <RefreshCw className="size-3.5 text-slate-500" />
-          Sync Rates
-        </button>
+          <I18nText i18nKey="ui.10bbect" source="Sync Rates" /></button>
       </div>
 
       {/* KPI strip */}
@@ -107,7 +104,7 @@ export default async function AdminRatesPage() {
           <Search className="size-3.5 shrink-0 text-slate-500" />
           <input
             type="text"
-            placeholder="Search currency pair..."
+            placeholder="Search currency pair..." data-i18n-placeholder={"[\"ui.1s3z7v6\",\"Search currency pair...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -127,12 +124,12 @@ export default async function AdminRatesPage() {
         {/* Pairs table */}
         <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
-            <span className="flex-1">PAIR</span>
-            <span className="w-[120px] text-right">MID-MARKET</span>
-            <span className="w-[120px] text-right">RATE</span>
-            <span className="w-[90px] text-right">SPREAD</span>
-            <span className="w-[90px] text-right">CHANGE</span>
-            <span className="w-[90px] text-right">STATUS</span>
+            <span className="flex-1"><I18nText i18nKey="ui.s4mp69" source="PAIR" /></span>
+            <span className="w-[120px] text-right"><I18nText i18nKey="ui.9ift6o" source="MID-MARKET" /></span>
+            <span className="w-[120px] text-right"><I18nText i18nKey="ui.1boecvb" source="RATE" /></span>
+            <span className="w-[90px] text-right"><I18nText i18nKey="ui.a0w2ku" source="SPREAD" /></span>
+            <span className="w-[90px] text-right"><I18nText i18nKey="ui.1ysqse5" source="CHANGE" /></span>
+            <span className="w-[90px] text-right"><I18nText i18nKey="ui.165vtrj" source="STATUS" /></span>
           </div>
           <div className="flex flex-col">
             {pairs.map((p) => {
@@ -143,7 +140,7 @@ export default async function AdminRatesPage() {
                   className="flex items-center border-b border-slate-200 px-6 py-3.5"
                 >
                   <span className="flex-1 text-[13px] font-bold text-slate-900">
-                    {p.base} → {p.quote}
+                    {p.base} <I18nText i18nKey="ui.15ynnjp" source="→" />{p.quote}
                   </span>
                   <span className="w-[120px] text-right font-mono text-[13px] text-slate-600">
                     {fmtRate(p.rate)}
@@ -162,7 +159,7 @@ export default async function AdminRatesPage() {
                     {p.changeTone ?? "—"}
                   </span>
                   <div className="flex w-[90px] justify-end">
-                    <Badge tone="success">Live</Badge>
+                    <Badge tone="success"><I18nText i18nKey="ui.11rknnz" source="Live" /></Badge>
                   </div>
                 </div>
               );
@@ -170,18 +167,14 @@ export default async function AdminRatesPage() {
           </div>
           <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
             <p className="text-[13px] text-slate-500">
-              Showing {pairs.length} of {pairs.length} active pairs
-            </p>
+              <I18nText i18nKey="ui.1j6rifw" source="Showing" />{pairs.length} <I18nText i18nKey="ui.t6uqnc" source="of" />{pairs.length} <I18nText i18nKey="ui.1xoyoqm" source="active pairs" /></p>
             <div className="flex items-center gap-2">
               <button className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100">
-                Previous
-              </button>
+                <I18nText i18nKey="ui.1t5jxvs" source="Previous" /></button>
               <span className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white">
-                1
-              </span>
+                <I18nText i18nKey="ui.efwnq4" source="1" /></span>
               <button className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-                Next
-              </button>
+                <I18nText i18nKey="ui.1padbm0" source="Next" /></button>
             </div>
           </div>
         </div>
@@ -189,18 +182,15 @@ export default async function AdminRatesPage() {
         {/* Markup configuration */}
         <div className="flex w-full shrink-0 flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[360px]">
           <h2 className="text-[15px] font-bold text-slate-900">
-            Markup Configuration
-          </h2>
+            <I18nText i18nKey="ui.10ay91j" source="Markup Configuration" /></h2>
 
           <div className="flex flex-col gap-2">
             <label className="text-xs font-bold text-slate-500">
-              GLOBAL BASE MARKUP
-            </label>
+              <I18nText i18nKey="ui.wo6ncd" source="GLOBAL BASE MARKUP" /></label>
             <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
               <span className="font-mono text-lg font-bold text-slate-900">
-                —
-              </span>
-              <span className="text-[11px] text-slate-500">applied to mid</span>
+                <I18nText i18nKey="ui.4s9bsz" source="—" /></span>
+              <span className="text-[11px] text-slate-500"><I18nText i18nKey="ui.wt1sdt" source="applied to mid" /></span>
             </div>
           </div>
 
@@ -209,26 +199,23 @@ export default async function AdminRatesPage() {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-0.5">
               <p className="text-[13px] font-semibold text-slate-900">
-                Rate Source
-              </p>
-              <p className="text-[11px] text-slate-500">Not configured</p>
+                <I18nText i18nKey="ui.gem28o" source="Rate Source" /></p>
+              <p className="text-[11px] text-slate-500"><I18nText i18nKey="ui.4tqh3i" source="Not configured" /></p>
             </div>
-            <Badge tone="neutral">Unknown</Badge>
+            <Badge tone="neutral"><I18nText i18nKey="ui.1kmy72x" source="Unknown" /></Badge>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-0.5">
               <p className="text-[13px] font-semibold text-slate-900">
-                Auto-sync
-              </p>
-              <p className="text-[11px] text-slate-500">Not configured</p>
+                <I18nText i18nKey="ui.1qsq44e" source="Auto-sync" /></p>
+              <p className="text-[11px] text-slate-500"><I18nText i18nKey="ui.4tqh3i" source="Not configured" /></p>
             </div>
-            <Toggle defaultOn={false} aria-label="Auto-sync rates" />
+            <Toggle defaultOn={false} aria-label="Auto-sync rates" data-i18n-aria-label={"[\"ui.1tgvc69\",\"Auto-sync rates\"]"} />
           </div>
 
           <button className="rounded-lg bg-slate-900 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800">
-            Publish Rate Changes
-          </button>
+            <I18nText i18nKey="ui.1ft8q6j" source="Publish Rate Changes" /></button>
         </div>
       </div>
     </div>

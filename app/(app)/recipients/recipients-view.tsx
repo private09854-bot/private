@@ -9,6 +9,7 @@ import {
   deleteRecipient,
   toggleRecipientFavorite,
 } from "@/app/actions/banking";
+import { I18nText } from "@/components/i18n-text";
 
 export type UserRecipient = {
   id: string;
@@ -80,19 +81,16 @@ export default function RecipientsView({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-bold tracking-[-0.5px] text-slate-900">
-            Recipients
-          </h1>
+            <I18nText i18nKey="ui.10kc7e9" source="Recipients" /></h1>
           <p className="text-sm text-slate-600">
-            Manage your saved corporate contacts, Profintal Savings users, and external bank
-            accounts.
-          </p>
+            <I18nText i18nKey="ui.x690k" source="Manage your saved corporate contacts, Profintal Savings users, and external bank accounts." /></p>
         </div>
         <button
           onClick={() => setAdding((v) => !v)}
           className="flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-slate-800"
         >
           {adding ? <X className="size-3.5" /> : <Plus className="size-3.5" />}
-          {adding ? "Cancel" : "Add Recipient"}
+          {adding ? <I18nText i18nKey="ui.ew9em3" source="Cancel" /> : <I18nText i18nKey="ui.1jjkb6r" source="Add Recipient" />}
         </button>
       </div>
 
@@ -101,23 +99,21 @@ export default function RecipientsView({
         <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-end">
           <div className="flex flex-1 flex-col gap-1.5">
             <label className="text-[11px] font-bold text-slate-500">
-              FULL NAME
-            </label>
+              <I18nText i18nKey="ui.314iq7" source="FULL NAME" /></label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Jane Cooper"
+              placeholder="Jane Cooper" data-i18n-placeholder={"[\"ui.10y5p51\",\"Jane Cooper\"]"}
               className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none"
             />
           </div>
           <div className="flex flex-1 flex-col gap-1.5">
             <label className="text-[11px] font-bold text-slate-500">
-              USERNAME (OPTIONAL)
-            </label>
+              <I18nText i18nKey="ui.bcjvck" source="USERNAME (OPTIONAL)" /></label>
             <input
               value={handle}
               onChange={(e) => setHandle(e.target.value)}
-              placeholder="@jane_c"
+              placeholder="@jane_c" data-i18n-placeholder={"[\"ui.7ljp7x\",\"@jane_c\"]"}
               className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none"
             />
           </div>
@@ -126,8 +122,7 @@ export default function RecipientsView({
             disabled={pending || !name.trim()}
             className="rounded-lg bg-emerald-500 px-5 py-2 text-[13px] font-bold text-white transition-colors hover:bg-emerald-600 disabled:opacity-60"
           >
-            Save
-          </button>
+            <I18nText i18nKey="ui.lewgh4" source="Save" /></button>
         </div>
       )}
 
@@ -135,8 +130,7 @@ export default function RecipientsView({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex gap-3">
           <button className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">
-            Platform Users
-          </button>
+            <I18nText i18nKey="ui.y15gj2" source="Platform Users" /></button>
         </div>
         <div className="flex w-full items-center gap-2.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 sm:w-[300px]">
           <Search className="size-3.5 shrink-0 text-slate-500" />
@@ -144,7 +138,7 @@ export default function RecipientsView({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search recipients..."
+            placeholder="Search recipients..." data-i18n-placeholder={"[\"ui.1pjjwl7\",\"Search recipients...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -155,8 +149,7 @@ export default function RecipientsView({
         {/* Platform users */}
         <div className="flex flex-1 flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-7">
           <h2 className="text-base font-bold text-slate-900">
-            Saved Platform Users
-          </h2>
+            <I18nText i18nKey="ui.1c4o7gb" source="Saved Platform Users" /></h2>
           <div className="flex flex-col gap-3">
             {filtered.map((u) => (
               <div
@@ -178,7 +171,7 @@ export default function RecipientsView({
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => onToggleFavorite(u.id)}
-                    aria-label="Toggle favorite"
+                    aria-label="Toggle favorite" data-i18n-aria-label={"[\"ui.1xt9o9r\",\"Toggle favorite\"]"}
                   >
                     <Star
                       className={`size-[18px] transition-colors ${
@@ -192,11 +185,10 @@ export default function RecipientsView({
                     href="/send"
                     className="flex items-center rounded-md bg-slate-900 px-3.5 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-slate-800"
                   >
-                    Send
-                  </Link>
+                    <I18nText i18nKey="ui.1vatbdb" source="Send" /></Link>
                   <button
                     onClick={() => onDelete(u.id)}
-                    aria-label="Delete recipient"
+                    aria-label="Delete recipient" data-i18n-aria-label={"[\"ui.en7th9\",\"Delete recipient\"]"}
                     className="text-slate-300 transition-colors hover:text-red-500"
                   >
                     <Trash2 className="size-4" />
@@ -206,8 +198,7 @@ export default function RecipientsView({
             ))}
             {filtered.length === 0 && (
               <p className="py-6 text-center text-[13px] text-slate-500">
-                No recipients found.
-              </p>
+                <I18nText i18nKey="ui.aiqvfw" source="No recipients found." /></p>
             )}
           </div>
         </div>
@@ -215,8 +206,7 @@ export default function RecipientsView({
         {/* Bank accounts preview */}
         <div className="flex h-full w-full shrink-0 flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 lg:w-[400px]">
           <h2 className="text-[15px] font-bold text-slate-900">
-            Saved Bank Accounts (Preview)
-          </h2>
+            <I18nText i18nKey="ui.1ok585l" source="Saved Bank Accounts (Preview)" /></h2>
           <div className="flex flex-col gap-3">
             {bankAccounts.map((b) => (
               <div
@@ -237,26 +227,23 @@ export default function RecipientsView({
                     {b.bankName}
                   </p>
                   <p className="font-mono text-[13px] font-bold text-slate-900">
-                    Account ending {b.accountMask}
+                    <I18nText i18nKey="ui.1la0w3b" source="Account ending" />{b.accountMask}
                   </p>
                 </div>
                 <div className="flex items-center justify-between border-t border-slate-200 pt-2.5 text-xs font-semibold">
                   <button className="text-emerald-500 hover:text-emerald-600">
-                    Edit Details
-                  </button>
+                    <I18nText i18nKey="ui.a86f5f" source="Edit Details" /></button>
                   <button
                     onClick={() => onDelete(b.id)}
                     className="text-red-500 hover:text-red-600"
                   >
-                    Delete
-                  </button>
+                    <I18nText i18nKey="ui.oay2cq" source="Delete" /></button>
                 </div>
               </div>
             ))}
             {bankAccounts.length === 0 && (
               <p className="py-6 text-center text-[13px] text-slate-500">
-                No saved bank accounts.
-              </p>
+                <I18nText i18nKey="ui.kax4qn" source="No saved bank accounts." /></p>
             )}
           </div>
         </div>

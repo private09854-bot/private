@@ -11,6 +11,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { getWithdrawalNotice } from "@/lib/data";
 import WithdrawalNoticeForm from "./withdrawal-notice-form";
+import { I18nText } from "@/components/i18n-text";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -49,12 +50,9 @@ export default async function AdminSettingsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            System Settings
-          </h1>
+            <I18nText i18nKey="ui.77b4vt" source="System Settings" /></h1>
           <p className="text-sm text-slate-600">
-            Configure platform-wide controls, security policy and external
-            integrations.
-          </p>
+            <I18nText i18nKey="ui.1fd39x7" source="Configure platform-wide controls, security policy and external integrations." /></p>
         </div>
 
       </div>
@@ -65,13 +63,10 @@ export default async function AdminSettingsPage() {
           <div className="flex items-center gap-2">
             <MessageSquareWarning className="size-4 text-amber-500" />
             <h2 className="text-[15px] font-bold text-slate-900">
-              Withdrawal Notice
-            </h2>
+              <I18nText i18nKey="ui.1b1jmv2" source="Withdrawal Notice" /></h2>
           </div>
           <p className="text-[13px] text-slate-500">
-            The message every customer sees when they attempt a withdrawal.
-            Changes take effect immediately across the platform.
-          </p>
+            <I18nText i18nKey="ui.1o5l4p9" source="The message every customer sees when they attempt a withdrawal. Changes take effect immediately across the platform." /></p>
         </div>
         <WithdrawalNoticeForm initial={withdrawalNotice} />
       </div>
@@ -83,27 +78,22 @@ export default async function AdminSettingsPage() {
           <div className="flex items-center gap-2">
             <ShieldCheck className="size-4 text-amber-500" />
             <h2 className="text-[15px] font-bold text-slate-900">
-              Security Policy
-            </h2>
+              <I18nText i18nKey="ui.w7jdkr" source="Security Policy" /></h2>
           </div>
           <div className="flex flex-col gap-4">
             <p className="text-[13px] text-slate-500">
-              Security policy controls are not configured in the database.
-            </p>
+              <I18nText i18nKey="ui.1v3diyh" source="Security policy controls are not configured in the database." /></p>
           </div>
           <div className="w-full border-t border-slate-200" />
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-0.5">
               <p className="text-[13px] font-semibold text-slate-900">
-                Session timeout
-              </p>
+                <I18nText i18nKey="ui.1kwmtw8" source="Session timeout" /></p>
               <p className="text-[11px] text-slate-500">
-                Auto-logout idle admins
-              </p>
+                <I18nText i18nKey="ui.1lcm48h" source="Auto-logout idle admins" /></p>
             </div>
             <button className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-              Not configured
-              <ChevronDown className="size-2.5 text-slate-500" />
+              <I18nText i18nKey="ui.4tqh3i" source="Not configured" /><ChevronDown className="size-2.5 text-slate-500" />
             </button>
           </div>
         </div>
@@ -113,8 +103,7 @@ export default async function AdminSettingsPage() {
           <div className="flex items-center gap-2">
             <Plug className="size-4 text-amber-500" />
             <h2 className="text-[15px] font-bold text-slate-900">
-              Integrations
-            </h2>
+              <I18nText i18nKey="ui.1sd7qpm" source="Integrations" /></h2>
           </div>
           <div className="flex flex-col gap-3">
             {gateways.map((i) => (
@@ -127,14 +116,12 @@ export default async function AdminSettingsPage() {
                     {i.name}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    Provider not configured
-                  </p>
+                    <I18nText i18nKey="ui.1v2adpr" source="Provider not configured" /></p>
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge tone={gatewayTone(i.status)}>{i.status}</Badge>
                   <button className="text-[13px] font-semibold text-blue-500 hover:text-blue-600">
-                    Manage
-                  </button>
+                    <I18nText i18nKey="ui.1nufuae" source="Manage" /></button>
                 </div>
               </div>
             ))}
@@ -146,8 +133,7 @@ export default async function AdminSettingsPage() {
           <div className="flex items-center gap-2">
             <Users className="size-4 text-amber-500" />
             <h2 className="text-[15px] font-bold text-slate-900">
-              Access &amp; Roles
-            </h2>
+              <I18nText i18nKey="ui.7t8ahk" source="Access & Roles" /></h2>
           </div>
           <div className="flex flex-col gap-3">
             {admins.map((a) => {
@@ -175,8 +161,7 @@ export default async function AdminSettingsPage() {
           </div>
           <button className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 py-3 text-[13px] font-semibold text-slate-600 transition-colors hover:bg-slate-50">
             <Plus className="size-4" />
-            Invite Admin
-          </button>
+            <I18nText i18nKey="ui.u2fo5z" source="Invite Admin" /></button>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Snowflake, Sun } from "lucide-react";
 import { setUserFrozen } from "@/app/actions/admin";
+import { I18nText } from "@/components/i18n-text";
 
 export default function UserActions({
   userId,
@@ -41,7 +42,7 @@ export default function UserActions({
         ) : (
           <Snowflake className="size-3.5" />
         )}
-        {pending ? "Working…" : frozen ? "Unfreeze account" : "Freeze account"}
+        {pending ? <I18nText i18nKey="ui.1hfa4bu" source="Working…" /> : frozen ? "Unfreeze account" : "Freeze account"}
       </button>
       {error && <p className="text-[11px] font-semibold text-red-600">{error}</p>}
     </div>

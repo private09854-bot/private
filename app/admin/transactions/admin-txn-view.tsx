@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Search, ChevronDown, Calendar } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 type Tone = "success" | "warning" | "danger" | "neutral";
 
@@ -46,7 +47,7 @@ function Dropdown({
 }) {
   return (
     <div className="relative flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-      {label}: {value}
+      {label}<I18nText i18nKey="ui.hhsact" source=":" />{value}
       <ChevronDown className="size-2.5 text-slate-500" />
       <select
         value={value}
@@ -112,7 +113,7 @@ export default function AdminTxnView({ rows }: { rows: AdminTxn[] }) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by transaction ID or counterparty..."
+            placeholder="Search by transaction ID or counterparty..." data-i18n-placeholder={"[\"ui.hbhyoq\",\"Search by transaction ID or counterparty...\"]"}
             className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
@@ -122,19 +123,18 @@ export default function AdminTxnView({ rows }: { rows: AdminTxn[] }) {
         <Dropdown label="Status" value={status} options={statuses} onChange={setStatus} />
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <Calendar className="size-3.5 text-slate-500" />
-          Last 30 Days
-        </button>
+          <I18nText i18nKey="ui.ll7v9v" source="Last 30 Days" /></button>
       </div>
 
       {/* Table */}
       <div className="flex min-w-0 flex-1 flex-col overflow-x-auto rounded-2xl border border-slate-200 bg-white">
         <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 py-3 text-[11px] font-bold text-slate-500">
-          <span className="w-[150px]">TXN ID</span>
-          <span className="flex-1">COUNTERPARTY</span>
-          <span className="w-[120px]">ROUTE</span>
-          <span className="w-[140px] text-right">AMOUNT</span>
-          <span className="w-[90px] text-center">RISK</span>
-          <span className="w-[110px] text-right">STATUS</span>
+          <span className="w-[150px]"><I18nText i18nKey="ui.kzi4zu" source="TXN ID" /></span>
+          <span className="flex-1"><I18nText i18nKey="ui.1b59pet" source="COUNTERPARTY" /></span>
+          <span className="w-[120px]"><I18nText i18nKey="ui.16p96ny" source="ROUTE" /></span>
+          <span className="w-[140px] text-right"><I18nText i18nKey="ui.1xotqa1" source="AMOUNT" /></span>
+          <span className="w-[90px] text-center"><I18nText i18nKey="ui.dml3my" source="RISK" /></span>
+          <span className="w-[110px] text-right"><I18nText i18nKey="ui.165vtrj" source="STATUS" /></span>
         </div>
         <div className="flex flex-col">
           {filtered.map((t) => {
@@ -178,24 +178,19 @@ export default function AdminTxnView({ rows }: { rows: AdminTxn[] }) {
           })}
           {filtered.length === 0 && (
             <div className="px-6 py-10 text-center text-[13px] text-slate-500">
-              No settlements match your filters.
-            </div>
+              <I18nText i18nKey="ui.18z68d5" source="No settlements match your filters." /></div>
           )}
         </div>
         <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
           <p className="text-[13px] text-slate-500">
-            Showing {filtered.length} of {rows.length} settlements
-          </p>
+            <I18nText i18nKey="ui.1j6rifw" source="Showing" />{filtered.length} <I18nText i18nKey="ui.t6uqnc" source="of" />{rows.length} <I18nText i18nKey="ui.1h5nfsr" source="settlements" /></p>
           <div className="flex items-center gap-2">
             <button className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100">
-              Previous
-            </button>
+              <I18nText i18nKey="ui.1t5jxvs" source="Previous" /></button>
             <span className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-bold text-white">
-              1
-            </span>
+              <I18nText i18nKey="ui.efwnq4" source="1" /></span>
             <button className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-              Next
-            </button>
+              <I18nText i18nKey="ui.1padbm0" source="Next" /></button>
           </div>
         </div>
       </div>

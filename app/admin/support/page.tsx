@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import SupportInbox, { type Conversation } from "./support-inbox";
+import { I18nText } from "@/components/i18n-text";
 
 export default async function AdminSupportPage() {
   await requireAdmin();
@@ -54,11 +55,10 @@ export default async function AdminSupportPage() {
     <div className="flex h-full flex-col gap-8">
       <div className="flex flex-col gap-1.5">
         <h1 className="text-[28px] font-extrabold text-slate-900">
-          Support Inbox
-        </h1>
+          <I18nText i18nKey="ui.4p0fuw" source="Support Inbox" /></h1>
         <p className="text-sm text-slate-600">
           {conversations.length === 0
-            ? "Customer messages will appear here."
+            ? <I18nText i18nKey="ui.94imny" source="Customer messages will appear here." />
             : `${conversations.length} conversation${
                 conversations.length === 1 ? "" : "s"
               }${totalUnread ? ` · ${totalUnread} unread` : ""}.`}

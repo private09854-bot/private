@@ -6,6 +6,7 @@ import { WITHDRAW_METHODS, type PaymentMethod } from "@/lib/payment-methods";
 import type { WithdrawalNotice } from "@/lib/data";
 import MethodMark from "@/components/ui/method-mark";
 import { formatCurrency, currencyFlag } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 type Wallet = { currency: string; symbol: string; balance: number };
 
@@ -87,13 +88,13 @@ export default function WithdrawMethods({
                 <MethodMark method={active} size="sm" />
                 <div className="flex flex-col">
                   <h2 className="text-[15px] font-bold text-slate-900">
-                    Withdraw via {active.name}
+                    <I18nText i18nKey="ui.1cglkoz" source="Withdraw via" />{active.name}
                   </h2>
                   <p className="text-[11px] text-slate-500">{active.blurb}</p>
                 </div>
               </div>
               <button
-                aria-label="Close"
+                aria-label="Close" data-i18n-aria-label={"[\"ui.1l0xxoj\",\"Close\"]"}
                 onClick={close}
                 className="text-slate-400 hover:text-slate-900"
               >
@@ -114,15 +115,13 @@ export default function WithdrawMethods({
                   onClick={close}
                   className="mt-1 rounded-lg bg-slate-900 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800"
                 >
-                  Got it
-                </button>
+                  <I18nText i18nKey="ui.l8hqi2" source="Got it" /></button>
               </div>
             ) : (
               <>
                 <div className="flex flex-col gap-2">
                   <label className="text-[11px] font-bold tracking-[0.5px] text-slate-500">
-                    AMOUNT
-                  </label>
+                    <I18nText i18nKey="ui.1xotqa1" source="AMOUNT" /></label>
                   <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 p-3">
                     <div className="flex items-baseline gap-1">
                       <span className="font-mono text-xl font-bold text-slate-900">
@@ -146,7 +145,7 @@ export default function WithdrawMethods({
                         value={currency}
                         onChange={(e) => setCurrency(e.target.value)}
                         className="absolute inset-0 cursor-pointer opacity-0"
-                        aria-label="Currency"
+                        aria-label="Currency" data-i18n-aria-label={"[\"ui.5o3zh2\",\"Currency\"]"}
                       >
                         {wallets.map((w) => (
                           <option key={w.currency} value={w.currency}>
@@ -157,15 +156,14 @@ export default function WithdrawMethods({
                     </div>
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    Available: {formatCurrency(wallet?.balance ?? 0, currency)}{" "}
+                    <I18nText i18nKey="ui.1pbceue" source="Available:" />{formatCurrency(wallet?.balance ?? 0, currency)}{" "}
                     {currency}
                   </p>
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <label className="text-[11px] font-bold tracking-[0.5px] text-slate-500">
-                    DESTINATION
-                  </label>
+                    <I18nText i18nKey="ui.170xk9r" source="DESTINATION" /></label>
                   <input
                     type="text"
                     value={destination}
@@ -179,8 +177,7 @@ export default function WithdrawMethods({
                   onClick={() => setBlocked(true)}
                   className="rounded-lg bg-emerald-500 py-3 text-[13px] font-bold text-white transition-colors hover:bg-emerald-600"
                 >
-                  Request Withdrawal
-                </button>
+                  <I18nText i18nKey="ui.8xg4xd" source="Request Withdrawal" /></button>
               </>
             )}
           </div>

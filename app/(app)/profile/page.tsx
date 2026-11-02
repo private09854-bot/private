@@ -20,6 +20,7 @@ import {
 } from "@/lib/format";
 import { countryName } from "@/lib/countries";
 import ProfileEditForm from "./profile-edit-form";
+import { I18nText } from "@/components/i18n-text";
 
 const NOT_SET = "—";
 
@@ -220,11 +221,9 @@ export default async function ProfilePage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-bold tracking-[-0.5px] text-slate-900">
-            Account Profile
-          </h1>
+            <I18nText i18nKey="ui.1hvalq9" source="Account Profile" /></h1>
           <p className="text-sm text-slate-600">
-            Everything on file for your account, including verification status.
-          </p>
+            <I18nText i18nKey="ui.ag7ufw" source="Everything on file for your account, including verification status." /></p>
         </div>
         <ProfileEditForm user={user} />
       </div>
@@ -247,7 +246,7 @@ export default async function ProfilePage() {
               {user.email}
             </p>
             <p className="text-[13px] text-slate-500">
-              {user.accountType ?? "Account"} • {user.tier ?? "Tier 1"}
+              {user.accountType ?? "Account"} <I18nText i18nKey="ui.aw0l2d" source="•" />{user.tier ?? "Tier 1"}
             </p>
           </div>
         </div>
@@ -256,7 +255,7 @@ export default async function ProfilePage() {
           className={`flex w-fit shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-bold ${style.tone}`}
         >
           <StatusIcon className="size-4" />
-          KYC: {style.label}
+          <I18nText i18nKey="ui.1cez94c" source="KYC:" />{style.label}
         </span>
       </div>
 
@@ -265,15 +264,10 @@ export default async function ProfilePage() {
         <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" />
           <p className="text-[13px] leading-relaxed text-amber-900">
-            <span className="font-bold">Your profile is incomplete.</span> We do
-            not have your {missing.join(", ")} on file. This account was opened
-            before those details were collected — verification cannot complete
-            without them.{" "}
+            <span className="font-bold"><I18nText i18nKey="ui.s7428j" source="Your profile is incomplete." /></span> <I18nText i18nKey="ui.126b35a" source="We do not have your" />{missing.join(", ")} <I18nText i18nKey="ui.1se253y" source="on file. This account was opened before those details were collected — verification cannot complete without them." />{" "}
             <Link href="/kyc" className="font-bold underline">
-              Verify your identity
-            </Link>
-            .
-          </p>
+              <I18nText i18nKey="ui.1bxu20r" source="Verify your identity" /></Link>
+            <I18nText i18nKey="ui.by08hd" source="." /></p>
         </div>
       )}
 
@@ -296,16 +290,16 @@ export default async function ProfilePage() {
 
       {/* ------------------------------------------------------------- lists */}
       <div className="grid gap-6 xl:grid-cols-2">
-        <Card title="User information">
+        <Card title="User information" data-i18n-title={"[\"ui.1x63lk\",\"User information\"]"}>
           <InfoList rows={identity} />
         </Card>
 
         <div className="flex flex-col gap-6">
-          <Card title="Account details">
+          <Card title="Account details" data-i18n-title={"[\"ui.fq47pe\",\"Account details\"]"}>
             <InfoList rows={account} />
           </Card>
 
-          <Card title="Wallets">
+          <Card title="Wallets" data-i18n-title={"[\"ui.8mlup9\",\"Wallets\"]"}>
             <div className="flex flex-col">
               {wallets.map((w, i) => (
                 <div
@@ -323,8 +317,7 @@ export default async function ProfilePage() {
                     </span>
                     {w.primary && (
                       <span className="shrink-0 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-600">
-                        PRIMARY
-                      </span>
+                        <I18nText i18nKey="ui.z603w9" source="PRIMARY" /></span>
                     )}
                   </span>
                   <span className="shrink-0 font-mono text-sm font-bold text-slate-900">
@@ -334,8 +327,7 @@ export default async function ProfilePage() {
               ))}
               {wallets.length === 0 && (
                 <p className="px-5 py-8 text-center text-[13px] text-slate-500">
-                  No wallets on this account.
-                </p>
+                  <I18nText i18nKey="ui.62mt9q" source="No wallets on this account." /></p>
               )}
             </div>
           </Card>
@@ -343,12 +335,12 @@ export default async function ProfilePage() {
       </div>
 
       {/* --------------------------------------------------------------- KYC */}
-      <Card title="Identity verification (KYC)">
+      <Card title="Identity verification (KYC)" data-i18n-title={"[\"ui.43ob02\",\"Identity verification (KYC)\"]"}>
         <div className="flex flex-col gap-4 p-5">
           <div className="flex flex-col gap-1">
             <p className="text-sm font-bold text-slate-900">
               {status === "Verified"
-                ? "Your identity has been verified."
+                ? <I18nText i18nKey="ui.l5tvmw" source="Your identity has been verified." />
                 : status === "Rejected"
                   ? "Your verification was declined."
                   : status === "Frozen"
@@ -358,7 +350,7 @@ export default async function ProfilePage() {
             <p className="text-[13px] leading-relaxed text-slate-500">
               {kyc
                 ? `Application opened ${formatDate(kyc.createdAt)} · requesting ${kyc.requesting}.`
-                : "No verification application has been opened for this account yet."}
+                : <I18nText i18nKey="ui.g6ppni" source="No verification application has been opened for this account yet." />}
             </p>
           </div>
 
@@ -397,7 +389,7 @@ export default async function ProfilePage() {
               className="inline-flex w-fit items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-[13px] font-bold text-white transition-colors hover:bg-emerald-700"
             >
               {kyc?.status === "pending" || kyc?.status === "escalated"
-                ? "View your submission"
+                ? <I18nText i18nKey="ui.xfin31" source="View your submission" />
                 : kyc?.status === "rejected"
                   ? "Submit again"
                   : "Start verification"}
@@ -405,10 +397,7 @@ export default async function ProfilePage() {
           )}
 
           <p className="text-[11px] leading-relaxed text-slate-400">
-            Profintal Savings is a demonstration project. Verification is
-            reviewed from the admin console and no documents are transmitted to
-            any real identity provider.
-          </p>
+            <I18nText i18nKey="ui.3ecdqs" source="Profintal Savings is a demonstration project. Verification is reviewed from the admin console and no documents are transmitted to any real identity provider." /></p>
         </div>
       </Card>
 
@@ -417,8 +406,7 @@ export default async function ProfilePage() {
           href="/settings"
           className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50"
         >
-          Security &amp; settings
-        </Link>
+          <I18nText i18nKey="ui.14hbvgy" source="Security & settings" /></Link>
       </div>
     </div>
   );

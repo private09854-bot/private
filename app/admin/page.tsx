@@ -2,6 +2,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { usdRateMap } from "@/lib/data";
 import { formatCompact } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 const Divider = () => <div className="h-px w-full bg-slate-200" />;
 
@@ -126,12 +127,9 @@ export default async function AdminDashboardPage() {
       {/* Header */}
       <div className="flex flex-col gap-1.5">
         <h1 className="text-[28px] font-extrabold text-slate-900">
-          System Overview
-        </h1>
+          <I18nText i18nKey="ui.19cj2ev" source="System Overview" /></h1>
         <p className="text-sm text-slate-600">
-          Institutional network health, counterparty exposure and priority
-          flags.
-        </p>
+          <I18nText i18nKey="ui.1qqc0mz" source="Institutional network health, counterparty exposure and priority flags." /></p>
       </div>
 
       {/* KPI strip */}
@@ -157,15 +155,12 @@ export default async function AdminDashboardPage() {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
               <p className="text-[15px] font-bold text-slate-900">
-                Transaction Volume (7 Days)
-              </p>
+                <I18nText i18nKey="ui.5vuntm" source="Transaction Volume (7 Days)" /></p>
               <p className="text-xs text-slate-500">
-                USD equivalent (Consolidated)
-              </p>
+                <I18nText i18nKey="ui.ueqyfl" source="USD equivalent (Consolidated)" /></p>
             </div>
             <button className="text-xs font-semibold text-blue-500 hover:text-blue-600">
-              Export Report
-            </button>
+              <I18nText i18nKey="ui.jr96av" source="Export Report" /></button>
           </div>
           <Divider />
           <div className="flex h-[160px] items-end justify-between">
@@ -185,20 +180,18 @@ export default async function AdminDashboardPage() {
         {/* Currency distribution */}
         <div className="flex w-full flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[420px]">
           <p className="text-[15px] font-bold text-slate-900">
-            Currency Distribution
-          </p>
+            <I18nText i18nKey="ui.eg8zeg" source="Currency Distribution" /></p>
           <Divider />
           <div className="flex flex-col gap-4">
             {distribution.length === 0 && (
               <p className="py-6 text-center text-[13px] text-slate-500">
-                No customer holdings yet.
-              </p>
+                <I18nText i18nKey="ui.cqamfq" source="No customer holdings yet." /></p>
             )}
             {distribution.map((d) => (
               <div key={d.code} className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-slate-900">{d.code}</span>
-                  <span className="text-slate-600">{d.pct}%</span>
+                  <span className="text-slate-600">{d.pct}<I18nText i18nKey="ui.8w4luo" source="%" /></span>
                 </div>
                 <div className="h-2 w-full overflow-hidden rounded-[4px] bg-slate-200">
                   <div
@@ -217,17 +210,14 @@ export default async function AdminDashboardPage() {
         {/* System alerts */}
         <div className="flex w-full flex-1 flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6">
           <p className="text-base font-bold text-slate-900">
-            System Alerts (Priority Queue)
-          </p>
+            <I18nText i18nKey="ui.9hdn8f" source="System Alerts (Priority Queue)" /></p>
           <div className="flex flex-col gap-3">
             {alerts.length === 0 && (
               <div className="rounded-lg border border-dashed border-slate-200 py-8 text-center">
                 <p className="text-[13px] font-semibold text-slate-600">
-                  No active alerts
-                </p>
+                  <I18nText i18nKey="ui.1mm0ti7" source="No active alerts" /></p>
                 <p className="mt-1 text-[11px] text-slate-500">
-                  Alerts appear here when activity trips a detection rule.
-                </p>
+                  <I18nText i18nKey="ui.1n98dsi" source="Alerts appear here when activity trips a detection rule." /></p>
               </div>
             )}
             {alerts.map((a) => {
@@ -253,7 +243,7 @@ export default async function AdminDashboardPage() {
 
         {/* Gateway status */}
         <div className="flex w-full flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 xl:w-[420px]">
-          <p className="text-base font-bold text-slate-900">Gateway Status</p>
+          <p className="text-base font-bold text-slate-900"><I18nText i18nKey="ui.1fcdmzx" source="Gateway Status" /></p>
           <Divider />
           <div className="flex flex-col gap-4">
             {gateways.map((g) => {

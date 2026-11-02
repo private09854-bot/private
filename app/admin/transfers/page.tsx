@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/session";
 import { formatCompact } from "@/lib/format";
 import TransfersQueue, { type TransferRow } from "./transfers-queue";
+import { I18nText } from "@/components/i18n-text";
 
 export default async function AdminTransfersPage() {
   await requireAdmin();
@@ -61,17 +62,13 @@ export default async function AdminTransfersPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-extrabold text-slate-900">
-            Transfer Authorization
-          </h1>
+            <I18nText i18nKey="ui.12diydn" source="Transfer Authorization" /></h1>
           <p className="text-sm text-slate-600">
-            Approve or reject high-value and flagged settlement instructions
-            awaiting signature.
-          </p>
+            <I18nText i18nKey="ui.1rgr38r" source="Approve or reject high-value and flagged settlement instructions awaiting signature." /></p>
         </div>
         <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
           <ShieldCheck className="size-3.5 text-slate-500" />
-          Bulk Authorize
-        </button>
+          <I18nText i18nKey="ui.j7plyi" source="Bulk Authorize" /></button>
       </div>
 
       {/* KPI strip */}

@@ -5,6 +5,7 @@ import { requireCustomer } from "@/lib/session";
 import { formatDate, formatDateOnly } from "@/lib/format";
 import { countryName } from "@/lib/countries";
 import KycForm from "./kyc-form";
+import { I18nText } from "@/components/i18n-text";
 
 export default async function KycPage() {
   const user = await requireCustomer();
@@ -30,11 +31,9 @@ export default async function KycPage() {
       <div className="flex h-full flex-col gap-8">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-[28px] font-bold tracking-[-0.5px] text-slate-900">
-            Identity Verification
-          </h1>
+            <I18nText i18nKey="ui.14q6c4q" source="Identity Verification" /></h1>
           <p className="text-sm text-slate-600">
-            Your submission and its current status.
-          </p>
+            <I18nText i18nKey="ui.168fn54" source="Your submission and its current status." /></p>
         </div>
 
         <div
@@ -56,7 +55,7 @@ export default async function KycPage() {
               }`}
             >
               {settled
-                ? "Your identity is verified"
+                ? <I18nText i18nKey="ui.x1x8pc" source="Your identity is verified" />
                 : status === "escalated"
                   ? "Under compliance review"
                   : "Documents received — under review"}
@@ -75,8 +74,7 @@ export default async function KycPage() {
 
         <section className="flex flex-col gap-3">
           <h2 className="text-[11px] font-bold uppercase tracking-wide text-slate-500">
-            What you submitted
-          </h2>
+            <I18nText i18nKey="ui.76hwhl" source="What you submitted" /></h2>
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
             {[
               { label: "Document type", value: app?.documentType ?? "—" },
@@ -113,8 +111,7 @@ export default async function KycPage() {
 
         <section className="flex flex-col gap-3">
           <h2 className="text-[11px] font-bold uppercase tracking-wide text-slate-500">
-            Documents
-          </h2>
+            <I18nText i18nKey="ui.oz47lx" source="Documents" /></h2>
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
             {documents.map((d, i) => {
               const ok = d.status === "Verified" || d.status === "Cleared";
@@ -150,8 +147,7 @@ export default async function KycPage() {
             href="/profile"
             className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50"
           >
-            Back to profile
-          </Link>
+            <I18nText i18nKey="ui.ry0acy" source="Back to profile" /></Link>
         </div>
       </div>
     );
@@ -162,12 +158,9 @@ export default async function KycPage() {
     <div className="flex h-full flex-col gap-8">
       <div className="flex flex-col gap-1.5">
         <h1 className="text-[28px] font-bold tracking-[-0.5px] text-slate-900">
-          Identity Verification
-        </h1>
+          <I18nText i18nKey="ui.14q6c4q" source="Identity Verification" /></h1>
         <p className="text-sm text-slate-600">
-          Verify your identity to raise your limits and unlock full account
-          access.
-        </p>
+          <I18nText i18nKey="ui.yivpu" source="Verify your identity to raise your limits and unlock full account access." /></p>
       </div>
 
       {status === "rejected" && (
@@ -175,8 +168,7 @@ export default async function KycPage() {
           <ShieldAlert className="mt-0.5 size-6 shrink-0 text-red-600" />
           <div className="flex flex-col gap-1">
             <p className="text-base font-bold text-red-900">
-              Your previous submission was declined
-            </p>
+              <I18nText i18nKey="ui.163wfxu" source="Your previous submission was declined" /></p>
             <p className="text-[13px] leading-relaxed text-red-800">
               {app?.reviewNote ??
                 "Please check your documents are clear, in date, and match the name on your account, then submit again."}

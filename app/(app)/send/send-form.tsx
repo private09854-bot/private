@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { User, ChevronDown, CheckCircle2 } from "lucide-react";
 import { sendMoney } from "@/app/actions/banking";
 import { formatCurrency, currencyFlag } from "@/lib/format";
+import { I18nText } from "@/components/i18n-text";
 
 type Recipient = {
   id: string;
@@ -72,15 +73,14 @@ export default function SendForm({
         {/* Recipient search */}
         <div className="flex flex-col gap-2">
           <label className="text-[13px] font-semibold text-slate-600">
-            RECIPIENT PROFINTAL SAVINGS PROFILE
-          </label>
+            <I18nText i18nKey="ui.1nuj4a3" source="RECIPIENT PROFINTAL SAVINGS PROFILE" /></label>
           <div className="flex items-center gap-2.5 rounded-lg border border-slate-200 bg-slate-50 p-3.5">
             <User className="size-[18px] shrink-0 text-slate-500" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by name, email, or username..."
+              placeholder="Search by name, email, or username..." data-i18n-placeholder={"[\"ui.1gfxpiw\",\"Search by name, email, or username...\"]"}
               className="w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none"
             />
           </div>
@@ -89,8 +89,7 @@ export default function SendForm({
         {/* Recent recipients */}
         <div className="flex flex-col gap-2.5">
           <p className="text-xs font-semibold text-slate-500">
-            RECENT RECIPIENTS
-          </p>
+            <I18nText i18nKey="ui.1byaml2" source="RECENT RECIPIENTS" /></p>
           <div className="flex flex-wrap gap-2.5">
             {filtered.map((r) => (
               <button
@@ -137,16 +136,14 @@ export default function SendForm({
               </div>
             </div>
             <span className="text-[13px] font-semibold text-emerald-500">
-              Selected
-            </span>
+              <I18nText i18nKey="ui.1ucoec4" source="Selected" /></span>
           </div>
         )}
 
         {/* Amount */}
         <div className="flex flex-col gap-2">
           <label className="text-[13px] font-semibold text-slate-600">
-            SEND AMOUNT
-          </label>
+            <I18nText i18nKey="ui.1xst87l" source="SEND AMOUNT" /></label>
           <div className="flex items-center justify-between rounded-[10px] border border-slate-200 bg-slate-50 p-4">
             <div className="flex items-baseline gap-1">
               <span className="font-mono text-[28px] font-bold text-slate-900">
@@ -170,7 +167,7 @@ export default function SendForm({
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
                 className="absolute inset-0 cursor-pointer opacity-0"
-                aria-label="Send currency"
+                aria-label="Send currency" data-i18n-aria-label={"[\"ui.lm4fm6\",\"Send currency\"]"}
               >
                 {wallets.map((w) => (
                   <option key={w.currency} value={w.currency}>
@@ -181,7 +178,7 @@ export default function SendForm({
             </div>
           </div>
           <p className="text-xs text-slate-500">
-            Available Balance:{" "}
+            <I18nText i18nKey="ui.u88l8y" source="Available Balance:" />{" "}
             {formatCurrency(wallet?.available ?? wallet?.balance ?? 0, currency)}{" "}
             {currency}
           </p>
@@ -190,8 +187,7 @@ export default function SendForm({
         {/* Memo */}
         <div className="flex flex-col gap-2">
           <label className="text-[13px] font-semibold text-slate-600">
-            REFERENCE / NOTE (OPTIONAL)
-          </label>
+            <I18nText i18nKey="ui.1e98lek" source="REFERENCE / NOTE (OPTIONAL)" /></label>
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
             <input
               type="text"
@@ -205,33 +201,30 @@ export default function SendForm({
 
       {/* Summary panel */}
       <div className="flex w-full shrink-0 flex-col gap-7 rounded-2xl border border-slate-200 bg-white p-5 sm:p-8 lg:w-[400px]">
-        <h2 className="text-base font-bold text-slate-900">Transfer Summary</h2>
+        <h2 className="text-base font-bold text-slate-900"><I18nText i18nKey="ui.1ogkpvi" source="Transfer Summary" /></h2>
         <div className="flex flex-col gap-4 text-[13px]">
           <div className="flex items-center justify-between">
-            <span className="text-slate-600">You send</span>
+            <span className="text-slate-600"><I18nText i18nKey="ui.1gtc70q" source="You send" /></span>
             <span className="font-mono font-bold text-slate-900">
               {formatCurrency(amountNum, currency)} {currency}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-600">Transfer fee</span>
+            <span className="text-slate-600"><I18nText i18nKey="ui.rw9c0q" source="Transfer fee" /></span>
             <span className="font-mono font-bold text-slate-900">
-              {formatCurrency(0, currency)} {currency} (Platform Free)
-            </span>
+              {formatCurrency(0, currency)} {currency} <I18nText i18nKey="ui.ygvg59" source="(Platform Free)" /></span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-slate-600">
-              {selected?.name.split(" ")[0] ?? "Recipient"} receives
-            </span>
+              {selected?.name.split(" ")[0] ?? "Recipient"} <I18nText i18nKey="ui.tviq6b" source="receives" /></span>
             <span className="font-mono font-bold text-slate-900">
               {formatCurrency(amountNum, currency)} {currency}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-600">Delivery window</span>
+            <span className="text-slate-600"><I18nText i18nKey="ui.vempm7" source="Delivery window" /></span>
             <span className="font-mono font-bold text-slate-900">
-              Instantaneous
-            </span>
+              <I18nText i18nKey="ui.2ezui9" source="Instantaneous" /></span>
           </div>
         </div>
         <div className="w-full border-t border-slate-200" />
@@ -244,8 +237,7 @@ export default function SendForm({
         {result.ok && (
           <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3.5 py-2.5 text-[13px] font-semibold text-emerald-600">
             <CheckCircle2 className="size-4" />
-            Transfer sent successfully.
-          </div>
+            <I18nText i18nKey="ui.1b3looh" source="Transfer sent successfully." /></div>
         )}
 
         <button
@@ -254,7 +246,7 @@ export default function SendForm({
           className="flex items-center justify-center rounded-[10px] bg-emerald-500 p-4 text-[15px] font-bold text-white transition-colors hover:bg-emerald-600 disabled:opacity-60"
         >
           {pending
-            ? "Sending…"
+            ? <I18nText i18nKey="ui.15r3dgd" source="Sending…" />
             : `Send ${formatCurrency(amountNum, currency)} ${currency}`}
         </button>
       </div>
