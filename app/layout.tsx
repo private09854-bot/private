@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import LanguageSwitcher from "@/components/language-switcher";
+import I18nProvider from "@/components/i18n-provider";
 
 export const metadata: Metadata = {
   title: "Profintal Savings",
@@ -15,10 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" dir="ltr" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body>
-        {children}
-        <LanguageSwitcher />
+        <I18nProvider>{children}<LanguageSwitcher /></I18nProvider>
       </body>
     </html>
   );
