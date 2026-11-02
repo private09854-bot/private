@@ -1,17 +1,27 @@
 "use client";
 
 import { Languages, LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { localeName, SUPPORTED_LOCALES, type SupportedLocale } from "@/lib/i18n/config";
 import { currentLocale, setLocale } from "./i18n-provider";
 import { updateLocalePreference } from "@/app/actions/preferences";
 
 export default function LanguageSwitcher() {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [language, setLanguage] = useState<SupportedLocale>(currentLocale());
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const syncLanguage = (next: string) => {
+      setLanguage(next as SupportedLocale);
+    };
+    i18n.on("languageChanged", syncLanguage);
+    return () => {
+      i18n.off("languageChanged", syncLanguage);
+    };
+  }, [i18n]);
 
   async function changeLanguage(next: string) {
     setPending(true); setError(false);

@@ -7,12 +7,21 @@ import { translationKey } from "@/lib/i18n/keys";
 export function I18nText({
   i18nKey,
   source,
+  values,
 }: {
   i18nKey?: string;
   source: string;
+  values?: Record<string, unknown>;
 }) {
   const { t } = useTranslation();
-  return <>{t(i18nKey ?? translationKey(source), { defaultValue: source })}</>;
+  return (
+    <>
+      {t(i18nKey ?? translationKey(source), {
+        defaultValue: source,
+        ...values,
+      })}
+    </>
+  );
 }
 
 const TRANSLATABLE_ATTRIBUTES = [
@@ -57,7 +66,8 @@ export function I18nAttributeProvider() {
               : options.find(([, source]) => source === current) ??
                 (options.length === 1 ? options[0] : undefined);
           if (!selected) continue;
-          const [key, source] = selected;
+          const key = Array.isArray(selected) ? selected[0] : selected.key;
+          const source = Array.isArray(selected) ? selected[1] : selected.source;
           if (typeof key !== "string" || typeof source !== "string") continue;
           const translated = t(key, { defaultValue: source });
           memo.set(attribute, { key, source, translated });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { translationAttribute } from "@/lib/i18n/keys";
 
 export default function Toggle({
   defaultOn = false,
@@ -16,6 +17,9 @@ export default function Toggle({
       role="switch"
       aria-checked={on}
       aria-label={ariaLabel}
+      {...(ariaLabel
+        ? translationAttribute("aria-label", ariaLabel)
+        : {})}
       onClick={() => setOn((v) => !v)}
       className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
         on ? "bg-emerald-500" : "bg-slate-200"

@@ -115,7 +115,7 @@ export default function KycReviewCard({
           {applicant.details.map((d) => (
             <div key={d.label} className="flex items-start justify-between gap-3">
               <span className="shrink-0 text-[11px] text-slate-500">
-                {d.label}
+                <I18nText source={d.label} />
               </span>
               <span className="min-w-0 break-words text-right text-[11px] font-semibold text-slate-900">
                 {d.value}
@@ -131,7 +131,7 @@ export default function KycReviewCard({
           <I18nText i18nKey="ui.19mphty" source="VERIFICATION CHECKLIST" /></p>
         {applicant.documents.map((c) => (
           <div key={c.label} className="flex items-center justify-between">
-            <span className="text-[13px] text-slate-900">{c.label}</span>
+            <span className="text-[13px] text-slate-900"><I18nText source={c.label} /></span>
             <Badge tone={c.tone}>{c.state}</Badge>
           </div>
         ))}

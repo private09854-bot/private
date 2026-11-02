@@ -159,7 +159,7 @@ export default async function WalletsPage() {
                   }`}
                 >
                   <Icon className="size-3.5" />
-                  {a.label}
+                  <I18nText source={a.label} />
                 </Link>
               );
             })}
@@ -185,7 +185,7 @@ export default async function WalletsPage() {
               >
                 <div className="flex flex-col gap-0.5">
                   <p className="text-[11px] font-semibold text-slate-500">
-                    {det.label}
+                    <I18nText source={det.label} />
                   </p>
                   <p className="font-mono text-[13px] font-bold text-slate-900">
                     {det.value}

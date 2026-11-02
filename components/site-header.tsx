@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import BrandLogo from "./brand-logo";
 import { I18nText } from "@/components/i18n-text";
+import { translationAttribute } from "@/lib/i18n/keys";
 
 const links = [
   { label: "Features", href: "#features" },
@@ -55,6 +56,7 @@ export default function SiteHeader() {
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
+          {...translationAttribute("aria-label", ["Close menu", "Open menu"])}
           aria-expanded={open}
           className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-700 md:hidden"
         >

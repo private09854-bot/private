@@ -35,10 +35,10 @@ export default async function AdminFeesPage() {
     : 0;
 
   const kpis = [
-    { label: "FEES COLLECTED", value: formatCompact(totalFees), tone: "text-emerald-500", sub: `Across ${txns.length} transactions` },
-    { label: "AVG FEE", value: formatCurrency(avgFee, "USD"), tone: "text-slate-900", sub: `On ${feeTxns.length} charged transfers` },
-    { label: "FEE-FREE TXNS", value: `${feeFreePct}%`, tone: "text-blue-500", sub: "Zero-fee transfers" },
-    { label: "FEE RULES", value: String(fees.length), tone: "text-amber-500", sub: "Active in schedule" },
+    { label: "FEES COLLECTED", value: formatCompact(totalFees), tone: "text-emerald-500", sub: "Across {{count}} transactions", subValues: { count: txns.length } },
+    { label: "AVG FEE", value: formatCurrency(avgFee, "USD"), tone: "text-slate-900", sub: "On {{count}} charged transfers", subValues: { count: feeTxns.length } },
+    { label: "FEE-FREE TXNS", value: `${feeFreePct}%`, tone: "text-blue-500", sub: "Zero-fee transfers", subValues: {} },
+    { label: "FEE RULES", value: String(fees.length), tone: "text-amber-500", sub: "Active in schedule", subValues: {} },
   ];
 
   // Platform limits derived from the highest configured customer settings.
@@ -83,10 +83,10 @@ export default async function AdminFeesPage() {
             className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-5"
           >
             <p className="text-[11px] font-bold tracking-[0.5px] text-slate-500">
-              {k.label}
+              <I18nText source={k.label} />
             </p>
             <p className={`text-2xl font-extrabold ${k.tone}`}>{k.value}</p>
-            <p className="text-[11px] text-slate-600">{k.sub}</p>
+            <p className="text-[11px] text-slate-600"><I18nText source={k.sub} values={k.subValues} /></p>
           </div>
         ))}
       </div>
@@ -106,7 +106,7 @@ export default async function AdminFeesPage() {
             key={f}
             className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50"
           >
-            {f}
+            <I18nText source={f} />
             <ChevronDown className="size-2.5 text-slate-500" />
           </button>
         ))}
@@ -164,7 +164,7 @@ export default async function AdminFeesPage() {
                 key={l.label}
                 className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2.5"
               >
-                <span className="text-[13px] text-slate-900">{l.label}</span>
+                <span className="text-[13px] text-slate-900"><I18nText source={l.label} /></span>
                 <span className="font-mono text-[13px] font-semibold text-slate-900">
                   {l.value}
                 </span>

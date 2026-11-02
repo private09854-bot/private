@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { X, ShieldAlert, ChevronDown } from "lucide-react";
 import { WITHDRAW_METHODS, type PaymentMethod } from "@/lib/payment-methods";
 import type { WithdrawalNotice } from "@/lib/data";
 import MethodMark from "@/components/ui/method-mark";
 import { formatCurrency, currencyFlag } from "@/lib/format";
+import { translationKey } from "@/lib/i18n/keys";
 import { I18nText } from "@/components/i18n-text";
 
 type Wallet = { currency: string; symbol: string; balance: number };
@@ -21,6 +23,7 @@ export default function WithdrawMethods({
   /** Dense 4-across icon grid for the dashboard; roomy cards on /withdraw. */
   compact?: boolean;
 }) {
+  const { t } = useTranslation();
   const [active, setActive] = useState<PaymentMethod | null>(null);
   const [amount, setAmount] = useState("100.00");
   const [currency, setCurrency] = useState(wallets[0]?.currency ?? "USD");
@@ -54,7 +57,7 @@ export default function WithdrawMethods({
                 <MethodMark method={m} />
               </span>
               <span className="w-full text-[11px] font-semibold leading-tight text-slate-700 sm:text-xs">
-                {m.name}
+                <I18nText source={m.name} />
               </span>
             </button>
           ))}
@@ -70,9 +73,9 @@ export default function WithdrawMethods({
               <MethodMark method={m} />
               <span className="flex flex-col gap-0.5">
                 <span className="text-[13px] font-bold text-slate-900">
-                  {m.name}
+                  <I18nText source={m.name} />
                 </span>
-                <span className="text-[11px] text-slate-500">{m.blurb}</span>
+                <span className="text-[11px] text-slate-500"><I18nText source={m.blurb} /></span>
               </span>
             </button>
           ))}
@@ -88,9 +91,11 @@ export default function WithdrawMethods({
                 <MethodMark method={active} size="sm" />
                 <div className="flex flex-col">
                   <h2 className="text-[15px] font-bold text-slate-900">
-                    <I18nText i18nKey="ui.1cglkoz" source="Withdraw via" />{active.name}
+                  {t(translationKey("Withdraw via {{method}}"), {
+                    method: active.name,
+                  })}
                   </h2>
-                  <p className="text-[11px] text-slate-500">{active.blurb}</p>
+                  <p className="text-[11px] text-slate-500"><I18nText source={active.blurb} /></p>
                 </div>
               </div>
               <button
@@ -168,7 +173,10 @@ export default function WithdrawMethods({
                     type="text"
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
-                    placeholder={`${active.name} account / email / IBAN`}
+                    placeholder={t(
+                      translationKey("{{method}} account / email / IBAN"),
+                      { method: active.name },
+                    )}
                     className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none"
                   />
                 </div>

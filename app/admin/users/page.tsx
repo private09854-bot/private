@@ -191,10 +191,10 @@ export default async function AdminUsersPage() {
             className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-5"
           >
             <p className="text-[11px] font-bold tracking-[0.5px] text-slate-500">
-              {k.label}
+              <I18nText source={k.label} />
             </p>
             <p className={`text-2xl font-extrabold ${k.tone}`}>{k.value}</p>
-            <p className="text-[11px] text-slate-600">{k.sub}</p>
+            <p className="text-[11px] text-slate-600"><I18nText source={k.sub} /></p>
           </div>
         ))}
       </div>
@@ -214,7 +214,7 @@ export default async function AdminUsersPage() {
             key={f}
             className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50"
           >
-            {f}
+            <I18nText source={f} />
             <ChevronDown className="size-2.5 text-slate-500" />
           </button>
         ))}
@@ -290,7 +290,7 @@ export default async function AdminUsersPage() {
                       <Badge tone={tierTone(u.tier)}>{u.tier ?? "Unknown"}</Badge>
                     </div>
                     <div className="lg:w-[90px]">
-                      <Badge tone={st.tone}>{st.label}</Badge>
+                      <Badge tone={st.tone}><I18nText source={st.label} /></Badge>
                     </div>
                     <span className="text-[13px] text-slate-600 lg:w-[100px]">
                       {formatDate(u.joined)}

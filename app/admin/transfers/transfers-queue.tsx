@@ -87,7 +87,7 @@ export default function TransfersQueue({
             key={f}
             className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50"
           >
-            {f}
+            <I18nText source={f} />
             <ChevronDown className="size-2.5 text-slate-500" />
           </button>
         ))}

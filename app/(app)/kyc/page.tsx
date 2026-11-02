@@ -123,7 +123,7 @@ export default async function KycPage() {
                   }`}
                 >
                   <span className="min-w-0 truncate text-[13px] text-slate-700">
-                    {d.label}
+                    <I18nText source={d.label} />
                   </span>
                   <span
                     className={`shrink-0 rounded px-2 py-0.5 text-[11px] font-bold ${

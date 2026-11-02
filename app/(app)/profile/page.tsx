@@ -193,25 +193,36 @@ export default async function ProfilePage() {
       icon: WalletIcon,
       label: "Account balance",
       value: formatCurrency(totalUsd, "USD"),
-      sub: `Across ${wallets.length} ${wallets.length === 1 ? "wallet" : "wallets"}`,
+      sub:
+        wallets.length === 1
+          ? "Across {{count}} wallet"
+          : "Across {{count}} wallets",
+      subValues: { count: wallets.length },
     },
     {
       icon: Gauge,
       label: "Daily limit",
       value: formatCurrency(settings?.dailyLimit ?? 50000, "USD"),
-      sub: `${formatCurrency(settings?.dailyUsed ?? 0, "USD")} used today`,
+      sub: "{{amount}} used today",
+      subValues: {
+        amount: formatCurrency(settings?.dailyUsed ?? 0, "USD"),
+      },
     },
     {
       icon: Landmark,
       label: "Monthly limit",
       value: formatCurrency(settings?.monthlyLimit ?? 500000, "USD"),
-      sub: `${formatCurrency(settings?.monthlyUsed ?? 0, "USD")} used this month`,
+      sub: "{{amount}} used this month",
+      subValues: {
+        amount: formatCurrency(settings?.monthlyUsed ?? 0, "USD"),
+      },
     },
     {
       icon: Coins,
       label: "Single transfer cap",
       value: formatCurrency(settings?.singleCap ?? 10000, "USD"),
       sub: "Maximum per transaction",
+      subValues: {},
     },
   ];
 
@@ -255,7 +266,7 @@ export default async function ProfilePage() {
           className={`flex w-fit shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-bold ${style.tone}`}
         >
           <StatusIcon className="size-4" />
-          <I18nText i18nKey="ui.1cez94c" source="KYC:" />{style.label}
+          <I18nText i18nKey="ui.1cez94c" source="KYC:" /><I18nText source={style.label} />
         </span>
       </div>
 
@@ -280,10 +291,10 @@ export default async function ProfilePage() {
           >
             <span className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-slate-500">
               <s.icon className="size-3.5" />
-              {s.label}
+              <I18nText source={s.label} />
             </span>
             <p className="text-xl font-extrabold text-slate-900">{s.value}</p>
-            <p className="text-[11px] text-slate-500">{s.sub}</p>
+            <p className="text-[11px] text-slate-500"><I18nText source={s.sub} values={s.subValues} /></p>
           </div>
         ))}
       </div>
@@ -364,7 +375,7 @@ export default async function ProfilePage() {
                     className="flex items-center justify-between gap-4 px-4 py-3"
                   >
                     <span className="min-w-0 truncate text-[13px] text-slate-700">
-                      {d.label}
+                      <I18nText source={d.label} />
                     </span>
                     <span
                       className={`shrink-0 rounded px-2 py-0.5 text-[11px] font-bold ${

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { Upload, Check, X, Loader2, FileText, ShieldCheck } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -16,6 +17,7 @@ import {
   KYC_ACCEPT,
 } from "@/lib/kyc-options";
 import { I18nText } from "@/components/i18n-text";
+import { translationKey } from "@/lib/i18n/keys";
 
 const FIELD =
   "w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500";
@@ -41,6 +43,7 @@ export default function KycForm({
   defaultCountry: string;
   accountName: string;
 }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -156,7 +159,7 @@ export default function KycForm({
             >
               {DOCUMENT_TYPES.map((t) => (
                 <option key={t} value={t}>
-                  {t}
+                  <I18nText source={t} />
                 </option>
               ))}
             </select>
@@ -236,7 +239,7 @@ export default function KycForm({
             >
               {SOURCES_OF_FUNDS.map((t) => (
                 <option key={t} value={t}>
-                  {t}
+                  <I18nText source={t} />
                 </option>
               ))}
             </select>
@@ -281,7 +284,7 @@ export default function KycForm({
                   </span>
                   <div className="flex min-w-0 flex-col gap-0.5">
                     <p className="text-[13px] font-bold text-slate-900">
-                      {slot.label}
+                      <I18nText source={slot.label} />
                       {!slot.required && (
                         <span className="ml-1.5 font-normal text-slate-400">
                           <I18nText i18nKey="ui.6pi6gi" source="(optional)" /></span>
@@ -290,7 +293,7 @@ export default function KycForm({
                     <p className="truncate text-[11px] text-slate-500">
                       {done
                         ? `${done.fileName} · ${prettySize(done.fileSize)}`
-                        : slot.hint}
+                        : <I18nText source={slot.hint} />}
                     </p>
                   </div>
                 </div>
@@ -299,7 +302,9 @@ export default function KycForm({
                   {done && (
                     <button
                       type="button"
-                      aria-label={`Remove ${slot.label}`}
+                      aria-label={t(translationKey("Remove {{label}}"), {
+                        label: slot.label,
+                      })}
                       onClick={() =>
                         setUploaded((p) => {
                           const n = { ...p };

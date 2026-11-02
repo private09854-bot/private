@@ -209,7 +209,7 @@ export default function LandingPage() {
                 (t) => (
                   <li key={t} className="flex items-center gap-1.5">
                     <Check className="size-4 shrink-0 text-emerald-400" />
-                    {t}
+                    <I18nText source={t} />
                   </li>
                 ),
               )}
@@ -228,7 +228,7 @@ export default function LandingPage() {
                   {f.value}
                 </p>
                 <p className="text-[13px] leading-snug text-slate-500">
-                  {f.label}
+                  <I18nText source={f.label} />
                 </p>
               </div>
             ))}
@@ -257,9 +257,9 @@ export default function LandingPage() {
                 <span className="flex size-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                   <f.icon className="size-5" />
                 </span>
-                <h3 className="text-lg font-bold text-slate-900">{f.title}</h3>
+                <h3 className="text-lg font-bold text-slate-900"><I18nText source={f.title} /></h3>
                 <p className="text-sm leading-relaxed text-slate-600">
-                  {f.desc}
+                  <I18nText source={f.desc} />
                 </p>
               </div>
             ))}
@@ -297,7 +297,7 @@ export default function LandingPage() {
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-3 text-slate-700">
                     <Check className="mt-0.5 size-5 shrink-0 text-emerald-600" />
-                    <span className="text-sm leading-relaxed">{t}</span>
+                    <span className="text-sm leading-relaxed"><I18nText source={t} /></span>
                   </li>
                 ))}
               </ul>
@@ -328,9 +328,9 @@ export default function LandingPage() {
                 <span className="text-4xl font-extrabold text-emerald-100">
                   {s.n}
                 </span>
-                <h3 className="text-lg font-bold text-slate-900">{s.title}</h3>
+                <h3 className="text-lg font-bold text-slate-900"><I18nText source={s.title} /></h3>
                 <p className="text-sm leading-relaxed text-slate-600">
-                  {s.desc}
+                  <I18nText source={s.desc} />
                 </p>
               </div>
             ))}
@@ -369,9 +369,9 @@ export default function LandingPage() {
                   <span className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-400">
                     <s.icon className="size-5" />
                   </span>
-                  <h3 className="text-base font-bold text-white">{s.title}</h3>
+                  <h3 className="text-base font-bold text-white"><I18nText source={s.title} /></h3>
                   <p className="text-sm leading-relaxed text-slate-400">
-                    {s.desc}
+                    <I18nText source={s.desc} />
                   </p>
                 </div>
               ))}
@@ -398,7 +398,7 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <blockquote className="flex-1 text-sm leading-relaxed text-slate-700">
-                  <I18nText i18nKey="ui.13j0wox" source="&ldquo;" />{q.text}<I18nText i18nKey="ui.1iovyl3" source="&rdquo;" /></blockquote>
+                  <I18nText i18nKey="ui.13j0wox" source="&ldquo;" /><I18nText source={q.text} /><I18nText i18nKey="ui.1iovyl3" source="&rdquo;" /></blockquote>
                 <figcaption className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -412,7 +412,7 @@ export default function LandingPage() {
                       {q.name}
                     </span>
                     <span className="block truncate text-xs text-slate-500">
-                      {q.role}
+                      <I18nText source={q.role} />
                     </span>
                   </span>
                 </figcaption>
@@ -440,12 +440,12 @@ export default function LandingPage() {
                   className="group rounded-2xl border border-slate-200 bg-white p-5 sm:p-6"
                 >
                   <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-sm font-bold text-slate-900 sm:text-base">
-                    <span className="min-w-0">{f.q}</span>
+                    <span className="min-w-0"><I18nText source={f.q} /></span>
                     <span className="mt-0.5 shrink-0 text-lg leading-none text-emerald-600 transition-transform group-open:rotate-45">
                       <I18nText i18nKey="ui.crz1ka" source="+" /></span>
                   </summary>
                   <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                    {f.a}
+                    <I18nText source={f.a} />
                   </p>
                 </details>
               ))}
@@ -488,7 +488,7 @@ export default function LandingPage() {
               {footerCols.map((col) => (
                 <div key={col.title} className="flex min-w-0 flex-col gap-3">
                   <p className="text-[12px] font-bold uppercase tracking-wide text-white">
-                    {col.title}
+                    <I18nText source={col.title} />
                   </p>
                   {col.links.map((l) => (
                     <a
@@ -496,7 +496,7 @@ export default function LandingPage() {
                       href="#"
                       className="text-[13px] text-slate-400 transition-colors hover:text-white"
                     >
-                      {l}
+                      <I18nText source={l} />
                     </a>
                   ))}
                 </div>

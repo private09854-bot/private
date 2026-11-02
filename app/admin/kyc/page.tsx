@@ -145,10 +145,10 @@ export default async function AdminKycPage() {
             className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-5"
           >
             <p className="text-[11px] font-bold tracking-[0.5px] text-slate-500">
-              {k.label}
+              <I18nText source={k.label} />
             </p>
             <p className={`text-2xl font-extrabold ${k.tone}`}>{k.value}</p>
-            <p className="text-[11px] text-slate-600">{k.sub}</p>
+            <p className="text-[11px] text-slate-600"><I18nText source={k.sub} /></p>
           </div>
         ))}
       </div>

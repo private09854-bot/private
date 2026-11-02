@@ -129,7 +129,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
             key={f}
             className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50"
           >
-            {f}
+            <I18nText source={f} />
             <ChevronDown className="size-2.5 text-slate-500" />
           </button>
         ))}
@@ -272,7 +272,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                     className="flex items-start justify-between gap-3"
                   >
                     <span className="shrink-0 text-[11px] text-slate-500">
-                      {f.label}
+                      <I18nText source={f.label} />
                     </span>
                     <span className="min-w-0 break-words text-right text-[11px] font-semibold text-slate-900">
                       {f.value}
@@ -302,7 +302,7 @@ export default function KycQueue({ applicants }: { applicants: Applicant[] }) {
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                       <p className="truncate text-[13px] font-semibold text-slate-900">
-                        {docm.label}
+                        <I18nText source={docm.label} />
                       </p>
                       <p className="truncate text-[11px] text-slate-500">
                         {docm.fileName

@@ -31,7 +31,8 @@ export default async function AdminTransactionsPage() {
       label: "PROCESSED (ALL)",
       value: formatCompact(processed),
       tone: "text-slate-900",
-      sub: `${txns.length} settlements`,
+      sub: "{{count}} settlements",
+      subValues: { count: txns.length },
     },
     {
       label: "PENDING",
@@ -41,18 +42,21 @@ export default async function AdminTransactionsPage() {
       ),
       tone: "text-amber-500",
       sub: "Awaiting settlement",
+      subValues: {},
     },
     {
       label: "FLAGGED",
       value: String(flaggedCount),
       tone: "text-red-500",
       sub: "Flagged for review",
+      subValues: {},
     },
     {
       label: "COMPLETED",
       value: String(completedCount),
       tone: "text-emerald-500",
       sub: "Settled successfully",
+      subValues: {},
     },
   ];
 
@@ -92,10 +96,10 @@ export default async function AdminTransactionsPage() {
             className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-5"
           >
             <p className="text-[11px] font-bold tracking-[0.5px] text-slate-500">
-              {k.label}
+              <I18nText source={k.label} />
             </p>
             <p className={`text-2xl font-extrabold ${k.tone}`}>{k.value}</p>
-            <p className="text-[11px] text-slate-600">{k.sub}</p>
+            <p className="text-[11px] text-slate-600"><I18nText source={k.sub} values={k.subValues} /></p>
           </div>
         ))}
       </div>

@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateSetting } from "@/app/actions/banking";
+import { translationAttribute } from "@/lib/i18n/keys";
 
 export default function PersistToggle({
   settingKey,
@@ -33,6 +34,9 @@ export default function PersistToggle({
       role="switch"
       aria-checked={on}
       aria-label={ariaLabel}
+      {...(ariaLabel
+        ? translationAttribute("aria-label", ariaLabel)
+        : {})}
       onClick={toggle}
       className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
         on ? "bg-emerald-500" : "bg-slate-200"

@@ -17,6 +17,7 @@ import {
 import Badge from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/format";
 import { I18nText } from "@/components/i18n-text";
+import { translationAttribute } from "@/lib/i18n/keys";
 
 export type TxRow = {
   id: string;
@@ -72,17 +73,18 @@ function Dropdown({
 }) {
   return (
     <div className="relative flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-semibold text-slate-900 transition-colors hover:bg-slate-50">
-      {label}<I18nText i18nKey="ui.hhsact" source=":" />{value}
+      <I18nText source={label} /><I18nText i18nKey="ui.hhsact" source=":" />{value === "All" ? <I18nText source="All" /> : value}
       <ChevronDown className="size-2.5 text-slate-500" />
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="absolute inset-0 cursor-pointer opacity-0"
         aria-label={label}
+        {...translationAttribute("aria-label", label)}
       >
         {options.map((o) => (
           <option key={o} value={o}>
-            {o}
+            {o === "All" ? <I18nText source="All" /> : o}
           </option>
         ))}
       </select>
@@ -274,7 +276,7 @@ export default function TransactionsView({ rows }: { rows: TxRow[] }) {
                 { label: "Reference Code", value: selected.reference ?? selected.ref, mono: true },
               ].map((s) => (
                 <div key={s.label} className="flex items-start justify-between gap-4">
-                  <span className="shrink-0 text-slate-500">{s.label}</span>
+                  <span className="shrink-0 text-slate-500"><I18nText source={s.label} /></span>
                   <span
                     className={`text-right font-semibold text-slate-900 ${
                       s.mono ? "font-mono" : ""

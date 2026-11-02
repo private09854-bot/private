@@ -227,7 +227,7 @@ export default async function AdminUserDetailPage({
               {user.email}
             </p>
             <div className="flex flex-wrap items-center gap-2">
-              <Badge tone={st.tone}>{st.label}</Badge>
+              <Badge tone={st.tone}><I18nText source={st.label} /></Badge>
               <Badge tone="neutral">{user.tier ?? "Tier 1"}</Badge>
               {user.flagged && <Badge tone="danger"><I18nText i18nKey="ui.dq1l0x" source="Flagged" /></Badge>}
             </div>
@@ -345,7 +345,7 @@ export default async function AdminUserDetailPage({
                 >
                   <div className="flex min-w-0 flex-col gap-0.5">
                     <p className="truncate text-[13px] font-semibold text-slate-900">
-                      {d.label}
+                      <I18nText source={d.label} />
                     </p>
                     <p className="truncate text-[11px] text-slate-500">
                       {d.fileName ?? "No file uploaded"}

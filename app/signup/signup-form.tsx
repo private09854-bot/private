@@ -172,7 +172,7 @@ export default function SignupForm() {
             >
               {ACCOUNT_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
-                  {t.label} <I18nText i18nKey="ui.4s9bsz" source="—" />{t.desc}
+                  <I18nText source={t.label} /> <I18nText i18nKey="ui.4s9bsz" source="—" /><I18nText source={t.desc} />
                 </option>
               ))}
             </select>
@@ -191,7 +191,7 @@ export default function SignupForm() {
             >
               {SIGNUP_CURRENCIES.map((c) => (
                 <option key={c.code} value={c.code}>
-                  {c.flag}  {c.code} <I18nText i18nKey="ui.4s9bsz" source="—" />{c.label}
+                  {c.flag}  {c.code} <I18nText i18nKey="ui.4s9bsz" source="—" /><I18nText source={c.label} />
                 </option>
               ))}
             </select>

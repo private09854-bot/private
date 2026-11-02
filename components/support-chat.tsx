@@ -9,6 +9,7 @@ import {
   type SupportMessage,
 } from "@/app/actions/support";
 import { I18nText } from "@/components/i18n-text";
+import { translationAttribute } from "@/lib/i18n/keys";
 
 function timeLabel(iso: string): string {
   const d = new Date(iso);
@@ -244,6 +245,7 @@ export default function SupportChat({ authed = false }: { authed?: boolean }) {
       {/* Floating button */}
       <button
         aria-label={open ? "Close support chat" : "Open support chat"}
+        {...translationAttribute("aria-label", ["Close support chat", "Open support chat"])}
         onClick={() => setOpen((v) => !v)}
         className={`fixed right-6 z-50 flex size-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-[0_8px_24px_rgba(37,99,235,0.45)] transition-transform hover:scale-105 ${
           authed ? "bottom-24 lg:bottom-6" : "bottom-6"
