@@ -33,7 +33,7 @@ export default function SiteHeader() {
               href={l.href}
               className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
             >
-              {l.label}
+              <I18nText source={l.label} />
             </a>
           ))}
         </nav>
@@ -72,7 +72,7 @@ export default function SiteHeader() {
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-2 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
               >
-                {l.label}
+                <I18nText source={l.label} />
               </a>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-slate-100 pb-4 pt-4">

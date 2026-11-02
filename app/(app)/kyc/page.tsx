@@ -100,7 +100,7 @@ export default async function KycPage() {
                   i > 0 ? "border-t border-slate-200" : ""
                 }`}
               >
-                <span className="text-[13px] text-slate-500">{r.label}</span>
+                <span className="text-[13px] text-slate-500"><I18nText source={r.label} /></span>
                 <span className="text-sm font-semibold text-slate-900">
                   {r.value}
                 </span>

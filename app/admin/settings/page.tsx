@@ -154,7 +154,7 @@ export default async function AdminSettingsPage() {
                       {a.name}
                     </p>
                   </div>
-                  <Badge tone={info.tone}>{info.label}</Badge>
+                  <Badge tone={info.tone}><I18nText source={info.label} /></Badge>
                 </div>
               );
             })}

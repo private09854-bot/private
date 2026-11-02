@@ -55,5 +55,5 @@ export default function ProfileEditForm({ user }: { user: ProfileValues }) {
 }
 
 function Input({ label, name, value, type = "text", required = false }: { label: string; name: string; value: string; type?: string; required?: boolean }) {
-  return <label className="flex flex-col gap-1.5 text-[13px] font-semibold text-slate-900">{label}<input className={field} name={name} type={type} defaultValue={value} required={required} /></label>;
+  return <label className="flex flex-col gap-1.5 text-[13px] font-semibold text-slate-900"><I18nText source={label} /><input className={field} name={name} type={type} defaultValue={value} required={required} /></label>;
 }

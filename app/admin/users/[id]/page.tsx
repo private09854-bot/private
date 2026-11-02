@@ -53,7 +53,7 @@ function Rows({ rows }: { rows: { label: string; value: string; mono?: boolean }
             i > 0 ? "border-t border-slate-200" : ""
           }`}
         >
-          <span className="shrink-0 text-[13px] text-slate-500">{r.label}</span>
+          <span className="shrink-0 text-[13px] text-slate-500"><I18nText source={r.label} /></span>
           <span
             className={`min-w-0 break-words text-[13px] font-semibold sm:text-right ${
               r.value === NOT_SET ? "text-slate-400" : "text-slate-900"
@@ -71,7 +71,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
   return (
     <section className="flex flex-col gap-3">
       <h2 className="text-[11px] font-bold uppercase tracking-wide text-slate-500">
-        {title}
+        <I18nText source={title} />
       </h2>
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         {children}

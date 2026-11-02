@@ -41,7 +41,7 @@ export default function AuthShell({
             {points.map((p) => (
               <li key={p} className="flex items-start gap-3">
                 <Check className="mt-0.5 size-4 shrink-0 text-emerald-400" />
-                <span className="text-sm text-slate-300">{p}</span>
+                <span className="text-sm text-slate-300"><I18nText source={p} /></span>
               </li>
             ))}
           </ul>
@@ -70,10 +70,10 @@ export default function AuthShell({
         <div className="flex w-full max-w-[400px] flex-col gap-7">
           <div className="flex flex-col gap-2">
             <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-[28px]">
-              {heading}
+              <I18nText source={heading} />
             </h2>
             <p className="text-sm leading-relaxed text-slate-500">
-              {subheading}
+              <I18nText source={subheading} />
             </p>
           </div>
           {children}

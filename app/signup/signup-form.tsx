@@ -34,7 +34,7 @@ function Section({
   return (
     <fieldset className="flex flex-col gap-4">
       <legend className="mb-1 text-[11px] font-bold uppercase tracking-wide text-slate-400">
-        {title}
+        <I18nText source={title} />
       </legend>
       {children}
     </fieldset>
@@ -55,10 +55,10 @@ function Field({
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-1.5">
       <label htmlFor={id} className={LABEL}>
-        {label}
+        <I18nText source={label} />
       </label>
       {children}
-      {hint && <p className="text-[11px] text-slate-400">{hint}</p>}
+      {hint && <p className="text-[11px] text-slate-400"><I18nText source={hint} /></p>}
     </div>
   );
 }

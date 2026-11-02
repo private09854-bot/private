@@ -23,7 +23,11 @@ const TRANSLATABLE_ATTRIBUTES = [
   "alt",
 ] as const;
 
-type AttributeTranslation = [key: string, source: string];
+type AttributeTranslation = [key: string, source: string][];
+const translatedAttributes = new WeakMap<
+  Element,
+  Map<string, { key: string; source: string; translated: string }>
+>();
 
 export function I18nAttributeProvider() {
   const { i18n, t } = useTranslation();
@@ -35,9 +39,28 @@ export function I18nAttributeProvider() {
         if (!marker) continue;
 
         try {
-          const [key, source] = JSON.parse(marker) as AttributeTranslation;
+          const parsed = JSON.parse(marker) as AttributeTranslation | [string, string];
+          const options = (
+            Array.isArray(parsed[0]) ? parsed : [parsed]
+          ) as AttributeTranslation;
+          const current = element.getAttribute(attribute);
+          if (!current || !Array.isArray(options)) continue;
+          let memo = translatedAttributes.get(element);
+          if (!memo) {
+            memo = new Map();
+            translatedAttributes.set(element, memo);
+          }
+          const previous = memo.get(attribute);
+          const selected =
+            previous?.translated === current
+              ? previous
+              : options.find(([, source]) => source === current) ??
+                (options.length === 1 ? options[0] : undefined);
+          if (!selected) continue;
+          const [key, source] = selected;
           if (typeof key !== "string" || typeof source !== "string") continue;
           const translated = t(key, { defaultValue: source });
+          memo.set(attribute, { key, source, translated });
           if (element.getAttribute(attribute) !== translated) {
             element.setAttribute(attribute, translated);
           }

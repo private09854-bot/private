@@ -88,7 +88,7 @@ export default function AdminSidebar({
                   }`}
                 >
                   <Icon className="size-4" />
-                  <span>{label}</span>
+                  <span><I18nText source={label} /></span>
                 </Link>
               );
             })}

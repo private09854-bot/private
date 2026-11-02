@@ -9,12 +9,12 @@ export function translationKey(text: string) {
 
 export function translationAttribute(
   attribute: "placeholder" | "title" | "aria-label" | "aria-description" | "alt",
-  source: string,
+  source: string | string[],
 ) {
+  const sources = Array.isArray(source) ? source : [source];
   return {
     [`data-i18n-${attribute}`]: JSON.stringify([
-      translationKey(source),
-      source,
+      ...sources.map((value) => [translationKey(value), value]),
     ]),
   };
 }

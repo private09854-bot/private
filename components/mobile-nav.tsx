@@ -39,7 +39,7 @@ export default function MobileNav() {
         }`}
       >
         <Icon className="size-[22px]" strokeWidth={active ? 2.4 : 2} />
-        <span>{t.label}</span>
+        <span><I18nText source={t.label} /></span>
       </Link>
     );
   }
@@ -120,7 +120,7 @@ export default function MobileNav() {
                       active ? "text-emerald-700" : "text-slate-600"
                     }`}
                   >
-                    {label}
+                    <I18nText source={label} />
                   </span>
                 </Link>
               );

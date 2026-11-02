@@ -52,7 +52,7 @@ export default function AppSidebar({
                   }`}
                 >
                   <Icon className="size-[18px]" />
-                  <span>{label}</span>
+                  <span><I18nText source={label} /></span>
                 </Link>
               );
             })}
