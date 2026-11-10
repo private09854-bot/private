@@ -39,7 +39,10 @@ export function languagesForCountry(countryCode: string): CountryLanguageOption[
   }
 
   for (const [locale, entry] of Object.entries(languageMap)) {
-    const localeCountry = locale.split("-")[1]?.toUpperCase();
+    // Locale datasets can include scripts, e.g. `zh-Hans-CN`; the country is
+    // always the final segment rather than necessarily the second segment.
+    const localeParts = locale.split("-");
+    const localeCountry = localeParts[localeParts.length - 1]?.toUpperCase();
     if (localeCountry === country) {
       add(locale, entry.englishName, entry.nativeName);
     }
