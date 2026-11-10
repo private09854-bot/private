@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+import CountryLanguagePicker from "@/components/country-language-picker";
 import I18nProvider from "@/components/i18n-provider";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body>
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider>{children}<CountryLanguagePicker /></I18nProvider>
       </body>
     </html>
   );
