@@ -98,6 +98,7 @@ export type SignupDetails = {
   phone: string;
   accountType: string;
   preferredCurrency: string;
+  preferredLanguage: string | null;
   dob: string; // yyyy-mm-dd
   addressLine: string;
   city: string;
@@ -144,6 +145,7 @@ export async function provisionAccount(
         phone: details.phone,
         accountType: details.accountType,
         preferredCurrency: details.preferredCurrency,
+        preferredLanguage: details.preferredLanguage,
         dob: details.dob,
         addressLine: details.addressLine,
         city: details.city,
@@ -262,6 +264,7 @@ export async function signup(
   const email = s("email").toLowerCase();
   const accountType = s("accountType");
   const preferredCurrency = s("preferredCurrency").toUpperCase();
+  const preferredLanguage = s("preferredLanguage") || null;
   const phoneNumber = s("phone");
   const dobRaw = s("dob");
   const countryCode = s("countryCode").toUpperCase();
@@ -373,6 +376,7 @@ export async function signup(
     phone,
     accountType,
     preferredCurrency,
+    preferredLanguage,
     dob: dobRaw,
     addressLine,
     city,

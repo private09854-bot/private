@@ -10,6 +10,7 @@ import "react-international-phone/style.css";
 import AuthShell from "@/components/auth-shell";
 import PasswordField from "@/components/ui/password-field";
 import { COUNTRIES } from "@/lib/countries";
+import { languagesForCountry, type CountryLanguageOption } from "@/lib/languages";
 import { ACCOUNT_TYPES, SIGNUP_CURRENCIES } from "@/lib/account-options";
 import { signup, type AuthState } from "@/app/actions/auth";
 import { I18nText } from "@/components/i18n-text";
@@ -27,7 +28,7 @@ const countryOptions: CountryOption[] = COUNTRIES.map((country) => ({
   label: `${country.flag} ${country.name}`,
 }));
 
-const selectStyles: StylesConfig<CountryOption, false> = {
+const selectStyles: StylesConfig<CountryOption | CountryLanguageOption, false> = {
   control: (base, state) => ({
     ...base,
     minHeight: 48,
@@ -107,7 +108,19 @@ function SubmitButton() {
 export default function SignupForm() {
   const [state, formAction] = useFormState(signup, initial);
   const [countryCode, setCountryCode] = useState("US");
+  const [preferredLanguage, setPreferredLanguage] = useState<CountryLanguageOption | null>(null);
   const [phone, setPhone] = useState("");
+  const languageOptions = languagesForCountry(countryCode);
+
+  function selectCountry(option: CountryOption | null) {
+    const nextCountryCode = option?.value ?? "";
+    setCountryCode(nextCountryCode);
+    setPreferredLanguage((current) =>
+      current && languagesForCountry(nextCountryCode).some((language) => language.value === current.value)
+        ? current
+        : null,
+    );
+  }
 
   return (
     <AuthShell
@@ -245,9 +258,35 @@ export default function SignupForm() {
               inputId="countryCode"
               options={countryOptions}
               value={countryOptions.find((option) => option.value === countryCode)}
-              onChange={(option) => setCountryCode(option?.value ?? "")}
+              onChange={selectCountry}
               placeholder="Search for a country"
               isSearchable
+              styles={selectStyles}
+            />
+          </Field>
+
+          <Field id="preferredLanguage" label="Preferred language">
+            <input type="hidden" name="preferredLanguage" value={preferredLanguage?.value ?? ""} />
+            <Select<CountryLanguageOption, false>
+              inputId="preferredLanguage"
+              options={languageOptions}
+              value={preferredLanguage}
+              onChange={setPreferredLanguage}
+              placeholder={languageOptions.length ? "Search for a language" : "No language data available for this country"}
+              noOptionsMessage={() => "No matching languages found"}
+              isSearchable
+              isClearable
+              isDisabled={!languageOptions.length}
+              filterOption={(candidate, input) =>
+                candidate.data.searchText.includes(input.toLocaleLowerCase())
+              }
+              formatOptionLabel={(option) => (
+                <span className="flex min-w-0 flex-col">
+                  <span className="truncate text-sm text-slate-900">{option.nativeName}</span>
+                  <span className="truncate text-xs text-slate-500">{option.englishName}</span>
+                </span>
+              )}
+              getOptionLabel={(option) => `${option.nativeName} — ${option.englishName}`}
               styles={selectStyles}
             />
           </Field>
