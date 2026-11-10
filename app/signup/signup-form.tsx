@@ -14,6 +14,7 @@ import { languagesForCountry, type CountryLanguageOption } from "@/lib/languages
 import { ACCOUNT_TYPES, SIGNUP_CURRENCIES } from "@/lib/account-options";
 import { signup, type AuthState } from "@/app/actions/auth";
 import { I18nText } from "@/components/i18n-text";
+import { setLocale } from "@/components/i18n-provider";
 
 const initial: AuthState = {};
 
@@ -28,7 +29,7 @@ const countryOptions: CountryOption[] = COUNTRIES.map((country) => ({
   label: `${country.flag} ${country.name}`,
 }));
 
-const selectStyles: StylesConfig<CountryOption | CountryLanguageOption, false> = {
+const selectStyles = <Option,>(): StylesConfig<Option, false> => ({
   control: (base, state) => ({
     ...base,
     minHeight: 48,
@@ -43,7 +44,7 @@ const selectStyles: StylesConfig<CountryOption | CountryLanguageOption, false> =
     backgroundColor: state.isSelected ? "#059669" : state.isFocused ? "#ecfdf5" : "white",
     color: state.isSelected ? "white" : "#0f172a",
   }),
-};
+});
 
 /** Latest date of birth that still makes the applicant 18, as yyyy-mm-dd. */
 function maxDobToday(): string {
@@ -120,6 +121,11 @@ export default function SignupForm() {
         ? current
         : null,
     );
+  }
+
+  function selectLanguage(option: CountryLanguageOption | null) {
+    setPreferredLanguage(option);
+    if (option) void setLocale(option.value).catch(() => undefined);
   }
 
   return (
@@ -253,7 +259,7 @@ export default function SignupForm() {
 
           <Field id="countryCode" label="Country of residence">
             <input type="hidden" name="countryCode" value={countryCode} />
-            <Select
+            <Select<CountryOption, false>
               id="countryCode"
               inputId="countryCode"
               options={countryOptions}
@@ -261,7 +267,7 @@ export default function SignupForm() {
               onChange={selectCountry}
               placeholder="Search for a country"
               isSearchable
-              styles={selectStyles}
+              styles={selectStyles<CountryOption>()}
             />
           </Field>
 
@@ -271,7 +277,7 @@ export default function SignupForm() {
               inputId="preferredLanguage"
               options={languageOptions}
               value={preferredLanguage}
-              onChange={setPreferredLanguage}
+              onChange={selectLanguage}
               placeholder={languageOptions.length ? "Search for a language" : "No language data available for this country"}
               noOptionsMessage={() => "No matching languages found"}
               isSearchable
@@ -287,7 +293,7 @@ export default function SignupForm() {
                 </span>
               )}
               getOptionLabel={(option) => `${option.nativeName} — ${option.englishName}`}
-              styles={selectStyles}
+              styles={selectStyles<CountryLanguageOption>()}
             />
           </Field>
 
