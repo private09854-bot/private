@@ -262,7 +262,6 @@ export async function signup(
   const email = s("email").toLowerCase();
   const accountType = s("accountType");
   const preferredCurrency = s("preferredCurrency").toUpperCase();
-  const dialCode = s("dialCode");
   const phoneNumber = s("phone");
   const dobRaw = s("dob");
   const countryCode = s("countryCode").toUpperCase();
@@ -314,7 +313,9 @@ export async function signup(
   }
   const country = countryByCode(countryCode);
   if (!country) return { error: "Select your country." };
-  const phone = `${dialCode || country.dial} ${digits}`;
+  // New sign-ups submit an E.164 number from react-international-phone.
+  // Keep the fallback for any legacy/native form submission.
+  const phone = phoneNumber.startsWith("+") ? `+${digits}` : `${country.dial} ${digits}`.trim();
 
   // --- date of birth ---
   if (!dobRaw) return { error: "Enter your date of birth." };

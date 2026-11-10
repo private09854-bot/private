@@ -4,9 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { useFormState, useFormStatus } from "react-dom";
 import { ArrowRight } from "lucide-react";
+import Select, { type StylesConfig } from "react-select";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import AuthShell from "@/components/auth-shell";
 import PasswordField from "@/components/ui/password-field";
-import { COUNTRIES, countryByCode } from "@/lib/countries";
+import { COUNTRIES } from "@/lib/countries";
 import { ACCOUNT_TYPES, SIGNUP_CURRENCIES } from "@/lib/account-options";
 import { signup, type AuthState } from "@/app/actions/auth";
 import { I18nText } from "@/components/i18n-text";
@@ -16,6 +19,30 @@ const initial: AuthState = {};
 const FIELD =
   "w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500";
 const LABEL = "text-[13px] font-semibold text-slate-900";
+
+type CountryOption = { value: string; label: string };
+
+const countryOptions: CountryOption[] = COUNTRIES.map((country) => ({
+  value: country.code,
+  label: `${country.flag} ${country.name}`,
+}));
+
+const selectStyles: StylesConfig<CountryOption, false> = {
+  control: (base, state) => ({
+    ...base,
+    minHeight: 48,
+    borderColor: state.isFocused ? "#10b981" : "#e2e8f0",
+    borderRadius: 8,
+    boxShadow: state.isFocused ? "0 0 0 1px #10b981" : "none",
+    ":hover": { borderColor: "#10b981" },
+  }),
+  menu: (base) => ({ ...base, zIndex: 30 }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isSelected ? "#059669" : state.isFocused ? "#ecfdf5" : "white",
+    color: state.isSelected ? "white" : "#0f172a",
+  }),
+};
 
 /** Latest date of birth that still makes the applicant 18, as yyyy-mm-dd. */
 function maxDobToday(): string {
@@ -79,9 +106,8 @@ function SubmitButton() {
 
 export default function SignupForm() {
   const [state, formAction] = useFormState(signup, initial);
-  // Country drives the phone dial code, so it is the one piece of client state.
   const [countryCode, setCountryCode] = useState("US");
-  const dial = countryByCode(countryCode)?.dial ?? "+1";
+  const [phone, setPhone] = useState("");
 
   return (
     <AuthShell
@@ -212,40 +238,31 @@ export default function SignupForm() {
             />
           </Field>
 
-          {/* Country sits above the phone so the dial code below makes sense. */}
           <Field id="countryCode" label="Country of residence">
-            <select
+            <input type="hidden" name="countryCode" value={countryCode} />
+            <Select
               id="countryCode"
-              name="countryCode"
-              autoComplete="country"
-              value={countryCode}
-              onChange={(e) => setCountryCode(e.target.value)}
-              className={FIELD}
-            >
-              {COUNTRIES.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.flag}  {c.name}
-                </option>
-              ))}
-            </select>
+              inputId="countryCode"
+              options={countryOptions}
+              value={countryOptions.find((option) => option.value === countryCode)}
+              onChange={(option) => setCountryCode(option?.value ?? "")}
+              placeholder="Search for a country"
+              isSearchable
+              styles={selectStyles}
+            />
           </Field>
 
           <Field id="phone" label="Phone number">
-            <div className="flex gap-2">
-              <span className="flex shrink-0 items-center rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-600">
-                {dial}
-              </span>
-              <input type="hidden" name="dialCode" value={dial} />
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel-national"
-                placeholder="7700 900123" data-i18n-placeholder={"[\"ui.732c9k\",\"7700 900123\"]"}
-                className={FIELD}
-              />
-            </div>
+            <PhoneInput
+              defaultCountry="us"
+              value={phone}
+              onChange={setPhone}
+              name="phone"
+              inputProps={{ id: "phone", autoComplete: "tel", inputMode: "tel" }}
+              className="w-full rounded-lg border border-slate-200 bg-white focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500"
+              inputClassName="w-full rounded-r-lg bg-transparent py-3 text-sm text-slate-900 outline-none"
+              countrySelectorStyleProps={{ buttonClassName: "rounded-l-lg border-r border-slate-200 bg-slate-50" }}
+            />
           </Field>
         </Section>
 
