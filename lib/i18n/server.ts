@@ -46,30 +46,31 @@ function batches(values: string[]) {
   return result;
 }
 
-async function translateWithGoogle(text: string[], target: string) {
-  const key = process.env.GOOGLE_TRANSLATE_API_KEY;
-  if (!key) throw new Error("Google Cloud Translation is not configured.");
+async function translateWithLibreTranslate(text: string[], target: string) {
+  const baseUrl = process.env.LIBRETRANSLATE_URL?.trim().replace(/\/$/, "");
+  if (!baseUrl) throw new Error("LibreTranslate is not configured.");
 
   const translations: string[] = [];
   for (const batch of batches(text)) {
-    const response = await fetch(
-      `https://translation.googleapis.com/language/translate/v2?key=${encodeURIComponent(key)}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ q: batch, source: "en", target, format: "text" }),
-        cache: "no-store",
-      },
-    );
+    const response = await fetch(`${baseUrl}/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q: batch, source: "en", target, format: "text" }),
+      cache: "no-store",
+    });
     const data = (await response.json()) as {
-      data?: { translations?: { translatedText?: string }[] };
+      translatedText?: string | string[];
       error?: { message?: string };
     };
-    if (!response.ok) throw new Error(data.error?.message ?? "Google Cloud Translation failed.");
+    if (!response.ok) throw new Error(data.error?.message ?? "LibreTranslate failed.");
 
-    const translated = data.data?.translations?.map((item) => item.translatedText ?? "") ?? [];
+    const translated = Array.isArray(data.translatedText)
+      ? data.translatedText
+      : batch.length === 1 && data.translatedText
+        ? [data.translatedText]
+        : [];
     if (translated.length !== batch.length || translated.some((item) => !item)) {
-      throw new Error("Google Cloud Translation returned an incomplete response.");
+      throw new Error("LibreTranslate returned an incomplete response.");
     }
     translations.push(...translated);
   }
@@ -85,7 +86,9 @@ export async function translationResource(localeValue: string): Promise<Translat
 
   const resource = rebuild(
     englishResource,
-    await translateWithGoogle(strings(englishResource), locale),
+    // LibreTranslate uses ISO language codes; regional locale variants share
+    // the translation model of their primary language.
+    await translateWithLibreTranslate(strings(englishResource), locale.split("-")[0]),
   ) as TranslationResource;
   cache.set(locale, { resource, expiresAt: Date.now() + 86_400_000 });
   return resource;
