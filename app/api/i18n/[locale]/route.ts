@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { englishResource } from "@/lib/i18n/resources";
 import { translationResource } from "@/lib/i18n/server";
 
 export async function GET(_request: Request, { params }: { params: { locale: string } }) {
@@ -9,6 +10,8 @@ export async function GET(_request: Request, { params }: { params: { locale: str
     });
   } catch (error) {
     console.error("[i18n] translation request failed", error);
-    return NextResponse.json({ error: "Translations are temporarily unavailable." }, { status: 503 });
+    return NextResponse.json(englishResource, {
+      headers: { "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" },
+    });
   }
 }

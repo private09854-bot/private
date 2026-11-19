@@ -6,6 +6,7 @@ import { formatNumber } from "@/lib/format";
 import PersistToggle from "@/components/ui/persist-toggle";
 import RemoveDeviceButton from "./remove-device-button";
 import { I18nText } from "@/components/i18n-text";
+import LanguagePreference from "@/components/ui/language-preference";
 
 const Divider = () => <div className="h-px w-full bg-slate-200" />;
 
@@ -76,6 +77,8 @@ export default async function SettingsPage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         {/* Left column */}
         <div className="flex flex-1 flex-col gap-6">
+          <LanguagePreference />
+
           {/* Profile */}
           <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-6">
             <div className="flex items-center gap-4">

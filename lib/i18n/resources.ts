@@ -1,11 +1,15 @@
 import { uiResource } from "./ui-resource";
 
-export const supportedLanguages = ["en", "es", "fr", "de", "ar", "he"] as const;
+export const supportedLanguages = ["es", "en", "fr", "de", "ar", "he"] as const;
 export const rtlLanguages = ["ar", "he", "fa", "ur"] as const;
 
 export const englishResource = {
   common: {
     language: "Language",
+    languageSettings: "Language preference",
+    languageDescription: "Choose the language used for the interface.",
+    translationCoverageNotice: "Some interface text is not translated yet and will appear in English.",
+    languageChangeError: "We couldn't change the language. Please try again.",
     languageError: "We could not load that language. English is being shown.",
     signIn: "Sign in",
     signOut: "Sign out",
@@ -25,6 +29,22 @@ export const englishResource = {
     settings: "Settings",
     more: "More",
     allFeatures: "All features",
+    password: "Password",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
+    welcomeBack: "Welcome back",
+    loginSubtitle: "Sign in to your Profintal Savings account.",
+    newToProfintal: "New to Profintal Savings?",
+    home: "Home",
+    features: "Features",
+    security: "Security",
+    faq: "FAQ",
+    support: "Support",
+    emailAddress: "Email address",
+    typeYourMessage: "Type your message…",
+    sendMessage: "Send message",
+    closeChat: "Close chat",
+    justNow: "just now",
   },
   signup: {
     heading: "Open an account",

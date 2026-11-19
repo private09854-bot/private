@@ -1,6 +1,10 @@
 {
   "common": {
     "language": "Language",
+    "languageSettings": "Language preference",
+    "languageDescription": "Choose the language used for the interface.",
+    "translationCoverageNotice": "Some interface text is not translated yet and will appear in English.",
+    "languageChangeError": "We couldn't change the language. Please try again.",
     "signIn": "Sign in",
     "signOut": "Sign out",
     "createAccount": "Create account",

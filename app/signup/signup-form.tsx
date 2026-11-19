@@ -10,7 +10,11 @@ import "react-international-phone/style.css";
 import AuthShell from "@/components/auth-shell";
 import PasswordField from "@/components/ui/password-field";
 import { COUNTRIES } from "@/lib/countries";
-import { languagesForCountry, type CountryLanguageOption } from "@/lib/languages";
+import {
+  countryUsesLanguage,
+  languagesForCountry,
+  type CountryLanguageOption,
+} from "@/lib/languages";
 import { ACCOUNT_TYPES, SIGNUP_CURRENCIES } from "@/lib/account-options";
 import { signup, type AuthState } from "@/app/actions/auth";
 import { I18nText } from "@/components/i18n-text";
@@ -24,10 +28,20 @@ const LABEL = "text-[13px] font-semibold text-slate-900";
 
 type CountryOption = { value: string; label: string };
 
+const spanishSpeakingCountries = new Set(
+  COUNTRIES.filter((country) => countryUsesLanguage(country.code, "es")).map(
+    (country) => country.code,
+  ),
+);
+
 const countryOptions: CountryOption[] = COUNTRIES.map((country) => ({
   value: country.code,
   label: `${country.flag} ${country.name}`,
-}));
+})).sort((a, b) => {
+  const priority = Number(spanishSpeakingCountries.has(b.value)) -
+    Number(spanishSpeakingCountries.has(a.value));
+  return priority || a.label.localeCompare(b.label);
+});
 
 const selectStyles = <Option,>(): StylesConfig<Option, false> => ({
   control: (base, state) => ({
@@ -111,7 +125,11 @@ export default function SignupForm() {
   const [countryCode, setCountryCode] = useState("US");
   const [preferredLanguage, setPreferredLanguage] = useState<CountryLanguageOption | null>(null);
   const [phone, setPhone] = useState("");
-  const languageOptions = languagesForCountry(countryCode);
+  const languageOptions = languagesForCountry(countryCode).sort((a, b) => {
+    const priority = Number(b.value.split("-")[0] === "es") -
+      Number(a.value.split("-")[0] === "es");
+    return priority || a.englishName.localeCompare(b.englishName);
+  });
 
   function selectCountry(option: CountryOption | null) {
     const nextCountryCode = option?.value ?? "";

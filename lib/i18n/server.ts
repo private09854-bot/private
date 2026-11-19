@@ -77,19 +77,30 @@ async function translateWithLibreTranslate(text: string[], target: string) {
   return translations;
 }
 
+const TRANSLATABLE_LOCALES = new Set(["ar", "en"]);
+
 export async function translationResource(localeValue: string): Promise<TranslationResource> {
   const locale = normalizeLocale(localeValue);
   if (locale.toLowerCase().startsWith("en")) return englishResource;
 
+  const primaryLocale = locale.split("-")[0].toLowerCase();
+  if (!TRANSLATABLE_LOCALES.has(primaryLocale)) {
+    return englishResource;
+  }
+
   const saved = cache.get(locale);
   if (saved && saved.expiresAt > Date.now()) return saved.resource;
 
-  const resource = rebuild(
-    englishResource,
-    // LibreTranslate uses ISO language codes; regional locale variants share
-    // the translation model of their primary language.
-    await translateWithLibreTranslate(strings(englishResource), locale.split("-")[0]),
-  ) as TranslationResource;
-  cache.set(locale, { resource, expiresAt: Date.now() + 86_400_000 });
-  return resource;
+  try {
+    const resource = rebuild(
+      englishResource,
+      // LibreTranslate uses ISO language codes; regional locale variants share
+      // the translation model of their primary language.
+      await translateWithLibreTranslate(strings(englishResource), primaryLocale),
+    ) as TranslationResource;
+    cache.set(locale, { resource, expiresAt: Date.now() + 86_400_000 });
+    return resource;
+  } catch {
+    return englishResource;
+  }
 }

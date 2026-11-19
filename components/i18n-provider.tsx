@@ -10,6 +10,47 @@ const STORAGE_KEY = "bank.language";
 
 let initialization: Promise<void> | undefined;
 
+function isResourceObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function mergeResourceTrees(base: unknown, override: unknown): unknown {
+  if (!isResourceObject(base) || !isResourceObject(override)) {
+    return override === undefined ? base : override;
+  }
+
+  const merged = { ...base };
+  for (const [key, value] of Object.entries(override)) {
+    merged[key] = key in base ? mergeResourceTrees(base[key], value) : value;
+  }
+  return merged;
+}
+
+function mergeNewTranslations(
+  current: unknown,
+  english: unknown,
+  candidate: unknown,
+): unknown {
+  if (typeof english === "string") {
+    return typeof candidate === "string" && candidate !== english
+      ? candidate
+      : current;
+  }
+  if (!isResourceObject(english) || !isResourceObject(candidate)) return current;
+
+  const merged = isResourceObject(current) ? { ...current } : {};
+  for (const [key, englishValue] of Object.entries(english)) {
+    if (key in candidate) {
+      merged[key] = mergeNewTranslations(
+        merged[key],
+        englishValue,
+        candidate[key],
+      );
+    }
+  }
+  return merged;
+}
+
 function normalizeLocale(value: string) {
   const candidate = value.trim().replace(/_/g, "-") || "en";
   try {
@@ -49,44 +90,40 @@ async function loadLocaleResource(locale: string) {
   const normalized = toSupportedLocale(locale);
   if (normalized.toLowerCase().startsWith("en")) return englishResource;
 
+  let resource: unknown = englishResource;
+
   try {
-    const apiResponse = await fetch(`/api/i18n/${encodeURIComponent(normalized)}`, {
-      cache: "no-store",
-    });
-    if (!apiResponse.ok) throw new Error(`Translation service returned ${apiResponse.status}.`);
-    const translated = (await apiResponse.json()) as typeof englishResource;
-    return {
-      ...englishResource,
-      ...translated,
-      common: { ...englishResource.common, ...translated.common },
-      signup: { ...englishResource.signup, ...translated.signup },
-      ui: { ...englishResource.ui, ...translated.ui },
-    };
+    const publicResponse = await fetch(
+      `/locales/${encodeURIComponent(normalized)}/translation.json`,
+      { cache: "no-store" },
+    );
+    if (publicResponse.ok) {
+      const authored = (await publicResponse.json()) as typeof englishResource;
+      resource = mergeResourceTrees(englishResource, authored);
+    }
   } catch (error) {
     console.warn(
-      `[i18n] Full ${normalized} translations are unavailable; using the authored catalog and English fallback.`,
+      `[i18n] Could not load the authored ${normalized} catalog.`,
       error,
     );
   }
 
   try {
-    const publicResource = await fetch(`/locales/${encodeURIComponent(normalized)}/translation.json`, {
+    const apiResponse = await fetch(`/api/i18n/${encodeURIComponent(normalized)}`, {
       cache: "no-store",
     });
-    if (publicResource.ok) {
-      const authored = (await publicResource.json()) as typeof englishResource;
-      return {
-        ...englishResource,
-        ...authored,
-        common: { ...englishResource.common, ...authored.common },
-        signup: { ...englishResource.signup, ...authored.signup },
-        ui: { ...englishResource.ui, ...authored.ui },
-      };
+    if (apiResponse.ok) {
+      const candidate = (await apiResponse.json()) as typeof englishResource;
+      resource = mergeNewTranslations(resource, englishResource, candidate);
     }
-  } catch {
-    // No authored catalog is available; i18next uses English as its fallback.
+  } catch (error) {
+    console.warn(
+      `[i18n] Could not load additional ${normalized} translations; using the authored catalog and English fallback.`,
+      error,
+    );
   }
-  return englishResource;
+
+  return resource as typeof englishResource;
 }
 
 function configureI18n() {
